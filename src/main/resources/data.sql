@@ -1,0 +1,10 @@
+DROP TABLE IF EXISTS posts;
+
+CREATE TABLE posts (
+  id LONG AUTO_INCREMENT  PRIMARY KEY,
+  title VARCHAR(250) NOT NULL,
+  body VARCHAR(250) NOT NULL
+);
+
+INSERT INTO posts (title, body) VALUES
+  ('Name', 'Body');
