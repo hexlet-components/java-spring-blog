@@ -5,6 +5,6 @@ test:
 	./gradlew test
 
 run:
-	./gradlew bootRun
+	./gradlew --watch-fs --continuous bootRun
 
 .PHONY: build

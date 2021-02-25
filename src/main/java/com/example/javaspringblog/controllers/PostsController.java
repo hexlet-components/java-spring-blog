@@ -23,7 +23,7 @@ public class PostsController {
     @Autowired
     private PostRepository postRepository;
 
-    @GetMapping("/")
+    @GetMapping("")
     public String index(
             Model model,
             @RequestParam(defaultValue = "0") int page) {
