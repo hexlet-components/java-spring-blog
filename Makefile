@@ -4,7 +4,13 @@ build:
 test:
 	./gradlew test
 
-run:
-	./gradlew --watch-fs --continuous bootRun
+recompile-onfly:
+	./gradlew --watch-fs processResources -t
+
+boot-run:
+	./gradlew bootRun
+
+start:
+	heroku local
 
 .PHONY: build
