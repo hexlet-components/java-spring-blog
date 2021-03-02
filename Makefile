@@ -4,6 +4,9 @@ build:
 test:
 	./gradlew test
 
+lint:
+	./gradlew check
+
 recompile-onfly:
 	./gradlew --watch-fs processResources -t
 
