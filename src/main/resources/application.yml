@@ -8,15 +8,15 @@ spring:
     password: password
 
   jpa:
-    hibernate:
-      ddl-auto: update
-    # database-platform: org.hibernate.dialect.H2Dialect
+    # hibernate:
+    #   ddl-auto: update
+    database-platform: org.hibernate.dialect.H2Dialect
     show-sql: true
     properties:
       hibernate:
         format_sql: true
 
-  liquibase:
+  # liquibase:
     # change-log: classpath:db/db.changelog-master.yml
     # drop-first: true
     # enabled: false
