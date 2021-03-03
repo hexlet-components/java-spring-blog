@@ -1,19 +1,25 @@
 ---
 
-# spring.jpa.hibernate.ddl-auto=none
 spring:
   datasource:
-    url: jdbc:h2:mem:javaspringblog_development
+    url: jdbc:h2:file:./development
     driverClassName: org.h2.Driver
     username: tirion
     password: password
 
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    # database-platform: org.hibernate.dialect.H2Dialect
     show-sql: true
     properties:
       hibernate:
         format_sql: true
+
+  liquibase:
+    # change-log: classpath:db/db.changelog-master.yml
+    # drop-first: true
+    # enabled: false
 
   # logging:
   #   level:

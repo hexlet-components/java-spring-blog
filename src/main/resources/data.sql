@@ -1,2 +1,2 @@
-INSERT INTO posts (title, body) VALUES
+INSERT INTO post (title, body) VALUES
   ('Name', 'Body');
