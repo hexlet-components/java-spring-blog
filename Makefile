@@ -4,6 +4,9 @@ build:
 test:
 	./gradlew test
 
+deps-update:
+	./gradlew dependencyUpdates --refresh-dependencies -Drevision=release
+
 check:
 	./gradlew check
 

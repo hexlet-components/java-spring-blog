@@ -1,5 +1,8 @@
 package com.example.javaspringblog.models;
 
+import java.time.Instant;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,14 +17,16 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Post {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    // @NotBlank(message = "Body can't be empty")
+    @Column(nullable = false)
     private String title;
 
     // @NotBlank(message = "Body can't be empty")
     private String body;
+
+    private Instant createdAt;
 
     public Post(Long id, String title, String body) {
         this.id = id;

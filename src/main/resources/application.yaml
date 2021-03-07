@@ -8,6 +8,7 @@ spring:
     password: password
 
   jpa:
+    open-in-view: false
     # hibernate:
     #   ddl-auto: update
     database-platform: org.hibernate.dialect.H2Dialect
@@ -16,13 +17,17 @@ spring:
       hibernate:
         format_sql: true
 
-  # liquibase:
-    # change-log: classpath:db/db.changelog-master.yml
+  liquibase:
+    # change-log: classpath:db/changelog/changelog-master.yaml
+    url: jdbc:h2:file:./development
+    username: tirion
+    password: password
     # drop-first: true
     # enabled: false
 
-  # logging:
-  #   level:
+  logging:
+    level:
+      liquibase: info
   #     org.springframework.web: DEBUG
   #     guru.springframework.controllers: DEBUG
   #     org.hibernate: DEBUG
