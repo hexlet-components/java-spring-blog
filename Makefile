@@ -25,4 +25,7 @@ start:
 db-diff-changelog:
 	./gradlew diffChangeLog
 
+db-migrate:
+	./gradlew update
+
 .PHONY: build

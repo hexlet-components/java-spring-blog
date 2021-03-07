@@ -39,7 +39,7 @@ dependencies {
   liquibaseRuntime 'org.springframework.boot:spring-boot'
   liquibaseRuntime 'org.springframework:spring-orm'
   liquibaseRuntime 'ch.qos.logback:logback-classic:1.2.3' // Fix for https://liquibase.jira.com/browse/CORE-3212
-  liquibaseRuntime group: 'org.yaml', name: 'snakeyaml', version: '1.28'
+  liquibaseRuntime 'javax.xml.bind:jaxb-api'
 
   liquibaseRuntime sourceSets.main.output
 }
@@ -56,7 +56,8 @@ liquibase {
     main {
       // TODO Теперь разобраться как убрать дублирование и вынести переменные в конфиг приложения
       classpath "$projectDir/src/main/resources/db/changelog"
-      changeLogFile "${projectDir}/src/main/resources/db/changelog/db.changelog-master.yaml"
+      // NOTE в ямле не работает генерация changeset
+      changeLogFile "${projectDir}/src/main/resources/db/changelog/db.changelog-master.xml"
       url 'jdbc:h2:file:./development'
       driver 'org.h2.Driver'// System.getProperty('spring.datasource.driver-class-name')
       username 'tirion'
