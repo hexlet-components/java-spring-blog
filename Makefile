@@ -1,10 +1,10 @@
 build:
 	./gradlew
 
-check:
+test:
 	./gradlew test
 
-lint:
+check:
 	./gradlew check
 
 recompile-onfly:
