@@ -48,3 +48,26 @@ diffChangeLog.dependsOn compileJava
 test {
 	useJUnitPlatform()
 }
+
+task generateMigration() {
+  description 'Generates migration: -Pmigration=name-of-migration'
+  doLast {
+    // TODO use configuration
+    def name = project.properties['migration']
+    def now = new Date()
+    def basePath = 'src/main/resources/db/changelog/changes'
+    def id = "${now.getTime()}-${name}"
+    def filename = "${id}.yaml"
+    def fullPath = "${basePath}/${filename}"
+    File migration = file(fullPath)
+    migration.text = """
+    databaseChangeLog:
+    |  - changeSet:
+    |      id: ${id}
+    |      author: "\${global.author}"
+    |      changes:
+    """.stripMargin().trim()
+
+    println(migration)
+  }
+}

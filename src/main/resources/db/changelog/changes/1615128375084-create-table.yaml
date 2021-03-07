@@ -1,0 +1,5 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1615128375084-create-table
+      author: "${global.author}"
+      changes:
