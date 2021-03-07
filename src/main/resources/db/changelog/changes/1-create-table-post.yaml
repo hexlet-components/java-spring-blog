@@ -1,6 +1,7 @@
 databaseChangeLog:
   - changeSet:
-      # id: create-table-post
+      id: 1-create-table-post
+      author: "${global.author}"
       changes:
         - createTable:
             columns:

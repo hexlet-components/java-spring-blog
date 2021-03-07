@@ -1,3 +1,7 @@
 databaseChangeLog:
+  - property:
+      name: global.author
+      value: robot
+      global: true
   - includeAll:
       path: classpath*:db/changelog/changes/

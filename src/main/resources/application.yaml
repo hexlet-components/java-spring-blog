@@ -4,7 +4,7 @@ spring:
   datasource:
     url: jdbc:h2:file:./development
     driverClassName: org.h2.Driver
-    username: tirion
+    user: tirion
     password: password
 
   jpa:
@@ -17,13 +17,13 @@ spring:
       hibernate:
         format_sql: true
 
-  liquibase:
-    # change-log: classpath:db/changelog/changelog-master.yaml
-    url: jdbc:h2:file:./development
-    username: tirion
-    password: password
-    # drop-first: true
-    # enabled: false
+  # liquibase:
+  #   # change-log: classpath:db/changelog/changelog-master.yaml
+  #   url: jdbc:h2:file:./development
+  #   user: tirion
+  #   password: password
+  #   # drop-first: true
+  #   # enabled: false
 
   logging:
     level:
