@@ -4,6 +4,9 @@ build:
 test:
 	./gradlew test
 
+clean:
+	./gradlew clean
+
 deps-update:
 	./gradlew dependencyUpdates --refresh-dependencies -Drevision=release
 
@@ -18,5 +21,8 @@ boot-run:
 
 start:
 	heroku local
+
+db-diff-changelog:
+	./gradlew diffChangeLog
 
 .PHONY: build

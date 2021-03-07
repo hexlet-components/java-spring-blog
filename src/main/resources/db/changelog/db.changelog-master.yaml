@@ -1,7 +1,34 @@
 databaseChangeLog:
-  - property:
-      name: global.author
-      value: robot
-      global: true
-  - includeAll:
-      path: classpath*:db/changelog/changes/
+- changeSet:
+    id: 1615152461035-1
+    author: kirillmokevnin (generated)
+    changes:
+    - createSequence:
+        sequenceName: hibernate_sequence
+- changeSet:
+    id: 1615152461035-2
+    author: kirillmokevnin (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: PostPK
+            name: id
+            type: BIGINT
+        - column:
+            name: body
+            type: VARCHAR(255)
+        - column:
+            name: createdAt
+            type: TIMESTAMP
+        - column:
+            constraints:
+              nullable: false
+            name: title
+            type: VARCHAR(255)
+        tableName: Post
+

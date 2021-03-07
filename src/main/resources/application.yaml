@@ -3,7 +3,7 @@
 spring:
   datasource:
     url: jdbc:h2:file:./development
-    driverClassName: org.h2.Driver
+    driver-class-name: org.h2.Driver
     user: tirion
     password: password
 

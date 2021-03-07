@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import org.springframework.data.annotation.CreatedDate;
+
 import lombok.Data;
 
 @Entity
@@ -23,6 +25,7 @@ public class Post {
     // @NotBlank(message = "Body can't be empty")
     private String body;
 
+    @CreatedDate
     private Instant createdAt;
 
     public Post(Long id, String title, String body) {

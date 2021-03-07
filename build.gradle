@@ -30,15 +30,17 @@ dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-web'
   implementation 'org.springframework.boot:spring-boot-starter-actuator'
   implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-  runtimeOnly 'com.h2database:h2'
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-  implementation 'org.liquibase:liquibase-core:4.3.1'
-  implementation 'org.liquibase.ext:liquibase-hibernate5:3.6'
-  implementation 'org.liquibase:liquibase-groovy-dsl:3.0.0'
-  implementation 'org.springframework.boot:spring-boot'
-  implementation 'org.springframework:spring-orm'
-  // liquibaseRuntime 'mysql:mysql-connector-java:5.1.34'
+  runtimeOnly 'com.h2database:h2'
+
+  liquibaseRuntime 'org.liquibase:liquibase-core'
+  liquibaseRuntime 'org.liquibase.ext:liquibase-hibernate5:3.6'
+  liquibaseRuntime 'org.springframework.boot:spring-boot'
+  liquibaseRuntime 'org.springframework:spring-orm'
+  liquibaseRuntime 'ch.qos.logback:logback-classic:1.2.3' // Fix for https://liquibase.jira.com/browse/CORE-3212
+  liquibaseRuntime group: 'org.yaml', name: 'snakeyaml', version: '1.28'
+
   liquibaseRuntime sourceSets.main.output
 }
 
@@ -49,25 +51,19 @@ test {
 	useJUnitPlatform()
 }
 
-task generateMigration() {
-  description 'Generates migration: -Pmigration=name-of-migration'
-  doLast {
-    // TODO use configuration
-    def name = project.properties['migration']
-    def now = new Date()
-    def basePath = 'src/main/resources/db/changelog/changes'
-    def id = "${now.getTime()}-${name}"
-    def filename = "${id}.yaml"
-    def fullPath = "${basePath}/${filename}"
-    File migration = file(fullPath)
-    migration.text = """
-    databaseChangeLog:
-    |  - changeSet:
-    |      id: ${id}
-    |      author: "\${global.author}"
-    |      changes:
-    """.stripMargin().trim()
+liquibase {
+  activities {
+    main {
+      // TODO Теперь разобраться как убрать дублирование и вынести переменные в конфиг приложения
+      classpath "$projectDir/src/main/resources/db/changelog"
+      changeLogFile "${projectDir}/src/main/resources/db/changelog/db.changelog-master.yaml"
+      url 'jdbc:h2:file:./development'
+      driver 'org.h2.Driver'// System.getProperty('spring.datasource.driver-class-name')
+      username 'tirion'
+      password 'password'
 
-    println(migration)
+      // referenceDriver 'org.h2.Driver'
+      referenceUrl 'hibernate:spring:com.example.javaspringblog.models?dialect=org.hibernate.dialect.H2Dialect'
+    }
   }
 }
