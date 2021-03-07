@@ -1,7 +1,7 @@
 build:
 	./gradlew
 
-test:
+check:
 	./gradlew test
 
 lint:
