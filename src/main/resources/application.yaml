@@ -8,7 +8,7 @@ spring:
     password: password
 
   jpa:
-    open-in-view: false
+    # open-in-view: false
     # hibernate:
     #   ddl-auto: update
     database-platform: org.hibernate.dialect.H2Dialect
@@ -16,6 +16,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        show_sql: true
 
   # liquibase:
   #   # change-log: classpath:db/changelog/changelog-master.yaml
@@ -25,9 +26,17 @@ spring:
   #   # drop-first: true
   #   # enabled: false
 
-  logging:
-    level:
-      liquibase: info
+logging:
+  level:
+    # root: debug
+    org:
+      springframework: debug
+      hibernate:
+        type:
+          descriptor:
+            sql: trace
+        SQL: debug
+    #     type: debug
   #     org.springframework.web: DEBUG
   #     guru.springframework.controllers: DEBUG
   #     org.hibernate: DEBUG

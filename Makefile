@@ -28,4 +28,7 @@ db-diff-changelog:
 db-migrate:
 	./gradlew update
 
+gradle-upgrade:
+	./gradlew wrapper --gradle-version 6.8.3
+
 .PHONY: build
