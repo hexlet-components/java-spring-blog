@@ -15,9 +15,11 @@ import com.example.javaspringblog.models.post.Comment;
 import org.springframework.data.annotation.CreatedDate;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@NoArgsConstructor
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
