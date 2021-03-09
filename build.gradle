@@ -59,6 +59,7 @@ dependencies {
 
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
   // TODO подключить и отследить почему долго выполняется @AutoConfigureMockMvc
+  // https://www.adesso.de/de/news/blog/identify-bottlenecks-in-your-spring-tests-with-junit-insights.jsp
   // implementation group: 'de.adesso', name: 'junit-insights', version: '1.1.0'
   // testCompile 'de.adesso:junit-insights:1.1.0'
 
