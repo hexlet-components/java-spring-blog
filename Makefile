@@ -1,6 +1,8 @@
 build:
 	./gradlew
 
+# Run single test
+# ./gradlew test --continuous --tests "*HomeControllerTests"
 test:
 	./gradlew test
 

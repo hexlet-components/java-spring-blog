@@ -11,6 +11,7 @@ public class HomeController {
     public String index(Model model) {
         model.addAttribute("msg", "owdy, World");
         model.addAttribute("title", "Howdy, World");
+        System.out.print("JOPAAAA");
         return "index";
     }
 }

@@ -29,6 +29,12 @@ configurations {
   checkstyleConfig
 }
 
+// testLogger {
+//   theme 'mocha'
+//   // events "passed", "skipped", "failed"
+//   // showStandardStreams true
+// }
+
 afterEvaluate {
   checkstyle {
     toolVersion project.ext.checkstyleVersion
@@ -52,6 +58,9 @@ dependencies {
   implementation group: 'com.tobedevoured.modelcitizen', name: 'spring', version: '0.8.1'
 
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
+  // TODO подключить и отследить почему долго выполняется @AutoConfigureMockMvc
+  // implementation group: 'de.adesso', name: 'junit-insights', version: '1.1.0'
+  // testCompile 'de.adesso:junit-insights:1.1.0'
 
   runtimeOnly 'com.h2database:h2'
 
@@ -69,7 +78,8 @@ diff.dependsOn compileJava
 diffChangeLog.dependsOn compileJava
 
 test {
-	useJUnitPlatform()
+  useJUnitPlatform()
+  systemProperty 'de.adesso.junitinsights.enabled', 'true'
 }
 
 liquibase {

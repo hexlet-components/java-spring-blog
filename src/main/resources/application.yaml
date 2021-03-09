@@ -28,9 +28,12 @@ spring:
 
 logging:
   level:
-    # root: debug
+    root: debug
     org:
-      springframework: debug
+      springframework:
+        test:
+          context:
+            cache: debug
       hibernate:
         type:
           descriptor:
