@@ -1,0 +1,38 @@
+# ===================================================================
+# Spring Boot configuration for the "dev" profile.
+#
+# This configuration overrides the application.yml file.
+# ===================================================================
+
+# ===================================================================
+# Standard Spring Boot properties.
+# Full reference is available at:
+# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+# ===================================================================
+
+server:
+  error:
+    include-stacktrace: on_param
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/blog
+    username: developer
+    password: password
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        generate_statistics: true
+        use_sql_comments: true
+        format_sql: true
+  thymeleaf:
+    cache: false
+
+logging:
+  level:
+    root: INFO
+    web: DEBUG
+    org.hibernate.type.descriptor.sql: TRACE
+    org.springframework.security: TRACE
+    io.hexlet.typoreporter: DEBUG

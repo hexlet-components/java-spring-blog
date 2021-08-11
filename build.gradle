@@ -1,39 +1,30 @@
 plugins {
-  id 'org.springframework.boot' version '2.4.3'
+  id 'org.springframework.boot' version '2.5.3'
   id 'io.spring.dependency-management' version '1.0.11.RELEASE'
   id 'java'
-
   id 'com.adarshr.test-logger' version '2.1.1'
-  id 'io.freefair.lombok' version '5.3.0'
-  id 'org.liquibase.gradle' version '2.0.4'
-  // TODO: https://github.com/spotbugs/spotbugs-gradle-plugin/issues/32
-  // id 'com.github.spotbugs' version '4.6.2'
   id 'checkstyle'
   id 'com.github.ben-manes.versions' version '0.38.0'
- 	// id 'net.ltgt.errorprone' version '1.3.0'
 }
 
-group = 'com.example'
+group = 'io.hexlet'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+sourceCompatibility = '16'
+
+configurations {
+  compileOnly {
+    extendsFrom annotationProcessor
+  }
+  checkstyleConfig
+}
 
 repositories {
-	mavenCentral()
+  mavenCentral()
 }
 
 ext {
   checkstyleVersion = '8.41'
 }
-
-configurations {
-  checkstyleConfig
-}
-
-// testLogger {
-//   theme 'mocha'
-//   // events "passed", "skipped", "failed"
-//   // showStandardStreams true
-// }
 
 afterEvaluate {
   checkstyle {
@@ -53,50 +44,22 @@ dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-web'
   implementation 'org.springframework.boot:spring-boot-starter-actuator'
   implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+  implementation 'org.springframework.boot:spring-boot-starter-validation'
+  runtimeOnly 'org.postgresql:postgresql'
 
-  // https://mvnrepository.com/artifact/com.github.database-rider/rider-spring
-  implementation group: 'com.tobedevoured.modelcitizen', name: 'spring', version: '0.8.1'
+  compileOnly 'org.projectlombok:lombok'
+  annotationProcessor 'org.projectlombok:lombok'
 
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
-  // TODO подключить и отследить почему долго выполняется @AutoConfigureMockMvc
-  // https://www.adesso.de/de/news/blog/identify-bottlenecks-in-your-spring-tests-with-junit-insights.jsp
-  // implementation group: 'de.adesso', name: 'junit-insights', version: '1.1.0'
-  // testCompile 'de.adesso:junit-insights:1.1.0'
-
-  runtimeOnly 'com.h2database:h2'
-
-  liquibaseRuntime 'org.liquibase:liquibase-core'
-  liquibaseRuntime 'org.liquibase.ext:liquibase-hibernate5:3.6'
-  liquibaseRuntime 'org.springframework.boot:spring-boot'
-  liquibaseRuntime 'org.springframework:spring-orm'
-  liquibaseRuntime 'ch.qos.logback:logback-classic:1.2.3' // Fix for https://liquibase.jira.com/browse/CORE-3212
-  liquibaseRuntime 'javax.xml.bind:jaxb-api'
-
-  liquibaseRuntime sourceSets.main.output
+  testImplementation 'com.tobedevoured.modelcitizen:spring:0.8.3'
+  testRuntimeOnly 'com.h2database:h2'
 }
-
-diff.dependsOn compileJava
-diffChangeLog.dependsOn compileJava
 
 test {
   useJUnitPlatform()
-  systemProperty 'de.adesso.junitinsights.enabled', 'true'
 }
 
-liquibase {
-  activities {
-    main {
-      // TODO Теперь разобраться как убрать дублирование и вынести переменные в конфиг приложения
-      classpath "$projectDir/src/main/resources/db/changelog"
-      // NOTE в ямле не работает генерация changeset
-      changeLogFile "${projectDir}/src/main/resources/db/changelog/db.changelog-master.xml"
-      url 'jdbc:h2:file:./development'
-      driver 'org.h2.Driver'// System.getProperty('spring.datasource.driver-class-name')
-      username 'tirion'
-      password 'password'
-
-      // referenceDriver 'org.h2.Driver'
-      referenceUrl 'hibernate:spring:com.example.javaspringblog.models?dialect=org.hibernate.dialect.H2Dialect'
-    }
-  }
+tasks.named('wrapper') {
+  gradleVersion = '7.1.1'
+  distributionType = Wrapper.DistributionType.ALL
 }
