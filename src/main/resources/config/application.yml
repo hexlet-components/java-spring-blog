@@ -1,0 +1,14 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: javaspringblogApplication
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: create
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
