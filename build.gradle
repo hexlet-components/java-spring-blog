@@ -1,9 +1,9 @@
 plugins {
+  id 'java'
+  id 'checkstyle'
   id 'org.springframework.boot' version '2.5.3'
   id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-  id 'java'
   id 'com.adarshr.test-logger' version '2.1.1'
-  id 'checkstyle'
   id 'com.github.ben-manes.versions' version '0.38.0'
 }
 
@@ -23,12 +23,12 @@ repositories {
 }
 
 ext {
-  checkstyleVersion = '8.41'
+  checkstyleVersion = '9.0'
 }
 
 afterEvaluate {
   checkstyle {
-    toolVersion project.ext.checkstyleVersion
+    toolVersion = project.ext.checkstyleVersion
     // https://github.com/square/okhttp/pull/5720/files
     config resources.text.fromArchiveEntry(configurations.checkstyleConfig, 'google_checks.xml')
   }
@@ -39,20 +39,20 @@ dependencies {
     transitive = false
   }
 
-  developmentOnly 'org.springframework.boot:spring-boot-devtools'
-  implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-  implementation 'org.springframework.boot:spring-boot-starter-web'
-  implementation 'org.springframework.boot:spring-boot-starter-actuator'
-  implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-  implementation 'org.springframework.boot:spring-boot-starter-validation'
-  runtimeOnly 'org.postgresql:postgresql'
+  developmentOnly 'org.springframework.boot:spring-boot-devtools:2.5.5'
+  implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.5.5'
+  implementation 'org.springframework.boot:spring-boot-starter-web:2.5.5'
+  implementation 'org.springframework.boot:spring-boot-starter-actuator:2.5.5'
+  implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:2.5.5'
+  implementation 'org.springframework.boot:spring-boot-starter-validation:2.5.5'
+  runtimeOnly 'org.postgresql:postgresql:42.2.24.jre7'
 
-  compileOnly 'org.projectlombok:lombok'
-  annotationProcessor 'org.projectlombok:lombok'
+  compileOnly 'org.projectlombok:lombok:1.18.22'
+  annotationProcessor 'org.projectlombok:lombok:1.18.22'
 
-  testImplementation 'org.springframework.boot:spring-boot-starter-test'
+  testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.5'
   testImplementation 'com.tobedevoured.modelcitizen:spring:0.8.3'
-  testRuntimeOnly 'com.h2database:h2'
+  testRuntimeOnly 'com.h2database:h2:1.4.200'
 }
 
 test {
@@ -60,6 +60,6 @@ test {
 }
 
 tasks.named('wrapper') {
-  gradleVersion = '7.1.1'
+  gradleVersion = '7.2'
   distributionType = Wrapper.DistributionType.ALL
 }
