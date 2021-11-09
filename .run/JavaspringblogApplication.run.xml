@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="JavaspringblogApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <module name="java-spring-blog.main" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="io.hexlet.javaspringblog.JavaSpringBlogApplication" />
+    <option name="VM_PARAMETERS" value="-Dspring.profiles.active=dev" />
+    <option name="ALTERNATIVE_JRE_PATH" />
+    <option name="SHORTEN_COMMAND_LINE" value="NONE" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
