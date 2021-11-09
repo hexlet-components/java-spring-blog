@@ -12,7 +12,7 @@ spring:
     hibernate:
       ddl-auto: create-drop
   liquibase:
-    change-log: classpath:db/changelog/db.changelog-master.xml
+    enabled: false
   mvc:
     hiddenmethod:
       filter:

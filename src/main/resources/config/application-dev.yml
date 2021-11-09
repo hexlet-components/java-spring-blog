@@ -19,6 +19,8 @@ spring:
     url: jdbc:postgresql://localhost:5432/blog
     username: developer
     password: password
+  liquibase:
+    change-log: classpath:db/changelog/changelog-master.yml
   jpa:
     show-sql: true
     properties:
