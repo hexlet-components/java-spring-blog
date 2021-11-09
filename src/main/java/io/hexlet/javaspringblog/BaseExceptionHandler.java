@@ -1,6 +1,7 @@
 package io.hexlet.javaspringblog;
 
 import java.util.NoSuchElementException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -31,9 +32,15 @@ public class BaseExceptionHandler {
 
     @ResponseBody
     @ResponseStatus(BAD_REQUEST)
-    @ExceptionHandler({MethodArgumentNotValidException.class, HttpMessageNotReadableException.class})
+    @ExceptionHandler({
+            MethodArgumentNotValidException.class,
+            HttpMessageNotReadableException.class,
+            DataIntegrityViolationException.class
+    })
     public String validationExceptionsHandler(Exception exception) {
-        return exception.getMessage();
+        return exception instanceof DataIntegrityViolationException
+                ? exception.getCause().getCause().getMessage()
+                : exception.getMessage();
     }
 
 }
