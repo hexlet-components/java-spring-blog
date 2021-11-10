@@ -17,14 +17,14 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder encoder;
 
     @Override
-    public void registerNewUserAccount(final UserRegistrationDto userDto) {
+    public User registerNewUserAccount(final UserRegistrationDto userDto) {
         final User user = new User();
         user.setEmail(userDto.getEmail());
         user.setPassword(encodePassword(userDto));
         user.setName(userDto.getName());
         user.setRole(userDto.getRole());
 
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     private String encodePassword(final UserRegistrationDto dto) {

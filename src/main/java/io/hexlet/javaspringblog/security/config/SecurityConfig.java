@@ -11,8 +11,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import static io.hexlet.javaspringblog.controllers.UserController.PUBLIC_CONTROLLER_PATH;
 import static io.hexlet.javaspringblog.controllers.UserController.REG;
+import static io.hexlet.javaspringblog.controllers.UserController.USER_CONTROLLER_PATH;
 import static org.springframework.http.HttpMethod.POST;
 
 @Configuration
@@ -31,7 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(final HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                    .antMatchers(POST, PUBLIC_CONTROLLER_PATH + REG + "*").permitAll()
+                    .antMatchers(POST, USER_CONTROLLER_PATH + REG + "*").permitAll()
                     .anyRequest().authenticated()
                 .and().httpBasic()
                 .and().sessionManagement().disable()

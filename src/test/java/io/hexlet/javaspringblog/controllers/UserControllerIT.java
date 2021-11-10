@@ -1,8 +1,10 @@
 package io.hexlet.javaspringblog.controllers;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.tobedevoured.modelcitizen.spring.ModelFactoryBean;
 import io.hexlet.javaspringblog.config.SpringConfigForIT;
 import io.hexlet.javaspringblog.dtos.UserRegistrationDto;
+import io.hexlet.javaspringblog.models.user.User;
 import io.hexlet.javaspringblog.models.user.UserRole;
 import io.hexlet.javaspringblog.repositories.UserRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -20,9 +22,11 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static io.hexlet.javaspringblog.config.SpringConfigForIT.TEST_PROFILE;
 import static io.hexlet.javaspringblog.controllers.UserController.LOGIN;
-import static io.hexlet.javaspringblog.controllers.UserController.PUBLIC_CONTROLLER_PATH;
 import static io.hexlet.javaspringblog.controllers.UserController.REG;
+import static io.hexlet.javaspringblog.controllers.UserController.USER_CONTROLLER_PATH;
 import static io.hexlet.javaspringblog.utils.TestUtils.asJson;
+import static io.hexlet.javaspringblog.utils.TestUtils.fromJson;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -56,37 +60,47 @@ public class UserControllerIT {
 
     @Test
     public void register() throws Exception {
-        final var requestBody = post(PUBLIC_CONTROLLER_PATH + REG)
+        final var requestBody = post(USER_CONTROLLER_PATH + REG)
                 .content(asJson(testRegistrationDto))
                 .contentType(APPLICATION_JSON);
 
-        mockMvc.perform(requestBody)
-                .andExpect(status().isOk());
+        final var response = mockMvc.perform(requestBody)
+                .andExpect(status().isCreated())
+                .andReturn()
+                .getResponse();
+
+        assertEquals(1, userRepository.count());
+
+        final User actual = fromJson(response.getContentAsString(), new TypeReference<>() {});
+        final User expected = userRepository.findById(actual.getId()).orElse(null);
+        assertEquals(expected, actual);
     }
 
     @Test
     public void twiceRegTheSameUser() throws Exception {
-        final var requestBody = post(PUBLIC_CONTROLLER_PATH + REG)
+        final var requestBody = post(USER_CONTROLLER_PATH + REG)
                 .content(asJson(testRegistrationDto))
                 .contentType(APPLICATION_JSON);
 
         mockMvc.perform(requestBody)
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
 
         mockMvc.perform(requestBody)
                 .andExpect(status().isBadRequest());
+
+        assertEquals(1, userRepository.count());
     }
 
     @Test
     @WithMockUser
     public void login() throws Exception {
-        mockMvc.perform(post(PUBLIC_CONTROLLER_PATH + LOGIN))
+        mockMvc.perform(post(USER_CONTROLLER_PATH + LOGIN))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void loginFail() throws Exception {
-        mockMvc.perform(post(PUBLIC_CONTROLLER_PATH + LOGIN))
+        mockMvc.perform(post(USER_CONTROLLER_PATH + LOGIN))
                 .andExpect(status().isUnauthorized());
     }
 }
