@@ -5,6 +5,7 @@ plugins {
   id 'io.spring.dependency-management' version '1.0.11.RELEASE'
   id 'com.adarshr.test-logger' version '2.1.1'
   id 'com.github.ben-manes.versions' version '0.38.0'
+  id 'org.liquibase.gradle' version '2.0.4'
 }
 
 group = 'io.hexlet'
@@ -28,7 +29,7 @@ ext {
 
 afterEvaluate {
   checkstyle {
-    toolVersion = project.ext.checkstyleVersion
+    toolVersion project.ext.checkstyleVersion
     // https://github.com/square/okhttp/pull/5720/files
     config resources.text.fromArchiveEntry(configurations.checkstyleConfig, 'google_checks.xml')
   }
@@ -45,12 +46,18 @@ dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-actuator:2.5.5'
   implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:2.5.5'
   implementation 'org.springframework.boot:spring-boot-starter-validation:2.5.5'
+  implementation 'org.liquibase:liquibase-core:4.4.3'
   implementation 'org.springframework.boot:spring-boot-starter-security:2.5.5'
   runtimeOnly 'org.postgresql:postgresql:42.2.24.jre7'
 
   compileOnly 'org.projectlombok:lombok:1.18.22'
   annotationProcessor 'org.projectlombok:lombok:1.18.22'
 
+  liquibaseRuntime 'org.postgresql:postgresql'
+  liquibaseRuntime 'org.liquibase:liquibase-core'
+  liquibaseRuntime 'org.springframework.boot:spring-boot-starter-data-jpa'
+  liquibaseRuntime 'org.liquibase.ext:liquibase-hibernate5:4.5.0'
+  liquibaseRuntime sourceSets.main.output
   testImplementation 'org.springframework.security:spring-security-test:2.5.5'
   testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.5'
   testImplementation 'com.tobedevoured.modelcitizen:spring:0.8.3'
@@ -59,6 +66,30 @@ dependencies {
 
 test {
   useJUnitPlatform()
+}
+
+liquibase {
+  activities {
+    main {
+      // Указываем путь, по которому будет сгенерирован файл миграции
+      changeLogFile 'src/main/resources/db/changelog/changelog-master.yml'
+      // Указывем источник, с которым будут сравниваться изменния
+      // Это база данных, изначально она пустая
+      url 'jdbc:postgresql://localhost:5432/blog'
+      // Имя пользователя и пароль для подключения к базе
+      username 'developer'
+      password 'password'
+      // Указывем, откуда мы будем брать изменения
+      // Это модели
+      // Указываем пакет, в котором расположены модели
+      referenceUrl 'hibernate:spring:exercise.model' +
+              // Указываем диалект
+              '?dialect=org.hibernate.dialect.PostgreSQLDialect' +
+              // Указываем правила именования таблиц и столбцов,
+              // чтобы они соответствовали правилам Spring
+              '&hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy'
+    }
+  }
 }
 
 tasks.named('wrapper') {
