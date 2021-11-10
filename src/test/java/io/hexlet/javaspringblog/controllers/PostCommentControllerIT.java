@@ -18,6 +18,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -63,6 +64,7 @@ public class PostCommentControllerIT {
     }
 
     @Test
+    @WithMockUser
     public void getAllForPost() throws Exception {
         final Post post = modelFactoryBean.createModel(Post.class);
         final MockHttpServletResponse response = mockMvc.perform(

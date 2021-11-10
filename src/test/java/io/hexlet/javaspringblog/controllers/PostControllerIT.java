@@ -16,6 +16,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -62,6 +63,7 @@ public class PostControllerIT {
     }
 
     @Test
+    @WithMockUser
     public void getAll() throws Exception {
         final int postsToCreate = 3;
         for (int i = 0; i < postsToCreate; i++) {
@@ -77,6 +79,7 @@ public class PostControllerIT {
     }
 
     @Test
+    @WithMockUser
     public void getById() throws Exception {
 
         final Post expected = modelFactoryBean.createModel(Post.class);
@@ -91,6 +94,7 @@ public class PostControllerIT {
     }
 
     @Test
+    @WithMockUser
     public void createPost() throws Exception {
 
         final Post post = new Post();
@@ -107,6 +111,7 @@ public class PostControllerIT {
     }
 
     @Test
+    @WithMockUser
     public void deletePost() throws Exception {
         final Post toDelete = modelFactoryBean.createModel(Post.class);
         assertThat(postRepository.findAll()).hasSize(1);
