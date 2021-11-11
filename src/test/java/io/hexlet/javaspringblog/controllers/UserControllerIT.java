@@ -15,10 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
 
 import static io.hexlet.javaspringblog.config.SpringConfigForIT.TEST_PROFILE;
 import static io.hexlet.javaspringblog.controllers.UserController.LOGIN;
@@ -29,6 +31,7 @@ import static io.hexlet.javaspringblog.utils.TestUtils.fromJson;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -60,14 +63,10 @@ public class UserControllerIT {
 
     @Test
     public void register() throws Exception {
-        final var requestBody = post(USER_CONTROLLER_PATH + REG)
-                .content(asJson(testRegistrationDto))
-                .contentType(APPLICATION_JSON);
-
-        final var response = mockMvc.perform(requestBody)
-                .andExpect(status().isCreated())
-                .andReturn()
-                .getResponse();
+        final var response = makeRegistrationRequest(
+                testRegistrationDto,
+                status().isCreated()
+        );
 
         assertEquals(1, userRepository.count());
 
@@ -78,15 +77,8 @@ public class UserControllerIT {
 
     @Test
     public void twiceRegTheSameUser() throws Exception {
-        final var requestBody = post(USER_CONTROLLER_PATH + REG)
-                .content(asJson(testRegistrationDto))
-                .contentType(APPLICATION_JSON);
-
-        mockMvc.perform(requestBody)
-                .andExpect(status().isCreated());
-
-        mockMvc.perform(requestBody)
-                .andExpect(status().isBadRequest());
+        makeRegistrationRequest(testRegistrationDto, status().isCreated());
+        makeRegistrationRequest(testRegistrationDto, status().isBadRequest());
 
         assertEquals(1, userRepository.count());
     }
@@ -102,5 +94,50 @@ public class UserControllerIT {
     public void loginFail() throws Exception {
         mockMvc.perform(post(USER_CONTROLLER_PATH + LOGIN))
                 .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    public void deleteUser() throws Exception {
+        final var response = makeRegistrationRequest(
+                testRegistrationDto,
+                status().isCreated()
+        );
+
+        final Long userId = fromJson(response.getContentAsString(), new TypeReference<User>() {}).getId();
+
+        mockMvc.perform(delete(USER_CONTROLLER_PATH + "/" + userId))
+                .andExpect(status().isOk());
+
+        assertEquals(0, userRepository.count());
+    }
+
+    @Test
+    @WithMockUser
+    public void deleteUserFails() throws Exception {
+        final var response = makeRegistrationRequest(
+                testRegistrationDto,
+                status().isCreated()
+        );
+
+        final Long userId = fromJson(response.getContentAsString(), new TypeReference<User>() {}).getId();
+
+        mockMvc.perform(delete(USER_CONTROLLER_PATH + "/" + userId))
+                .andExpect(status().isForbidden());
+
+        assertEquals(1, userRepository.count());
+    }
+
+    private MockHttpServletResponse makeRegistrationRequest(final UserRegistrationDto dto,
+                                                            final ResultMatcher expectedStatus) throws Exception {
+        final var requestBody = post(USER_CONTROLLER_PATH + REG)
+                .content(asJson(dto))
+                .contentType(APPLICATION_JSON);
+
+        return mockMvc.perform(requestBody)
+                .andExpect(expectedStatus)
+                .andReturn()
+                .getResponse();
+
     }
 }
