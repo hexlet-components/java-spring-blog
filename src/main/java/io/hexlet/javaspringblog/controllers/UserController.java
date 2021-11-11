@@ -26,7 +26,7 @@ public class UserController {
     public static final String USER_CONTROLLER_PATH = "/users";
     public static final String LOGIN = "/login";
     public static final String REG = "/register";
-    public static final String ID = "{id}";
+    public static final String ID = "/{id}";
 
     private static final String ADMIN_ONLY = "hasRole(T(io.hexlet.javaspringblog.models.user.UserRole).ADMIN.name())";
 

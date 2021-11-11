@@ -56,8 +56,13 @@ public class PostController {
     }
 
     @PutMapping
-    public Post updatePost(@Valid @RequestBody final Post post) {
-        return postRepository.save(post);
+    @PreAuthorize(ONLY_POST_OWNER_BY_DTO)
+    public Post updatePost(@Valid @RequestBody final Post newPost) {
+        final Post oldPost = postRepository.findById(newPost.getId()).get();
+        oldPost.setTitle(newPost.getTitle());
+        oldPost.setBody(newPost.getBody());
+        oldPost.setPostStatus(newPost.getPostStatus());
+        return postRepository.save(newPost);
     }
 
     @DeleteMapping(ID)
