@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
 
 import static io.hexlet.javaspringblog.config.SpringConfigForIT.TEST_PROFILE;
+import static io.hexlet.javaspringblog.controllers.UserController.ID;
 import static io.hexlet.javaspringblog.controllers.UserController.LOGIN;
 import static io.hexlet.javaspringblog.controllers.UserController.REG;
 import static io.hexlet.javaspringblog.controllers.UserController.USER_CONTROLLER_PATH;
@@ -106,7 +107,7 @@ public class UserControllerIT {
 
         final Long userId = fromJson(response.getContentAsString(), new TypeReference<User>() {}).getId();
 
-        mockMvc.perform(delete(USER_CONTROLLER_PATH + "/" + userId))
+        mockMvc.perform(delete(USER_CONTROLLER_PATH + ID,userId))
                 .andExpect(status().isOk());
 
         assertEquals(0, userRepository.count());
@@ -122,7 +123,7 @@ public class UserControllerIT {
 
         final Long userId = fromJson(response.getContentAsString(), new TypeReference<User>() {}).getId();
 
-        mockMvc.perform(delete(USER_CONTROLLER_PATH + "/" + userId))
+        mockMvc.perform(delete(USER_CONTROLLER_PATH + ID, userId))
                 .andExpect(status().isForbidden());
 
         assertEquals(1, userRepository.count());
@@ -130,11 +131,11 @@ public class UserControllerIT {
 
     private MockHttpServletResponse makeRegistrationRequest(final UserRegistrationDto dto,
                                                             final ResultMatcher expectedStatus) throws Exception {
-        final var requestBody = post(USER_CONTROLLER_PATH + REG)
+        final var request = post(USER_CONTROLLER_PATH + REG)
                 .content(asJson(dto))
                 .contentType(APPLICATION_JSON);
 
-        return mockMvc.perform(requestBody)
+        return mockMvc.perform(request)
                 .andExpect(expectedStatus)
                 .andReturn()
                 .getResponse();
