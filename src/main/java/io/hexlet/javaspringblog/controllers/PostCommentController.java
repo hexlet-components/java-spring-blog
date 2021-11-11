@@ -45,8 +45,10 @@ public class PostCommentController {
     }
 
     @PutMapping
-    public PostComment updateComment(@Valid @RequestBody final PostComment comment) {
-        return commentRepository.save(comment);
+    public PostComment updateComment(@Valid @RequestBody final PostComment newComment) {
+        final PostComment oldComment = commentRepository.findById(newComment.getId()).get();
+        oldComment.setBody(newComment.getBody());
+        return commentRepository.save(oldComment);
     }
 
     @DeleteMapping(ID)

@@ -62,7 +62,7 @@ public class PostController {
         oldPost.setTitle(newPost.getTitle());
         oldPost.setBody(newPost.getBody());
         oldPost.setPostStatus(newPost.getPostStatus());
-        return postRepository.save(newPost);
+        return postRepository.save(oldPost);
     }
 
     @DeleteMapping(ID)
