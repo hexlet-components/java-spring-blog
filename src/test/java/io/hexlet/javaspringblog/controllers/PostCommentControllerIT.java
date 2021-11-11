@@ -38,6 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = RANDOM_PORT, classes = SpringConfigForIT.class)
 @Import({ModelFactoryBean.class})
 @TestInstance(PER_CLASS)
+@WithMockUser
 public class PostCommentControllerIT {
 
     @Autowired
@@ -64,7 +65,6 @@ public class PostCommentControllerIT {
     }
 
     @Test
-    @WithMockUser
     public void getAllForPost() throws Exception {
         final Post post = modelFactoryBean.createModel(Post.class);
         final MockHttpServletResponse response = mockMvc.perform(
