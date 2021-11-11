@@ -4,6 +4,7 @@ import io.hexlet.javaspringblog.models.post.Post;
 import io.hexlet.javaspringblog.repositories.PostRepository;
 import java.util.List;
 import javax.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +23,15 @@ import static org.springframework.http.HttpStatus.CREATED;
 public class PostController {
 
     public static final String POST_CONTROLLER_PATH = "/posts";
-    public static final String ID = "{id}";
+    public static final String ID = "/{id}";
+
+    private static final String ONLY_POST_OWNER_BY_ID = """
+            @postRepository.findById(#id).get().getCreatedBy() == authentication.getName()
+        """;
+
+    private static final String ONLY_POST_OWNER_BY_DTO = """
+            @postRepository.findById(#newPost.getId()).get().getCreatedBy() == authentication.getName()
+        """;
 
     private final PostRepository postRepository;
 
@@ -52,6 +61,7 @@ public class PostController {
     }
 
     @DeleteMapping(ID)
+    @PreAuthorize(ONLY_POST_OWNER_BY_ID)
     public void deletePost(@PathVariable final Long id) {
         postRepository.deleteById(id);
     }
