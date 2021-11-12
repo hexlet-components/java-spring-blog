@@ -2,6 +2,10 @@ package io.hexlet.javaspringblog.controllers;
 
 import io.hexlet.javaspringblog.models.post.Post;
 import io.hexlet.javaspringblog.repositories.PostRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.List;
 import javax.validation.Valid;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,29 +34,44 @@ public class PostController {
         this.postRepository = postRepository;
     }
 
+    @Operation(summary = "Get All Posts")
     @GetMapping
     public List<Post> getAllPosts() {
         return postRepository.findAll();
     }
 
+    @Operation(summary = "Get Post by Id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Post found"),
+            @ApiResponse(responseCode = "404", description = "Post with that id not found")
+    })
     @GetMapping(ID)
-    public Post getPostById(@PathVariable final Long id) {
+    public Post getPostById(@Parameter(description = "Post id") @PathVariable final Long id) {
         return postRepository.findById(id).get();
     }
 
+    @Operation(summary = "Create New Post")
+    @ApiResponse(responseCode = "201", description = "Post created")
     @PostMapping
     @ResponseStatus(CREATED)
-    public Post createPost(@Valid @RequestBody final Post post) {
+    public Post createPost(@Parameter(description = "Post to save") @Valid @RequestBody final Post post) {
         return postRepository.save(post);
     }
 
+    @Operation(summary = "Update Existing Post")
+    @ApiResponse(responseCode = "200", description = "Post updated")
     @PutMapping
-    public Post updatePost(@Valid @RequestBody final Post post) {
+    public Post updatePost(@Parameter(description = "Post to update")@Valid @RequestBody final Post post) {
         return postRepository.save(post);
     }
 
+    @Operation(summary = "Delete Post by Id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Post deleted"),
+            @ApiResponse(responseCode = "404", description = "Post with that id not found")
+    })
     @DeleteMapping(ID)
-    public void deletePost(@PathVariable final Long id) {
+    public void deletePost(@Parameter(description = "Id of post to be deleted") @PathVariable final Long id) {
         postRepository.deleteById(id);
     }
 }
