@@ -71,7 +71,7 @@ public class PostController {
     @ApiResponse(responseCode = "200", description = "Post updated")
     @PutMapping
     @PreAuthorize(ONLY_POST_OWNER_BY_DTO)
-    public Post updatePost(@Parameter(description = "Post to update") @Valid @RequestBody final Post post) {
+    public Post updatePost(@Parameter(description = "Post to update") @Valid @RequestBody final Post newPost) {
         final Post oldPost = postRepository.findById(newPost.getId()).get();
         oldPost.setTitle(newPost.getTitle());
         oldPost.setBody(newPost.getBody());

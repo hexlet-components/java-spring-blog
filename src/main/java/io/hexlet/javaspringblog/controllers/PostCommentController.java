@@ -85,7 +85,7 @@ public class PostCommentController {
             @Parameter(description = "Comment to update")
             @Valid
             @RequestBody
-            final PostComment comment) {
+            final PostComment newComment) {
         final PostComment oldComment = commentRepository.findById(newComment.getId()).get();
         oldComment.setBody(newComment.getBody());
         return commentRepository.save(oldComment);
