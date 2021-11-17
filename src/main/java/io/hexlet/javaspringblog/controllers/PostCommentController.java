@@ -2,6 +2,10 @@ package io.hexlet.javaspringblog.controllers;
 
 import io.hexlet.javaspringblog.models.post.PostComment;
 import io.hexlet.javaspringblog.repositories.PostCommentRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.List;
 import javax.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -39,32 +43,62 @@ public class PostCommentController {
         this.commentRepository = commentRepository;
     }
 
+    @Operation(summary = "Get All Comments for Post")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Post found"),
+            @ApiResponse(responseCode = "404", description = "Post with that id not found")
+    })
     @GetMapping
-    public List<PostComment> getAllCommentsForPost(@RequestParam final Long postId) {
+    public List<PostComment> getAllCommentsForPost(
+            @Parameter(description = "Id of post comment for which should be found")
+            @RequestParam
+            final Long postId) {
         return commentRepository.findAllByPostId(postId);
     }
 
+    @Operation(summary = "Get Exact Comment by Id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Comment found"),
+            @ApiResponse(responseCode = "404", description = "Comment with that id not found")
+    })
     @GetMapping(ID)
-    public PostComment getCommentById(@PathVariable final Long id) {
+    public PostComment getCommentById(@Parameter(description = "Comment id") @PathVariable final Long id) {
         return commentRepository.findById(id).get();
     }
 
+    @Operation(summary = "Create New Comment")
+    @ApiResponse(responseCode = "201", description = "Comment created")
     @PostMapping
-    public PostComment createComment(@Valid @RequestBody final PostComment comment) {
+    public PostComment createComment(
+            @Parameter(description = "Comment to save")
+            @Valid
+            @RequestBody
+            final PostComment comment) {
         return commentRepository.save(comment);
     }
 
+    @Operation(summary = "Update Existing Comment")
+    @ApiResponse(responseCode = "200", description = "Comment updated")
     @PutMapping
     @PreAuthorize(ONLY_COMMENT_OWNER_BY_DTO)
-    public PostComment updateComment(@Valid @RequestBody final PostComment newComment) {
+    public PostComment updateComment(
+            @Parameter(description = "Comment to update")
+            @Valid
+            @RequestBody
+            final PostComment comment) {
         final PostComment oldComment = commentRepository.findById(newComment.getId()).get();
         oldComment.setBody(newComment.getBody());
         return commentRepository.save(oldComment);
     }
 
+    @Operation(summary = "Delete Comment by Id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Post deleted"),
+            @ApiResponse(responseCode = "404", description = "Post with that id not found")
+    })
     @DeleteMapping(ID)
     @PreAuthorize(ONLY_COMMENT_OWNER_BY_ID)
-    public void deleteComment(@PathVariable final Long id) {
+    public void deleteComment(@Parameter(description = "Id of comment to be deleted") @PathVariable final Long id) {
         commentRepository.deleteById(id);
     }
 }

@@ -51,6 +51,7 @@ dependencies {
   runtimeOnly 'org.postgresql:postgresql:42.2.24.jre7'
 
   compileOnly 'org.projectlombok:lombok:1.18.22'
+  compileOnly 'org.springdoc:springdoc-openapi-ui:1.5.12'
   annotationProcessor 'org.projectlombok:lombok:1.18.22'
 
   liquibaseRuntime 'org.postgresql:postgresql'

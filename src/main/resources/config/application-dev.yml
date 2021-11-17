@@ -14,6 +14,10 @@ server:
   error:
     include-stacktrace: on_param
 
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/blog
