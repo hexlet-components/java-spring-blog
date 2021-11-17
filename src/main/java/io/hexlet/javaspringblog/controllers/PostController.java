@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.List;
 import javax.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +27,15 @@ import static org.springframework.http.HttpStatus.CREATED;
 public class PostController {
 
     public static final String POST_CONTROLLER_PATH = "/posts";
-    public static final String ID = "{id}";
+    public static final String ID = "/{id}";
+
+    private static final String ONLY_POST_OWNER_BY_ID = """
+            @postRepository.findById(#id).get().getCreatedBy() == authentication.getName()
+        """;
+
+    private static final String ONLY_POST_OWNER_BY_DTO = """
+            @postRepository.findById(#newPost.getId()).get().getCreatedBy() == authentication.getName()
+        """;
 
     private final PostRepository postRepository;
 
@@ -61,8 +70,13 @@ public class PostController {
     @Operation(summary = "Update Existing Post")
     @ApiResponse(responseCode = "200", description = "Post updated")
     @PutMapping
-    public Post updatePost(@Parameter(description = "Post to update")@Valid @RequestBody final Post post) {
-        return postRepository.save(post);
+    @PreAuthorize(ONLY_POST_OWNER_BY_DTO)
+    public Post updatePost(@Parameter(description = "Post to update") @Valid @RequestBody final Post post) {
+        final Post oldPost = postRepository.findById(newPost.getId()).get();
+        oldPost.setTitle(newPost.getTitle());
+        oldPost.setBody(newPost.getBody());
+        oldPost.setPostStatus(newPost.getPostStatus());
+        return postRepository.save(oldPost);
     }
 
     @Operation(summary = "Delete Post by Id")
@@ -71,6 +85,7 @@ public class PostController {
             @ApiResponse(responseCode = "404", description = "Post with that id not found")
     })
     @DeleteMapping(ID)
+    @PreAuthorize(ONLY_POST_OWNER_BY_ID)
     public void deletePost(@Parameter(description = "Id of post to be deleted") @PathVariable final Long id) {
         postRepository.deleteById(id);
     }

@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.List;
 import javax.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +26,16 @@ import static io.hexlet.javaspringblog.controllers.PostCommentController.COMMENT
 public class PostCommentController {
 
     public static final String COMMENT_CONTROLLER_PATH = "/comments";
-    public static final String ID = "{id}";
+    public static final String ID = "/{id}";
+
+    private static final String ONLY_COMMENT_OWNER_BY_ID = """
+            @commentRepository.findById(#id).get().getCreatedBy() == authentication.getName()
+        """;
+
+    private static final String ONLY_COMMENT_OWNER_BY_DTO = """
+            @commentRepository.findById(#newComment.getId()).get().getCreatedBy() == authentication.getName()
+        """;
+
 
     private final PostCommentRepository commentRepository;
 
@@ -70,12 +80,15 @@ public class PostCommentController {
     @Operation(summary = "Update Existing Comment")
     @ApiResponse(responseCode = "200", description = "Comment updated")
     @PutMapping
+    @PreAuthorize(ONLY_COMMENT_OWNER_BY_DTO)
     public PostComment updateComment(
             @Parameter(description = "Comment to update")
             @Valid
             @RequestBody
             final PostComment comment) {
-        return commentRepository.save(comment);
+        final PostComment oldComment = commentRepository.findById(newComment.getId()).get();
+        oldComment.setBody(newComment.getBody());
+        return commentRepository.save(oldComment);
     }
 
     @Operation(summary = "Delete Comment by Id")
@@ -84,6 +97,7 @@ public class PostCommentController {
             @ApiResponse(responseCode = "404", description = "Post with that id not found")
     })
     @DeleteMapping(ID)
+    @PreAuthorize(ONLY_COMMENT_OWNER_BY_ID)
     public void deleteComment(@Parameter(description = "Id of comment to be deleted") @PathVariable final Long id) {
         commentRepository.deleteById(id);
     }

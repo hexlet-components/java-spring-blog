@@ -47,6 +47,7 @@ dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:2.5.5'
   implementation 'org.springframework.boot:spring-boot-starter-validation:2.5.5'
   implementation 'org.liquibase:liquibase-core:4.4.3'
+  implementation 'org.springframework.boot:spring-boot-starter-security:2.5.5'
   runtimeOnly 'org.postgresql:postgresql:42.2.24.jre7'
 
   compileOnly 'org.projectlombok:lombok:1.18.22'
@@ -59,6 +60,8 @@ dependencies {
   liquibaseRuntime 'org.liquibase.ext:liquibase-hibernate5:4.5.0'
   liquibaseRuntime sourceSets.main.output
 
+  testImplementation 'org.springframework.boot:spring-boot-starter-security:2.5.6'
+  testImplementation 'org.springframework.security:spring-security-test:5.5.1'
   testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.5'
   testImplementation 'com.tobedevoured.modelcitizen:spring:0.8.3'
   testRuntimeOnly 'com.h2database:h2:1.4.200'
