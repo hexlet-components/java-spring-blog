@@ -20,11 +20,10 @@ springdoc:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/blog
-    username: developer
-    password: password
-  liquibase:
-    change-log: classpath:db/changelog/changelog-master.yml
+    username: ""
+    password: ""
+    url: "jdbc:h2:./hexlet-spring-blog"
+
   jpa:
     show-sql: true
     properties:
@@ -32,8 +31,19 @@ spring:
         generate_statistics: true
         use_sql_comments: true
         format_sql: true
+
   thymeleaf:
     cache: false
+
+  # Настраиваем консоль Н2
+  # Это позволит нам открыть её в браузере по указанному пути
+  h2:
+    console:
+      enabled: true
+      # Указываем путь, по которому будет открываться консоль
+      path: /h2console/
+      settings:
+        web-allow-others: true
 
 logging:
   level:
