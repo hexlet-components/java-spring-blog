@@ -18,7 +18,7 @@ import static io.hexlet.javaspringblog.config.SpringConfigForIT.TEST_PROFILE;
 @PropertySource(value = "classpath:/config/application.yml")
 public class SpringConfigForIT {
 
-    public static final String TEST_PROFILE = "test";
+    public final static String TEST_PROFILE = "test";
 
     @Bean
     public RestTemplate restTemplate() {
