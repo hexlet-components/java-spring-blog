@@ -1,24 +1,34 @@
 // @ts-check
 
-const apiPath = process.env.REACT_APP_API_URL;
+import path from 'path';
+
+// const hostname = 'localhost';
+// const port = process.env.REACT_APP_PORT || 5001;
+const apiUrl = '/api';
+const { host, protocol } = window.location;
+const fullHost = `${protocol}//${host}`;
+
+const buildUrl = (part) => () => {
+  const urlPath = path.join(apiUrl, part);
+  const url = new URL(urlPath, fullHost);
+  return url.toString();
+};
+
+const buildLocalUrl = (part) => () => `/${part}`;
 
 const routes = {
-  loginPath: () => [apiPath, 'login'].join('/'),
-  signupPath: () => [apiPath, 'signup'].join('/'),
-  dataPath: () => [apiPath, 'data'].join('/'),
-  homePagePath: () => '/',
-  loginPagePath: () => '/login',
-  signupPagePath: () => '/signup',
-  usersPagePath: () => '/users',
-  statusesPagePath: () => '/statuses',
-  labelsPagePath: () => '/labels',
-  tasksPagePath: () => '/tasks',
-  apiTasks: () => `${apiPath}/tasks`,
-  apiLabels: () => `${apiPath}/labels`,
-  apiStatuses: () => `${apiPath}/statuses`,
-  apiUsers: () => `${apiPath}/users`,
-  apiRegister: () => `${apiPath}/users/register`,
-  apiLogin: () => `${apiPath}/users/login`,
+  homePagePath: buildLocalUrl(''),
+  loginPagePath: buildLocalUrl('login'),
+  signupPagePath: buildLocalUrl('signup'),
+  usersPagePath: buildLocalUrl('users'),
+  statusesPagePath: buildLocalUrl('statuses'),
+  labelsPagePath: buildLocalUrl('labels'),
+  tasksPagePath: buildLocalUrl('tasks'),
+  apiTasks: buildUrl('tasks'),
+  apiLabels: buildUrl('labels'),
+  apiStatuses: buildUrl('statuses'),
+  apiUsers: buildUrl('users'),
+  apiLogin: buildUrl('login'),
 };
 
 export default routes;

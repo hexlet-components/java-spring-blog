@@ -6,10 +6,9 @@ import { Form, Button } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
-import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-import { useAuth } from '../hooks/index.js';
+import { useAuth, useNotify } from '../hooks/index.js';
 import routes from '../routes.js';
 
 
@@ -31,6 +30,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   const auth = useAuth();
+  const notify = useNotify();
 
   const f = useFormik({
     initialValues: {
@@ -44,13 +44,17 @@ const Login = () => {
         const { data: token } = await axios.post(routes.apiLogin(), userData);
 
         auth.logIn({ ...formData, token });
-        // dispatch(actions.addTask(task));
-        toast(t('loginSuccess'));
         const { from } = location.state || { from: { pathname: routes.homePagePath() } };
         navigate(from);
+        notify.addMessage(t('loginSuccess'));
       } catch (e) {
+        if (e.response?.status === 401) {
+          notify.addErrors([ { defaultMessage: t('loginFail') } ]);
+
+        } else {
+          notify.addErrors([ { defaultMessage: e.message }]);
+        }
         setSubmitting(false);
-        toast.error(t('loginFailed'));
       }
     },
     validateOnBlur: false,

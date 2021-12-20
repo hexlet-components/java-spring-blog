@@ -1,16 +1,12 @@
 // @ts-check
 
-import React, { useContext, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-  BrowserRouter as Router,
   Routes,
   Route,
+  useNavigate,
 } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
-
-import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { ToastContainer } from 'react-toastify';
 
 import { AuthContext } from '../contexts/index.js';
 import Navbar from './Navbar.jsx';
@@ -18,29 +14,23 @@ import Welcome from './Welcome.jsx';
 import Login from './Login.jsx';
 import Registration from './Registration.jsx';
 import NotFoundPage from './NotFoundPage.jsx';
-// import Users from './Users/Users.jsx';
-// import EditUser from './Users/EditUser.jsx';
-
-// import Statuses from './Statuses/Statuses.jsx';
-// import EditStatus from './Statuses/EditStatus.jsx';
-// import NewStatus from './Statuses/NewStatus.jsx';
-
-// import Labels from './Labels/Labels.jsx';
-// import EditLabel from './Labels/EditLabel.jsx';
-// import NewLabel from './Labels/NewLabel.jsx';
-
-// import Task from './Tasks/Task.jsx';
-// import Tasks from './Tasks/Tasks.jsx';
-// import NewTask from './Tasks/NewTask.jsx';
-// import EditTask from './Tasks/EditTask.jsx';
+import Users from './Users/Users.jsx';
+import EditUser from './Users/EditUser.jsx';
 
 import routes from '../routes.js';
+import Notification from './Notification.jsx';
+
+import { useNotify } from '../hooks/index.js';
+
+import getLogger from '../lib/logger.js';
+const log = getLogger('App');
+log.enabled = true;
 
 const AuthProvider = ({ children }) => {
   const currentUser = JSON.parse(localStorage.getItem('user'));
   const navigate = useNavigate();
-  const { t } = useTranslation();
   const [user, setUser] = useState(currentUser ? currentUser : null);
+
   const logIn = (userData) => {
     userData.username = userData.name;
     localStorage.setItem('user', JSON.stringify(userData));
@@ -52,7 +42,6 @@ const AuthProvider = ({ children }) => {
     setUser(null);
     const from = { pathname: routes.homePagePath() };
 
-    toast(t('logoutSuccess'));
     navigate(from);
   };
 
@@ -72,30 +61,30 @@ const AuthProvider = ({ children }) => {
   );
 };
 
-// const PrivateRoute = ({ children, ...props }) => {
-//   const auth = useAuth();
+const App = () => {
+  const notify = useNotify();
+  const navigate = useNavigate();
+  useEffect(() => {
+    // TODO: перенести нотификацию в слайсы
+    notify.clean();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigate]);
 
-//   return (
-//     <Route
-//       // eslint-disable-next-line react/jsx-props-no-spreading
-//       {...props}
-//       render={({ location }) => (auth.user
-//         ? children
-//         : <Redirect to={{ pathname: routes.loginPagePath(), state: { from: location } }} />)}
-//     />
-//   );
-// };
-
-const App = () => (
-  <Router>
+  return (
     <AuthProvider>
       <Navbar />
       <div className="container wrapper flex-grow-1">
-        <h1 className="my-4" />
+        <Notification />
+        <h1 className="my-4">{null}</h1>
         <Routes>
           <Route path={routes.homePagePath()} element={<Welcome />} />
           <Route path={routes.loginPagePath()} element={<Login />} />
           <Route path={routes.signupPagePath()} element={<Registration />} />
+
+          <Route path={routes.usersPagePath()}>
+            <Route path="" element={<Users />} />
+            <Route path=":userId/edit" element={<EditUser />} />
+          </Route>
 
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
@@ -107,7 +96,7 @@ const App = () => (
       </footer>
       <ToastContainer />
     </AuthProvider>
-  </Router>
-);
+  );
+};
 
 export default App;

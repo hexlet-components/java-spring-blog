@@ -50,8 +50,14 @@ const ru = {
     labelEdited: 'Метка изменена',
     logoutSuccess: 'Успешно',
     loginSuccess: 'Вы авторизованы',
+    loginFail: 'Неправильный емейл или пароль',
     registrationSuccess: 'Успешная регистрация',
+    registrationFail: 'Не удалось зарегистрировать',
     taskCreated: 'Задача создана',
+    firstName: 'Имя',
+    lastName: 'Фамилия',
+    userDeleteDenied: 'Вы не можете редактировать или удалять другого пользователя',
+    userDeleted: 'Пользователь удалён',
   },
 };
 

@@ -6,57 +6,53 @@ import { Form, Button } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import axios from 'axios';
 import * as yup from 'yup';
-import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 
-import { useAuth } from '../../hooks/index.js';
+import { useAuth, useNotify } from '../../hooks/index.js';
 import routes from '../../routes.js';
 
 import getLogger from '../../lib/logger.js';
 const log = getLogger('registration');
 log.enabled = true;
 
-const getValidationSchema = () => yup.object().shape({
-  name: yup
-    .string()
-    .required('modals.required')
-    .min(3, 'modals.min')
-    .max(20, 'modals.max'),
-  email: yup
-    .string()
-    .required('modals.required'),
-  password: yup
-    .string()
-    .required('modals.required')
-    .min(3, 'modals.min')
-    .max(20, 'modals.max'),
-});
+const getValidationSchema = () => yup.object().shape({});
 
 const Registration = () => {
   const { t } = useTranslation();
   const auth = useAuth();
   const navigate = useNavigate();
   const params = useParams();
+  const notify = useNotify();
 
-  const [user, setUser] = useState({name: ''});
+  const [user, setUser] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
-      // TODO: api
-      const { data } = await axios.get(`${routes.apiUsers()}/${params.userId}`, { headers: auth.getAuthHeader() });
-      setUser(data);
+      try {
+        const { data } = await axios.get(`${routes.apiUsers()}/${params.userId}`, { headers: auth.getAuthHeader() });
+        setUser(data);
+      } catch (e) {
+        if (e.response?.status === 401) {
+          const from = { pathname: routes.loginPagePath() };
+          navigate(from);
+          notify.addErrors([ { defaultMessage: t('Доступ запрещён! Пожалуйста, авторизируйтесь.') } ]);
+        } else if (e.response?.status === 422 && e.response?.data) {
+          notify.addErrors(e.response?.data);
+        } else {
+          notify.addErrors([{ defaultMessage: e.message }]);
+        }
+      }
     };
     fetchData();
-  }, [params.userId, auth]);
-
-  const [name, surname] = user.name.split(' ');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const f = useFormik({
     enableReinitialize: true,
     initialValues: {
-      name,
-      surname,
+      name: user.firstName,
+      surname: user.lastName,
       email: user.email,
       password: user.password,
     },
@@ -65,22 +61,32 @@ const Registration = () => {
       try {
         const user = {
           ...userData,
-          name: `${userData.name} ${userData.surname}`,
+          firstName: userData.name,
+          lastName: userData.surname,
         };
         log('create', user);
-        const { data } = await axios.post(routes.apiRegister(), user, { headers: auth.getAuthHeader() });
+        const { data } = await axios.post(routes.apiUser(), user, { headers: auth.getAuthHeader() });
 
-        // TODO: api login
         auth.logIn(data);
 
-        toast(t('registrationSuccess'));
         log('data:', data);
         const from = { pathname: routes.homePagePath() };
         navigate(from);
+        notify.addMessage(t('registrationSuccess'));
         // dispatch(actions.addTask(task));
       } catch (e) {
         log('create.error', e);
         setSubmitting(false);
+        if (e.response?.status === 401) {
+          const from = { pathname: routes.loginPagePath() };
+          navigate(from);
+          notify.addErrors([ { defaultMessage: t('Доступ запрещён! Пожалуйста, авторизируйтесь.') } ]);
+        } else if (e.response?.status === 422) {
+          notify.addErrors(e.response?.data);
+        } else {
+          notify.addErrors([{ defaultMessage: e.message }]);
+        }
+
       }
     },
     validateOnBlur: false,

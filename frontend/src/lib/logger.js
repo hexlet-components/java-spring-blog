@@ -1,3 +1,4 @@
 import debug from 'debug';
 
-export default (namespace) => debug(`frontend:${namespace}`);
+const logger = (namespace) => debug(`frontend:${namespace}`);
+export default logger;

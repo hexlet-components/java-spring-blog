@@ -1,17 +1,11 @@
-# FIXME: префикс добавляется ко всему в т.ч. к фронту
-# найти грамотное решение и убрать из контроллеров префикс /api
-# server:
-#   servlet:
-#     context-path: /api
+server:
+  port: ${PORT:5000}
+
+base-url: /api
 
 spring:
   application:
-    name: taskManager
-
-  jpa:
-    open-in-view: false
-    hibernate:
-      ddl-auto: create
+    name: hexletBlog
 
   liquibase:
     enabled: true

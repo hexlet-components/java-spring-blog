@@ -1,4 +1,6 @@
-export default {
+const en = {
   translation: {
   },
 };
+
+export default en;

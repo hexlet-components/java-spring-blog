@@ -1,15 +1,3 @@
-# ===================================================================
-# Spring Boot configuration for the "dev" profile.
-#
-# This configuration overrides the application.yml file.
-# ===================================================================
-
-# ===================================================================
-# Standard Spring Boot properties.
-# Full reference is available at:
-# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
-# ===================================================================
-
 server:
   error:
     include-stacktrace: on_param
@@ -22,18 +10,10 @@ spring:
   datasource:
     username: ""
     password: ""
-    url: "jdbc:h2:./hexlet-spring-blog"
+    url: "jdbc:h2:./hexletBlog"
 
   jpa:
     show-sql: true
-    properties:
-      hibernate:
-        generate_statistics: true
-        use_sql_comments: true
-        format_sql: true
-
-  thymeleaf:
-    cache: false
 
   # Настраиваем консоль Н2
   # Это позволит нам открыть её в браузере по указанному пути
@@ -49,6 +29,6 @@ logging:
   level:
     root: INFO
     web: DEBUG
-    org.hibernate.type.descriptor.sql: TRACE
-    org.springframework.security: TRACE
-    io.hexlet.typoreporter: DEBUG
+    # org.hibernate.type.descriptor.sql: TRACE
+    # org.springframework.security: TRACE
+    # io.hexlet.typoreporter: DEBUG

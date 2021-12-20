@@ -4,9 +4,6 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card, Button } from 'react-bootstrap';
 
-import { useAuth } from '../hooks/index.js';
-import routes from '../routes.js';
-
 const Welcome = () => {
   const { t } = useTranslation();
   return (

@@ -6,35 +6,21 @@ import { Form, Button } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import axios from 'axios';
 import * as yup from 'yup';
-import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
-import { useAuth } from '../hooks/index.js';
+import { useAuth, useNotify } from '../hooks/index.js';
 import routes from '../routes.js';
 
 import getLogger from '../lib/logger.js';
 const log = getLogger('registration');
 log.enabled = true;
 
-const getValidationSchema = () => yup.object().shape({
-  name: yup
-    .string()
-    .required('modals.required')
-    .min(3, 'modals.min')
-    .max(20, 'modals.max'),
-  email: yup
-    .string()
-    .required('modals.required'),
-  password: yup
-    .string()
-    .required('modals.required')
-    .min(3, 'modals.min')
-    .max(20, 'modals.max'),
-});
+const getValidationSchema = () => yup.object().shape({});
 
 const Registration = () => {
   const { t } = useTranslation();
   const auth = useAuth();
+  const notify = useNotify();
   const navigate = useNavigate();
 
   const f = useFormik({
@@ -49,20 +35,28 @@ const Registration = () => {
       try {
         const user = {
           ...userData,
-          name: `${userData.name} ${userData.surname}`,
+          firstName: userData.name,
+          lastName: userData.surname,
         };
-        const { data: token } = await axios.post(routes.apiRegister(), user);
+        const { data: token } = await axios.post(routes.apiUsers(), user);
 
-        // TODO: api login
         auth.logIn({ ...userData, token });
 
-        toast(t('registrationSuccess'));
         const from = { pathname: routes.homePagePath() };
+        notify.addMessage(t('registrationSuccess'));
         navigate(from);
         // dispatch(actions.addTask(task));
       } catch (e) {
         log('create.error', e);
         setSubmitting(false);
+        // TODO: убрать обработку ошибок в ErrorBoundaries
+        if (e.response?.status === 400) {
+          notify.addErrors([{ defaultMessage: t('registrationFail') }]);
+        } else if (e.response?.status === 422 && e.response?.data) {
+          notify.addErrors(e.response?.data);
+        } else {
+          notify.addErrors([{ defaultMessage: e.message }]);
+        }
       }
     },
     validateOnBlur: false,

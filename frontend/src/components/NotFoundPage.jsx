@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 const NotFoundPage = () => {
   const { t } = useTranslation();
@@ -12,7 +13,7 @@ const NotFoundPage = () => {
       </h1>
       <p className="text-muted">
         {t('notFound.message')}
-        <a href="/">{t('notFound.linkText')}</a>
+        <Link to="/">{t('notFound.linkText')}</Link>
       </p>
     </div>
   );
