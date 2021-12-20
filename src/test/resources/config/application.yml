@@ -2,7 +2,7 @@ base-url: ""
 
 spring:
   application:
-    name: taskManagerTest
+    name: hexletBlog
 
   jpa:
     show-sql: true

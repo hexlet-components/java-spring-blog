@@ -1,22 +1,19 @@
-package hexlet.code.utils;
+package io.hexlet.javaspringblog.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hexlet.code.dto.UserCreateDto;
-import hexlet.code.model.User;
-import hexlet.code.repository.LabelRepository;
-import hexlet.code.repository.TaskRepository;
-import hexlet.code.repository.TaskStatusRepository;
-import hexlet.code.repository.UserRepository;
-import hexlet.code.service.UserAuthenticationService;
+import io.hexlet.javaspringblog.dto.UserCreateDto;
+import io.hexlet.javaspringblog.model.User;
+import io.hexlet.javaspringblog.repository.UserRepository;
+import io.hexlet.javaspringblog.service.UserAuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-import static hexlet.code.controller.UserController.USER_CONTROLLER_PATH;
+import static io.hexlet.javaspringblog.controller.UserController.USER_CONTROLLER_PATH;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -47,19 +44,7 @@ public class TestUtils {
     @Autowired
     private UserAuthenticationService authenticationService;
 
-    @Autowired
-    private TaskStatusRepository taskStatusRepository;
-
-    @Autowired
-    private TaskRepository taskRepository;
-
-    @Autowired
-    private LabelRepository labelRepository;
-
     public void tearDown() {
-        taskRepository.deleteAll();
-        labelRepository.deleteAll();
-        taskStatusRepository.deleteAll();
         userRepository.deleteAll();
     }
 
