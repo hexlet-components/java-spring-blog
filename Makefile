@@ -1,36 +1,35 @@
-build:
-	./gradlew
-
-# Run single test
-# ./gradlew test --continuous --tests "*HomeControllerTests"
-test:
-	./gradlew test
+setup:
+	gradle wrapper --gradle-version 7.3
 
 clean:
 	./gradlew clean
 
-deps-update:
-	./gradlew dependencyUpdates --refresh-dependencies -Drevision=release
-
-check:
-	./gradlew check
-
-recompile-onfly:
-	./gradlew --watch-fs processResources -t
-
-boot-run:
-	./gradlew bootRun
+build:
+	./gradlew clean build
 
 start:
-	heroku local
+	./gradlew bootRun --args='--spring.profiles.active=dev'
 
-db-diff-changelog:
-	./gradlew diffChangeLog
+start-prod:
+	./gradlew bootRun --args='--spring.profiles.active=prod'
 
-db-migrate:
-	./gradlew update
+install:
+	./gradlew installDist
 
-gradle-upgrade:
-	./gradlew wrapper --gradle-version 6.8.3
+start-dist:
+	./build/install/app/bin/app
 
-.PHONY: build
+lint:
+	./gradlew checkstyleMain checkstyleTest
+
+test:
+	./gradlew test
+
+report:
+	./gradlew jacocoTestReport
+
+check-updates:
+	./gradlew dependencyUpdates
+
+generate-migrations:
+	gradle diffChangeLog

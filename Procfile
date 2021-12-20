@@ -1,2 +1,1 @@
-server: make boot-run
-compiling: make recompile-onfly
+web: ./build/install/app/bin/app

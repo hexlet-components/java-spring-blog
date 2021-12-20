@@ -1,13 +1,16 @@
 server:
-  port: 8080
+  port: ${PORT:5000}
+
+base-url: /api
 
 spring:
   application:
-    name: javaspringblogApplication
-  jpa:
-    open-in-view: false
-    hibernate:
-      ddl-auto: create
+    name: hexletBlog
+
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/changelog-master.xml
+
   mvc:
     hiddenmethod:
       filter:
