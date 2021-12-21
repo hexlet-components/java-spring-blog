@@ -61,33 +61,32 @@ const Comments = () => {
     }
   };
   return (
-    <Table striped hover>
-      <thead>
-        <tr>
-          <th>{t('id')}</th>
-          <th>{t('fullName')}</th>
-          <th>{t('email')}</th>
-          <th>{t('createDate')}</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {comments.map((comment) => (
-          <tr key={comment.id}>
-            <td>{comment.id}</td>
-            <td>{`${comment.firstName} ${comment.lastName}`}</td>
-            <td>{comment.email}</td>
-            <td>{new Date(comment.created).toLocaleString('ru')}</td>
-            <td>
-              <Link to={`${routes.commentPagePath()}/${comment.id}/edit`}>{t('edit')}</Link>
-              <Form onSubmit={(event) => removeComment(event, comment.id)}>
-                <Button type="submit" variant="link">Удалить</Button>
-              </Form>
-            </td>
+    <>
+      <Link to={`${routes.commentsPagePath()}/new`}>{t('createComment')}</Link>
+      <Table striped hover>
+        <thead>
+          <tr>
+            <th>{t('id')}</th>
+            <th>{t('body')}</th>
+            <th></th>
           </tr>
-        ))}
-      </tbody>
-    </Table>
+        </thead>
+        <tbody>
+          {comments.map((comment) => (
+            <tr key={comment.id}>
+              <td>{comment.id}</td>
+              <td>{comment.body}</td>
+              <td>
+                <Link to={`${routes.commentsPagePath()}/${comment.id}/edit`}>{t('edit')}</Link>
+                <Form onSubmit={(event) => removeComment(event, comment.id)}>
+                  <Button type="" variant="link">Удалить</Button>
+                </Form>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+    </>
   );
 };
 

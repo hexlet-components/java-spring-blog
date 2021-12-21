@@ -1,6 +1,6 @@
 package io.hexlet.javaspringblog.controllers;
 
-import io.hexlet.javaspringblog.model.post.PostComment;
+import io.hexlet.javaspringblog.model.PostComment;
 import io.hexlet.javaspringblog.repositories.PostCommentRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import static io.hexlet.javaspringblog.controllers.PostCommentController.COMMENT_CONTROLLER_PATH;
 
 @RestController
-@RequestMapping(COMMENT_CONTROLLER_PATH)
+@RequestMapping("${base-url}" + COMMENT_CONTROLLER_PATH)
 public class PostCommentController {
 
     public static final String COMMENT_CONTROLLER_PATH = "/comments";

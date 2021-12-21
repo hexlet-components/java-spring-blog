@@ -1,4 +1,4 @@
-package io.hexlet.javaspringblog.model.user;
+package io.hexlet.javaspringblog.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;

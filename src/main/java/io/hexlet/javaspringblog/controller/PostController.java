@@ -1,6 +1,6 @@
 package io.hexlet.javaspringblog.controllers;
 
-import io.hexlet.javaspringblog.model.post.Post;
+import io.hexlet.javaspringblog.model.Post;
 import io.hexlet.javaspringblog.repositories.PostRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -23,7 +23,7 @@ import static io.hexlet.javaspringblog.controllers.PostController.POST_CONTROLLE
 import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
-@RequestMapping(POST_CONTROLLER_PATH)
+@RequestMapping("${base-url}" + POST_CONTROLLER_PATH)
 public class PostController {
 
     public static final String POST_CONTROLLER_PATH = "/posts";

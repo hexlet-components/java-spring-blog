@@ -61,33 +61,32 @@ const Posts = () => {
     }
   };
   return (
-    <Table striped hover>
-      <thead>
-        <tr>
-          <th>{t('id')}</th>
-          <th>{t('fullName')}</th>
-          <th>{t('email')}</th>
-          <th>{t('createDate')}</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {posts.map((post) => (
-          <tr key={post.id}>
-            <td>{post.id}</td>
-            <td>{`${post.firstName} ${post.lastName}`}</td>
-            <td>{post.email}</td>
-            <td>{new Date(post.created).toLocaleString('ru')}</td>
-            <td>
-              <Link to={`${routes.postPagePath()}/${post.id}/edit`}>{t('edit')}</Link>
-              <Form onSubmit={(event) => removePost(event, post.id)}>
-                <Button type="submit" variant="link">Удалить</Button>
-              </Form>
-            </td>
+    <>
+      <Link to={`${routes.postsPagePath()}/new`}>{t('createPost')}</Link>
+      <Table striped hover>
+        <thead>
+          <tr>
+            <th>{t('id')}</th>
+            <th>{t('postTitle')}</th>
+            <th></th>
           </tr>
-        ))}
-      </tbody>
-    </Table>
+        </thead>
+        <tbody>
+          {posts.map((post) => (
+            <tr key={post.id}>
+              <td>{post.id}</td>
+              <td>{post.title}</td>
+              <td>
+                <Link to={`${routes.postsPagePath()}/${post.id}/edit`}>{t('edit')}</Link>
+                <Form onSubmit={(event) => removePost(event, post.id)}>
+                  <Button type="submit" variant="link">Удалить</Button>
+                </Form>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+    </>
   );
 };
 

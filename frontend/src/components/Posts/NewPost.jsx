@@ -73,7 +73,7 @@ const NewPost = () => {
             id="title"
             type="text" />
           <Form.Control.Feedback type="invalid">
-            {t(f.errors.name)}
+            {t(f.errors.title)}
           </Form.Control.Feedback>
         </Form.Group>
         <Form.Group className="mb-3">

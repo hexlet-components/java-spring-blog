@@ -1,6 +1,6 @@
 // @ts-check
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, Button } from 'react-bootstrap';
 import { useFormik } from 'formik';
@@ -22,13 +22,38 @@ const NewComment = () => {
   const auth = useAuth();
   const notify = useNotify();
 
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { data } = await axios.get(routes.apiPosts(), { headers: auth.getAuthHeader() });
+        setPosts(data);
+      } catch (e) {
+        if (e.response?.status === 401) {
+          const from = { pathname: routes.loginPagePath() };
+          navigate(from);
+          notify.addErrors([ { defaultMessage: t('Доступ запрещён! Пожалуйста, авторизируйтесь.') } ]);
+        } else if (e.response?.status === 422 && e.response?.data) {
+          notify.addErrors(e.response?.data);
+        } else {
+          notify.addErrors([{ defaultMessage: e.message }]);
+        }
+      }
+    };
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const f = useFormik({
     initialValues: {
       body: '',
+      post: null,
     },
     validationSchema: getValidationSchema(),
-    onSubmit: async ({ body }, { setSubmitting, setErrors }) => {
-      const comment = { body };
+    onSubmit: async (data, { setSubmitting, setErrors }) => {
+      const post = posts.find((p) => p.id.toString() === data.post);
+      const comment = { ...data, post };
       try {
         log('comment.create', comment);
 
@@ -75,6 +100,24 @@ const NewComment = () => {
             {t(f.errors.body)}
           </Form.Control.Feedback>
         </Form.Group>
+        <Form.Group className="mb-3" controlId="post">
+          <Form.Label>{t('post')}</Form.Label>
+          <Form.Select
+            value={f.values.post}
+            disabled={f.isSubmitting}
+            onChange={f.handleChange}
+            onBlur={f.handleBlur}
+            isInvalid={f.errors.post && f.touched.post}
+            name="post"
+          >
+            <option value=""></option>
+            {posts.map((post) => <option key={post.id} value={post.id}>{post.title}</option>)}
+          </Form.Select>
+          <Form.Control.Feedback type="invalid">
+            {t(f.errors.post)}
+          </Form.Control.Feedback>
+        </Form.Group>
+
         <Button variant="primary" type="submit" disabled={f.isSubmitting}>
           {t('create')}
         </Button>

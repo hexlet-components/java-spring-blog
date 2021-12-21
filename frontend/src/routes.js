@@ -28,7 +28,7 @@ const routes = {
   apiUsers: buildUrl('users'),
   apiLogin: buildUrl('login'),
   apiPosts: buildUrl('posts'),
-  apiComments: buildUrl('posts'),
+  apiComments: buildUrl('comments'),
 };
 
 export default routes;

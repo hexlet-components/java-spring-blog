@@ -1,5 +1,6 @@
-package io.hexlet.javaspringblog.model.post;
+package io.hexlet.javaspringblog.model;
 
+import io.hexlet.javaspringblog.model.Post;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import javax.persistence.Entity;

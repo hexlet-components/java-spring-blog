@@ -90,14 +90,8 @@ const App = () => {
           <Route path={routes.signupPagePath()} element={<Registration />} />
 
           <Route path={routes.postsPagePath()}>
-            <Route path="" element={<Comments />} />
-            <Route path=":statusId/edit" element={<EditComment />} />
-            <Route path="new" element={<NewComment />} />
-          </Route>
-
-          <Route path={routes.commentsPagePath()}>
             <Route path="" element={<Posts />} />
-            <Route path=":labelId/edit" element={<EditPost />} />
+            <Route path=":statusId/edit" element={<EditPost />} />
             <Route path="new" element={<NewPost />} />
           </Route>
 

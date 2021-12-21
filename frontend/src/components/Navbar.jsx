@@ -23,7 +23,6 @@ const Navbar = () => {
           <Link className="nav-link" to={routes.homePagePath()}>{t('hexletBlog', { defaultValue: 'Блог' })}</Link>
           <Link className="nav-link" to={routes.usersPagePath()}>{t('users')}</Link>
           {!!user && <Link className="nav-link" to={routes.postsPagePath()}>{t('posts')}</Link>}
-          {!!user && <Link className="nav-link" to={routes.commentsPagePath()}>{t('comments')}</Link>}
         </Nav>
         <Nav className="justify-content-end">
           {user ? (

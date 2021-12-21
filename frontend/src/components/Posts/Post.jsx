@@ -72,45 +72,13 @@ const Post = () => {
         <Card.Title>{post.title}</Card.Title>
       </Card.Header>
       <Card.Body>
-        <p>{post.description}</p>
+        <p>{post.body}</p>
         <Container>
           <Row>
             <Col>
-              {t('author')}
-            </Col>
-            <Col>
-              {`${post.author?.firstName ?? ''} ${post.author?.lastName ?? ''}`}
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              {t('executor')}
-            </Col>
-            <Col>
-              {`${post.executor?.firstName ?? ''} ${post.executor?.lastName ?? ''}`}
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              {t('status')}
-            </Col>
-            <Col>
-              {post.state?.name}
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              {t('createDate')}
-            </Col>
-            <Col>
-              {new Date(post.createdAt).toLocaleString('ru')}
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              {t('labels')}:
+              {t('comments')}:
               <ul>
-                {post?.labels?.map((label) => (<li>{label.name}</li>))}
+                {post?.comments?.map((comment) => (<li>{comment.body}</li>))}
               </ul>
             </Col>
           </Row>

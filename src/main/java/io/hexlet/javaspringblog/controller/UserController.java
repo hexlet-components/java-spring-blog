@@ -1,7 +1,7 @@
 package io.hexlet.javaspringblog.controller;
 
 import io.hexlet.javaspringblog.dto.UserCreateDto;
-import io.hexlet.javaspringblog.model.user.User;
+import io.hexlet.javaspringblog.model.User;
 import io.hexlet.javaspringblog.repository.UserRepository;
 import io.hexlet.javaspringblog.service.UserAuthenticationService;
 import io.hexlet.javaspringblog.service.UserService;

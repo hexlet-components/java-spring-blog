@@ -25,11 +25,15 @@ const EditComment = () => {
   const auth = useAuth();
   const notify = useNotify();
 
+  const [posts, setPosts] = useState([]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const { data } = await axios.get(`${routes.apiComments()}/${params.commentId}`, { headers: auth.getAuthHeader() });
         setComment(data);
+        const { data: postsData } = await axios.get(routes.apiPosts(), { headers: auth.getAuthHeader() });
+        setPosts(postsData);
       } catch (e) {
         if (e.response?.status === 401) {
           const from = { pathname: routes.loginPagePath() };
@@ -48,13 +52,15 @@ const EditComment = () => {
     enableReinitialize: true,
     initialValues: {
       body: comment.body,
+      posts: comment.posts,
     },
     validationSchema: getValidationSchema(),
-    onSubmit: async ({ body }, { setSubmitting, setErrors }) => {
-      const comment = { body };
+    onSubmit: async (data, { setSubmitting, setErrors }) => {
+      const post = posts.find((p) => p.id.toString() === data.post);
+      const comment = { ...data, post };
       try {
         log('comment.edit', comment);
-        await axios.put(`${routes.apicomments()}/${params.commentId}`, comment, { headers: auth.getAuthHeader() });
+        await axios.put(`${routes.apiComments()}/${params.commentId}`, comment, { headers: auth.getAuthHeader() });
         const from = { pathname: routes.commentsPagePath() };
         navigate(from);
         notify.addMessage(t('commentEdited'));
@@ -80,7 +86,7 @@ const EditComment = () => {
 
   return (
     <>
-      <h1 className="my-4">{t('commentEdit')}</h1>
+      <h1 className="my-4">{t('commentEditing')}</h1>
       <Form onSubmit={f.handleSubmit}>
         <Form.Group className="mb-3">
           <Form.Label>{t('naming')}</Form.Label>
@@ -98,6 +104,24 @@ const EditComment = () => {
             {t(f.errors.body)}
           </Form.Control.Feedback>
         </Form.Group>
+        <Form.Group className="mb-3" controlId="post">
+          <Form.Label>{t('post')}</Form.Label>
+          <Form.Select
+            value={f.values.post}
+            disabled={f.isSubmitting}
+            onChange={f.handleChange}
+            onBlur={f.handleBlur}
+            isInvalid={f.errors.post && f.touched.post}
+            name="post"
+          >
+            <option value=""></option>
+            {posts.map((post) => <option key={post.id} value={post.id}>{post.title}</option>)}
+          </Form.Select>
+          <Form.Control.Feedback type="invalid">
+            {t(f.errors.post)}
+          </Form.Control.Feedback>
+        </Form.Group>
+
         <Button variant="primary" type="submit" disabled={f.isSubmitting}>
           {t('edit')}
         </Button>

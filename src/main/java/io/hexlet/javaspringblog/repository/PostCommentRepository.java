@@ -1,6 +1,6 @@
 package io.hexlet.javaspringblog.repositories;
 
-import io.hexlet.javaspringblog.models.post.PostComment;
+import io.hexlet.javaspringblog.model.PostComment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
