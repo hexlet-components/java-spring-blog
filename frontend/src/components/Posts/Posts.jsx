@@ -11,26 +11,26 @@ import { useAuth, useNotify } from '../../hooks/index.js';
 import routes from '../../routes.js';
 
 import getLogger from '../../lib/logger.js';
-const log = getLogger('user');
+const log = getLogger('post');
 log.enabled = true;
 
-const Users = () => {
+const Posts = () => {
   const { t } = useTranslation();
-  const [users, setUsers] = useState([]);
+  const [posts, setPosts] = useState([]);
   const auth = useAuth();
   const notify = useNotify();
   const navigate = useNavigate();
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(routes.apiUsers(), { headers: auth.getAuthHeader() });
-        setUsers(data);
+        const { data } = await axios.get(routes.apiPosts(), { headers: auth.getAuthHeader() });
+        setPosts(data);
       } catch (e) {
         if (e.response?.status === 401) {
           const from = { pathname: routes.loginPagePath() };
           navigate(from);
           notify.addErrors([ { defaultMessage: t('Доступ запрещён! Пожалуйста, авторизируйтесь.') } ]);
-        } else if (e.response?.status === 422 && Array.isArray(e.response?.data)) {
+        } else if (e.response?.status === 422 && e.response?.data) {
           notify.addErrors(e.response?.data);
         } else {
           notify.addErrors([{ defaultMessage: e.message }]);
@@ -41,19 +41,19 @@ const Users = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const removeUser = async (event, id) => {
+  const removePost = async (event, id) => {
     event.preventDefault();
     try {
-      await axios.delete(`${routes.apiUsers()}/${id}`, { headers: auth.getAuthHeader() });
+      await axios.delete(`${routes.apiPosts()}/${id}`, { headers: auth.getAuthHeader() });
       auth.logOut();
-      setUsers(users.filter((user) => user.id === id));
+      setPosts(posts.filter((post) => post.id === id));
       log('success');
-      notify.addMessage(t('userDeleted'));
+      notify.addMessage(t('postDeleted'));
     } catch (e) {
       log(e);
       if (e.response?.status === 403 || e.response?.status === 401) {
-        notify.addErrors([{ defaultMessage: t('userDeleteDenied') }]);
-      } else if (e.response?.status === 422 && Array.isArray(e.response?.data)) {
+        notify.addErrors([{ defaultMessage: t('postDeleteDenied') }]);
+      } else if (e.response?.status === 422 && e.response?.data) {
         notify.addErrors(e.response?.data);
       } else {
         notify.addErrors([{ defaultMessage: e.message }]);
@@ -72,15 +72,15 @@ const Users = () => {
         </tr>
       </thead>
       <tbody>
-        {users.map((user) => (
-          <tr key={user.id}>
-            <td>{user.id}</td>
-            <td>{`${user.firstName} ${user.lastName}`}</td>
-            <td>{user.email}</td>
-            <td>{new Date(user.createdAt).toLocaleString('ru')}</td>
+        {posts.map((post) => (
+          <tr key={post.id}>
+            <td>{post.id}</td>
+            <td>{`${post.firstName} ${post.lastName}`}</td>
+            <td>{post.email}</td>
+            <td>{new Date(post.created).toLocaleString('ru')}</td>
             <td>
-              <Link to={`${routes.usersPagePath()}/${user.id}/edit`}>{t('edit')}</Link>
-              <Form onSubmit={(event) => removeUser(event, user.id)}>
+              <Link to={`${routes.postPagePath()}/${post.id}/edit`}>{t('edit')}</Link>
+              <Form onSubmit={(event) => removePost(event, post.id)}>
                 <Button type="submit" variant="link">Удалить</Button>
               </Form>
             </td>
@@ -91,4 +91,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default Posts;

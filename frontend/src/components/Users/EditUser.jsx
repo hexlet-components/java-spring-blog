@@ -37,7 +37,7 @@ const Registration = () => {
           const from = { pathname: routes.loginPagePath() };
           navigate(from);
           notify.addErrors([ { defaultMessage: t('Доступ запрещён! Пожалуйста, авторизируйтесь.') } ]);
-        } else if (e.response?.status === 422 && e.response?.data) {
+        } else if (e.response?.status === 422 && Array.isArray(e.response?.data)) {
           notify.addErrors(e.response?.data);
         } else {
           notify.addErrors([{ defaultMessage: e.message }]);
@@ -51,21 +51,19 @@ const Registration = () => {
   const f = useFormik({
     enableReinitialize: true,
     initialValues: {
-      name: user.firstName,
-      surname: user.lastName,
+      firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
       password: user.password,
     },
     validationSchema: getValidationSchema(),
-    onSubmit: async (userData, { setSubmitting }) => {
+    onSubmit: async (userData, { setSubmitting, setErrors }) => {
       try {
         const user = {
           ...userData,
-          firstName: userData.name,
-          lastName: userData.surname,
         };
         log('create', user);
-        const { data } = await axios.post(routes.apiUser(), user, { headers: auth.getAuthHeader() });
+        const { data } = await axios.post(routes.apiUsers(), user, { headers: auth.getAuthHeader() });
 
         auth.logIn(data);
 
@@ -81,8 +79,9 @@ const Registration = () => {
           const from = { pathname: routes.loginPagePath() };
           navigate(from);
           notify.addErrors([ { defaultMessage: t('Доступ запрещён! Пожалуйста, авторизируйтесь.') } ]);
-        } else if (e.response?.status === 422) {
-          notify.addErrors(e.response?.data);
+        } else if (e.response?.status === 422 && Array.isArray(e.response?.data)) {
+          const errors = e.response?.data.reduce((acc, err) => ({ ...acc, [err.field]: err.defaultMessage }), {});
+          setErrors(errors);
         } else {
           notify.addErrors([{ defaultMessage: e.message }]);
         }
@@ -97,30 +96,36 @@ const Registration = () => {
     <>
       <h1 className="my-4">{t('signup')}</h1>
       <Form onSubmit={f.handleSubmit}>
-        <Form.Group className="mb-3" controlId="name">
+        <Form.Group className="mb-3" controlId="firstName">
           <Form.Label>{t('name')}</Form.Label>
           <Form.Control
             type="text"
-            value={f.values.name}
+            value={f.values.firstName}
             disabled={f.isSubmitting}
             onChange={f.handleChange}
             onBlur={f.handleBlur}
-            isInvalid={f.errors.name && f.touched.name}
-            name="name"
+            isInvalid={f.errors.firstName && f.touched.firstName}
+            name="firstName"
           />
+          <Form.Control.Feedback type="invalid">
+            {t(f.errors.firstName)}
+          </Form.Control.Feedback>
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="surname">
+        <Form.Group className="mb-3" controlId="lastName">
           <Form.Label>{t('surname')}</Form.Label>
           <Form.Control
             type="text"
-            value={f.values.surname}
+            value={f.values.lastName}
             disabled={f.isSubmitting}
             onChange={f.handleChange}
             onBlur={f.handleBlur}
-            isInvalid={f.errors.surname && f.touched.surname}
-            name="surname"
+            isInvalid={f.errors.lastName && f.touched.lastName}
+            name="lastName"
           />
+          <Form.Control.Feedback type="invalid">
+            {t(f.errors.lastName)}
+          </Form.Control.Feedback>
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="email">
@@ -134,6 +139,9 @@ const Registration = () => {
             isInvalid={f.errors.email && f.touched.email}
             name="email"
           />
+          <Form.Control.Feedback type="invalid">
+            {t(f.errors.email)}
+          </Form.Control.Feedback>
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="password">
@@ -147,6 +155,9 @@ const Registration = () => {
             isInvalid={f.errors.password && f.touched.password}
             name="password"
           />
+          <Form.Control.Feedback type="invalid">
+            {t(f.errors.password)}
+          </Form.Control.Feedback>
         </Form.Group>
 
         <Button variant="primary" type="submit">

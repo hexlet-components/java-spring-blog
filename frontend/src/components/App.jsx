@@ -17,6 +17,14 @@ import NotFoundPage from './NotFoundPage.jsx';
 import Users from './Users/Users.jsx';
 import EditUser from './Users/EditUser.jsx';
 
+import Comments from './Comments/Comments.jsx';
+import EditComment from './Comments/EditComment.jsx';
+import NewComment from './Comments/NewComment.jsx';
+
+import Posts from './Posts/Posts.jsx';
+import EditPost from './Posts/EditPost.jsx';
+import NewPost from './Posts/NewPost.jsx';
+
 import routes from '../routes.js';
 import Notification from './Notification.jsx';
 
@@ -80,6 +88,18 @@ const App = () => {
           <Route path={routes.homePagePath()} element={<Welcome />} />
           <Route path={routes.loginPagePath()} element={<Login />} />
           <Route path={routes.signupPagePath()} element={<Registration />} />
+
+          <Route path={routes.postsPagePath()}>
+            <Route path="" element={<Comments />} />
+            <Route path=":statusId/edit" element={<EditComment />} />
+            <Route path="new" element={<NewComment />} />
+          </Route>
+
+          <Route path={routes.commentsPagePath()}>
+            <Route path="" element={<Posts />} />
+            <Route path=":labelId/edit" element={<EditPost />} />
+            <Route path="new" element={<NewPost />} />
+          </Route>
 
           <Route path={routes.usersPagePath()}>
             <Route path="" element={<Users />} />

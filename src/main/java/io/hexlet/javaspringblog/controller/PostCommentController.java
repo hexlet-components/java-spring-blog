@@ -1,6 +1,6 @@
 package io.hexlet.javaspringblog.controllers;
 
-import io.hexlet.javaspringblog.models.post.PostComment;
+import io.hexlet.javaspringblog.model.post.PostComment;
 import io.hexlet.javaspringblog.repositories.PostCommentRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

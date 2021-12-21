@@ -33,3 +33,6 @@ check-updates:
 
 generate-migrations:
 	gradle diffChangeLog
+
+db-migrate:
+	./gradlew update

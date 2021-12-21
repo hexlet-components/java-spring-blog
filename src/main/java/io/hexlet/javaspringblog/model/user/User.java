@@ -1,4 +1,4 @@
-package io.hexlet.javaspringblog.model;
+package io.hexlet.javaspringblog.model.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
@@ -45,7 +45,7 @@ public class User {
 
     @CreationTimestamp
     @Temporal(TIMESTAMP)
-    private Date created;
+    private Date createdAt;
 
     public User(final Long id) {
         this.id = id;

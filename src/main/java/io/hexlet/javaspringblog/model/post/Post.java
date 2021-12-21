@@ -1,4 +1,4 @@
-package io.hexlet.javaspringblog.models.post;
+package io.hexlet.javaspringblog.model.post;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;

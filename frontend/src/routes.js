@@ -21,14 +21,14 @@ const routes = {
   loginPagePath: buildLocalUrl('login'),
   signupPagePath: buildLocalUrl('signup'),
   usersPagePath: buildLocalUrl('users'),
-  statusesPagePath: buildLocalUrl('statuses'),
-  labelsPagePath: buildLocalUrl('labels'),
-  tasksPagePath: buildLocalUrl('tasks'),
-  apiTasks: buildUrl('tasks'),
-  apiLabels: buildUrl('labels'),
-  apiStatuses: buildUrl('statuses'),
+
+  postsPagePath: buildLocalUrl('posts'),
+  commentsPagePath: buildLocalUrl('comments'),
+
   apiUsers: buildUrl('users'),
   apiLogin: buildUrl('login'),
+  apiPosts: buildUrl('posts'),
+  apiComments: buildUrl('posts'),
 };
 
 export default routes;
