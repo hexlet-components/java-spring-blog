@@ -17,10 +17,6 @@ import NotFoundPage from './NotFoundPage.jsx';
 import Users from './Users/Users.jsx';
 import EditUser from './Users/EditUser.jsx';
 
-import Comments from './Comments/Comments.jsx';
-import EditComment from './Comments/EditComment.jsx';
-import NewComment from './Comments/NewComment.jsx';
-
 import Posts from './Posts/Posts.jsx';
 import EditPost from './Posts/EditPost.jsx';
 import NewPost from './Posts/NewPost.jsx';
