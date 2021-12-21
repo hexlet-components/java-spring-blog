@@ -30,7 +30,7 @@ const Users = () => {
           const from = { pathname: routes.loginPagePath() };
           navigate(from);
           notify.addErrors([ { defaultMessage: t('Доступ запрещён! Пожалуйста, авторизируйтесь.') } ]);
-        } else if (e.response?.status === 422 && e.response?.data) {
+        } else if (e.response?.status === 422 && Array.isArray(e.response?.data)) {
           notify.addErrors(e.response?.data);
         } else {
           notify.addErrors([{ defaultMessage: e.message }]);
@@ -53,7 +53,7 @@ const Users = () => {
       log(e);
       if (e.response?.status === 403 || e.response?.status === 401) {
         notify.addErrors([{ defaultMessage: t('userDeleteDenied') }]);
-      } else if (e.response?.status === 422 && e.response?.data) {
+      } else if (e.response?.status === 422 && Array.isArray(e.response?.data)) {
         notify.addErrors(e.response?.data);
       } else {
         notify.addErrors([{ defaultMessage: e.message }]);
@@ -77,7 +77,7 @@ const Users = () => {
             <td>{user.id}</td>
             <td>{`${user.firstName} ${user.lastName}`}</td>
             <td>{user.email}</td>
-            <td>{new Date(user.created).toLocaleString('ru')}</td>
+            <td>{new Date(user.createdAt).toLocaleString('ru')}</td>
             <td>
               <Link to={`${routes.usersPagePath()}/${user.id}/edit`}>{t('edit')}</Link>
               <Form onSubmit={(event) => removeUser(event, user.id)}>

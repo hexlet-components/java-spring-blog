@@ -6,7 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.hexlet.javaspringblog.dto.UserCreateDto;
 import io.hexlet.javaspringblog.model.User;
 import io.hexlet.javaspringblog.repository.UserRepository;
-import io.hexlet.javaspringblog.service.UserAuthenticationService;
+import io.hexlet.javaspringblog.service.TokenService;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.MockMvc;
@@ -42,7 +43,7 @@ public class TestUtils {
     private UserRepository userRepository;
 
     @Autowired
-    private UserAuthenticationService authenticationService;
+    private TokenService tokenService;
 
     public void tearDown() {
         userRepository.deleteAll();
@@ -65,8 +66,7 @@ public class TestUtils {
     }
 
     public ResultActions perform(final MockHttpServletRequestBuilder request, final String byUser) throws Exception {
-        final User user = userRepository.findByEmail(byUser).get();
-        final String token = authenticationService.login(user.getEmail(), user.getPassword());
+        final String token = tokenService.expiring(Map.of("username", byUser));
         request.header(AUTHORIZATION, token);
 
         return perform(request);
@@ -81,7 +81,6 @@ public class TestUtils {
     public static String asJson(final Object object) throws JsonProcessingException {
         return MAPPER.writeValueAsString(object);
     }
-
 
     public static <T> T fromJson(final String json, final TypeReference<T> to) throws JsonProcessingException {
         return MAPPER.readValue(json, to);
