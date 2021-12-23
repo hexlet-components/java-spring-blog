@@ -1,4 +1,4 @@
-package io.hexlet.javaspringblog.controllers;
+package io.hexlet.javaspringblog.controller;
 
 import io.hexlet.javaspringblog.model.PostComment;
 import io.hexlet.javaspringblog.dto.PostCommentDto;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import static io.hexlet.javaspringblog.controllers.PostCommentController.COMMENT_CONTROLLER_PATH;
+import static io.hexlet.javaspringblog.controller.PostCommentController.COMMENT_CONTROLLER_PATH;
 
 @AllArgsConstructor
 @RestController
