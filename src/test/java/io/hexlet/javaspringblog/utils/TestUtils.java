@@ -22,8 +22,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @Component
 public class TestUtils {
 
-    public static final String TEST_USERNAME = "email";
-    public static final String TEST_USERNAME_2 = "email2";
+    public static final String TEST_USERNAME = "email@email.com";
+    public static final String TEST_USERNAME_2 = "email2@email.com";
 
     private final UserCreateDto testRegistrationDto = new UserCreateDto(
             TEST_USERNAME,
