@@ -1,21 +1,17 @@
 package io.hexlet.javaspringblog.controller;
 
-import com.querydsl.core.types.Predicate;
 import io.hexlet.javaspringblog.dto.PostDto;
 import io.hexlet.javaspringblog.model.Post;
 import io.hexlet.javaspringblog.repository.PostRepository;
 import io.hexlet.javaspringblog.service.PostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
