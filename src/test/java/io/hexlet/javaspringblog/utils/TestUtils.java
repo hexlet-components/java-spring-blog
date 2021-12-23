@@ -5,6 +5,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.hexlet.javaspringblog.dto.UserCreateDto;
 import io.hexlet.javaspringblog.model.User;
+import io.hexlet.javaspringblog.repository.PostCommentRepository;
+import io.hexlet.javaspringblog.repository.PostRepository;
 import io.hexlet.javaspringblog.repository.UserRepository;
 import io.hexlet.javaspringblog.service.TokenService;
 import java.util.Map;
@@ -43,9 +45,17 @@ public class TestUtils {
     private UserRepository userRepository;
 
     @Autowired
+    private PostCommentRepository postCommentRepository;
+
+    @Autowired
+    private PostRepository postRepository;
+
+    @Autowired
     private TokenService tokenService;
 
     public void tearDown() {
+        postCommentRepository.deleteAll();
+        postRepository.deleteAll();
         userRepository.deleteAll();
     }
 

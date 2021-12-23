@@ -1,14 +1,10 @@
 package io.hexlet.javaspringblog.service;
 
 import io.hexlet.javaspringblog.dto.PostCommentDto;
-import io.hexlet.javaspringblog.model.PostComment;
 import io.hexlet.javaspringblog.model.Post;
+import io.hexlet.javaspringblog.model.PostComment;
 import io.hexlet.javaspringblog.model.User;
 import io.hexlet.javaspringblog.repository.PostCommentRepository;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -39,10 +35,12 @@ public class PostCommentServiceImpl implements PostCommentService {
 
     private PostComment fromDto(final PostCommentDto dto) {
         final User author = userService.getCurrentUser();
+        final Post post = new Post(dto.getPostId());
 
         return PostComment.builder()
                 .author(author)
                 .body(dto.getBody())
+                .post(post)
                 .build();
     }
 }
