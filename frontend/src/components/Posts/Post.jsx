@@ -76,6 +76,15 @@ const Post = () => {
         <Container>
           <Row>
             <Col>
+              {t('author')}
+            </Col>
+            <Col>
+              {`${post.author?.firstName ?? ''} ${post.author?.lastName ?? ''}`}
+            </Col>
+          </Row>
+
+          <Row>
+            <Col>
               {t('comments')}:
               <ul>
                 {post?.comments?.map((comment) => (<li>{comment.body}</li>))}
@@ -89,6 +98,9 @@ const Post = () => {
                 <Button type="submit" variant="link">Удалить</Button>
               </Form>
             </Col>
+          </Row>
+          <Row>
+            <Link to={`${routes.commentsPagePath()}/${post.id}/new`}>{t('createComment')}</Link>
           </Row>
         </Container>
       </Card.Body>

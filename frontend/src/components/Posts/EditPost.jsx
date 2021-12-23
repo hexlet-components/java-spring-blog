@@ -17,9 +17,9 @@ const log = getLogger('client');
 
 const getValidationSchema = () => yup.object().shape({});
 
-const EditLabel = () => {
+const EditPost = () => {
   const { t } = useTranslation();
-  const [label, setLabel] = useState({});
+  const [post, setpost] = useState({});
   const params = useParams();
   const navigate = useNavigate();
   const auth = useAuth();
@@ -28,8 +28,8 @@ const EditLabel = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(`${routes.apiLabels()}/${params.labelId}`, { headers: auth.getAuthHeader() });
-        setLabel(data);
+        const { data } = await axios.get(`${routes.apiPosts()}/${params.postId}`, { headers: auth.getAuthHeader() });
+        setpost(data);
       } catch (e) {
         if (e.response?.status === 401) {
           const from = { pathname: routes.loginPagePath() };
@@ -47,23 +47,23 @@ const EditLabel = () => {
   const f = useFormik({
     enableReinitialize: true,
     initialValues: {
-      name: label.name,
+      title: post.title,
+      body: post.body,
     },
     validationSchema: getValidationSchema(),
-    onSubmit: async ({ name }, { setSubmitting, setErrors }) => {
-      const label = { name };
+    onSubmit: async ({ title, body }, { setSubmitting, setErrors }) => {
+      const requestPost = { ...post, title, body };
       try {
-        log('label.edit', label);
-        await axios.put(`${routes.apiLabels()}/${params.labelId}`, label, { headers: auth.getAuthHeader() });
-        const from = { pathname: routes.labelsPagePath() };
+        log('post.edit', post);
+        await axios.put(`${routes.apiPosts()}/${params.postId}`, requestPost, { headers: auth.getAuthHeader() });
+        const from = { pathname: routes.postsPagePath() };
         navigate(from);
-        notify.addMessage(t('labelEdited'));
-        // dispatch(actions.addStatus(label));
+        notify.addMessage(t('postEdited'));
       } catch (e) {
-        log('label.edit.error', e);
+        log('post.edit.error', e);
         setSubmitting(false);
         if (e.response?.status === 401) {
-          const from = { pathname: routes.labelsPagePath() };
+          const from = { pathname: routes.postsPagePath() };
           navigate(from);
           notify.addErrors([ { defaultMessage: t('Доступ запрещён! Пожалуйста, авторизируйтесь.') } ]);
         } else if (e.response?.status === 422) {
@@ -80,7 +80,7 @@ const EditLabel = () => {
 
   return (
     <>
-      <h1 className="my-4">{t('labelEdit')}</h1>
+      <h1 className="my-4">{t('postEditing')}</h1>
       <Form onSubmit={f.handleSubmit}>
         <Form.Group className="mb-3">
           <Form.Label>{t('naming')}</Form.Label>
@@ -89,13 +89,31 @@ const EditLabel = () => {
             disabled={f.isSubmitting}
             onChange={f.handleChange}
             onBlur={f.handleBlur}
-            value={f.values.name}
-            isInvalid={f.errors.name && f.touched.name}
-            name="name"
-            id="name"
+            value={f.values.title}
+            isInvalid={f.errors.title && f.touched.title}
+            name="title"
+            id="title"
             type="text" />
           <Form.Control.Feedback type="invalid">
-            {t(f.errors.name)}
+            {t(f.errors.title)}
+          </Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label>{t('Текст')}</Form.Label>
+          <Form.Control
+            as="textarea"
+            rows={3}
+            className="mb-2"
+            disabled={f.isSubmitting}
+            onChange={f.handleChange}
+            onBlur={f.handleBlur}
+            value={f.values.body}
+            isInvalid={f.errors.body && f.touched.body}
+            name="body"
+            id="body"
+          />
+          <Form.Control.Feedback type="invalid">
+            {t(f.errors.body)}
           </Form.Control.Feedback>
         </Form.Group>
         <Button variant="primary" type="submit" disabled={f.isSubmitting}>
@@ -106,4 +124,4 @@ const EditLabel = () => {
   );
 };
 
-export default EditLabel;
+export default EditPost;

@@ -1,32 +1,42 @@
 package io.hexlet.javaspringblog.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
 
 import static javax.persistence.GenerationType.AUTO;
+import static javax.persistence.TemporalType.TIMESTAMP;
 
+import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
+import lombok.ToString;
+
+@Entity
 @Getter
 @Setter
-@ToString(callSuper = true)
+@Table(name = "post_comments")
+@Builder
 @NoArgsConstructor
-@Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@AllArgsConstructor
 public class PostComment {
 
     @Id
     @GeneratedValue(strategy = AUTO)
     private Long id;
+
+    @ManyToOne
+    private User author;
 
     @NotNull
     @NotBlank
@@ -38,13 +48,12 @@ public class PostComment {
     @ToString.Exclude
     private Post post;
 
-    @Override
-    public int hashCode() {
-        return 31;
-    }
+    @CreationTimestamp
+    @Temporal(TIMESTAMP)
+    private Date createdAt;
 
-    @Override
-    public boolean equals(Object obj) {
-        return this == obj || id != null && obj instanceof PostComment other && id.equals(other.id);
+    public PostComment(final Long id) {
+        this.id = id;
     }
 }
+

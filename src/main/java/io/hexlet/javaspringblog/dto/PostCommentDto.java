@@ -1,29 +1,23 @@
 package io.hexlet.javaspringblog.dto;
 
-import javax.validation.constraints.Email;
+import java.util.Set;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserCreateDto {
-
+public final class PostCommentDto {
+    @NotNull
     @NotBlank
-    @Email
-    private String email;
+    @Size(max = 200)
+    private String body;
 
-    @NotBlank
-    private String firstName;
-
-    @NotBlank
-    private String lastName;
-
-    @NotBlank
-    @Size(min = 3, max = 100)
-    private String password;
+    private Long postId;
 
 }

@@ -1,35 +1,46 @@
 package io.hexlet.javaspringblog.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import java.util.Date;
 import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
 
+import static javax.persistence.GenerationType.AUTO;
+import static javax.persistence.TemporalType.TIMESTAMP;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+
+import lombok.*;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
-import static javax.persistence.GenerationType.AUTO;
 
+@Entity
 @Getter
 @Setter
-@ToString(callSuper = true)
+@Table(name = "posts")
+@Builder
 @NoArgsConstructor
-@Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@AllArgsConstructor
 public class Post {
 
     @Id
     @GeneratedValue(strategy = AUTO)
     private Long id;
+
+    @ManyToOne
+    private User author;
 
     @NotNull
     @NotBlank
@@ -38,30 +49,15 @@ public class Post {
 
     @NotNull
     @NotBlank
-    @Size(max = 1000)
+    @Size(max = 200)
     private String body;
 
-    @ToString.Exclude
-    @OneToMany(mappedBy = "post", cascade = ALL, orphanRemoval = true, fetch = EAGER)
-    private Set<PostComment> postComments;
+    // @ToString.Exclude
+    // @OneToMany(mappedBy = "post", cascade = ALL, orphanRemoval = true, fetch = EAGER)
+    // private Set<PostComment> postComments;
 
-    public void addComment(final PostComment postComment) {
-        postComments.add(postComment);
-        postComment.setPost(this);
-    }
+    @CreationTimestamp
+    @Temporal(TIMESTAMP)
+    private Date createdAt;
 
-    public void removeComment(final PostComment postComment) {
-        postComments.remove(postComment);
-        postComment.setPost(null);
-    }
-
-    @Override
-    public int hashCode() {
-        return 31;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return this == obj || id != null && obj instanceof Post other && id.equals(other.id);
-    }
 }
