@@ -37,20 +37,21 @@ public class BaseExceptionHandler {
     }
 
     @ResponseStatus(BAD_REQUEST)
-    @ExceptionHandler({
-            HttpMessageNotReadableException.class,
-            DataIntegrityViolationException.class
-    })
+    @ExceptionHandler({HttpMessageNotReadableException.class})
     public String validationExceptionsHandler(Exception exception) {
-        return exception instanceof DataIntegrityViolationException
-                ? exception.getCause().getCause().getMessage()
-                : exception.getMessage();
+        return exception.getMessage();
     }
 
     @ResponseStatus(UNPROCESSABLE_ENTITY)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public List<ObjectError> validationExceptionsHandler(MethodArgumentNotValidException exception) {
         return exception.getAllErrors();
+    }
+
+    @ResponseStatus(UNPROCESSABLE_ENTITY)
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public String validationExceptionsHandler(DataIntegrityViolationException exception) {
+        return exception.getCause().getCause().getMessage();
     }
 
     @ResponseStatus(FORBIDDEN)
