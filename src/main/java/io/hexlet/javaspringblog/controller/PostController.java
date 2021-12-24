@@ -71,6 +71,7 @@ public class PostController {
     @PutMapping(ID)
     @PreAuthorize(ONLY_AUTHOR_BY_ID)
     public Post updatePost(@PathVariable final Long id,
+                           // Schema используется, чтобы указать тип данных для параметра
                            @Parameter(schema = @Schema(implementation = PostDto.class))
                            @RequestBody @Valid  final PostDto dto) {
         return postService.updatePost(id, dto);
