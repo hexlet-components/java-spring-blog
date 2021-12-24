@@ -23,12 +23,23 @@ const Post = () => {
   const navigate = useNavigate();
 
   const [post, setPost] = useState({});
+  const [comments, setComments] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
+      const requestParams = {
+        postId: params.postId,
+      };
       try {
-        const { data: postData } = await axios.get(`${routes.apiPosts()}/${params.postId}`, { headers: auth.getAuthHeader() });
+        const [
+          { data: postData },
+          { data: commentsData },
+        ] = await Promise.all([
+          axios.get(`${routes.apiPosts()}/${params.postId}`, { headers: auth.getAuthHeader() }),
+          axios.get(routes.apiComments(), { headers: auth.getAuthHeader(), params: requestParams }),
+        ]);
         setPost(postData);
+        setComments(commentsData);
       } catch (e) {
         if (e.response?.status === 401) {
           const from = { pathname: routes.loginPagePath() };
@@ -67,44 +78,75 @@ const Post = () => {
   }
 
   return (
-    <Card>
-      <Card.Header className="bg-secondary text-white">
-        <Card.Title>{post.title}</Card.Title>
-      </Card.Header>
-      <Card.Body>
-        <p>{post.body}</p>
-        <Container>
-          <Row>
-            <Col>
-              {t('author')}
-            </Col>
-            <Col>
-              {`${post.author?.firstName ?? ''} ${post.author?.lastName ?? ''}`}
-            </Col>
-          </Row>
+    <>
+      <Card>
+        <Card.Header className="bg-secondary text-white">
+          <Card.Title>{post.title}</Card.Title>
+        </Card.Header>
+        <Card.Body>
+          <p>{post.body}</p>
+          <Container>
+            <Row>
+              <Col>
+                {t('author')}
+              </Col>
+              <Col>
+                {`${post.author?.firstName ?? ''} ${post.author?.lastName ?? ''}`}
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                {t('createDate')}
+              </Col>
+              <Col>
+                {new Date(post.createdAt).toLocaleString('ru')}
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Link to={`${routes.postsPagePath()}/${post.id}/edit`}>{t('edit')}</Link>
+                <Form onSubmit={() => removePost(post.id)}>
+                  <Button type="submit" variant="link">Удалить</Button>
+                </Form>
+              </Col>
+            </Row>
+            <Row>
+              <Link to={`${routes.commentsPagePath()}/${post.id}/new`}>{t('createComment')}</Link>
+            </Row>
+          </Container>
+        </Card.Body>
+      </Card>
 
-          <Row>
-            <Col>
-              {t('comments')}:
-              <ul>
-                {post?.comments?.map((comment) => (<li>{comment.body}</li>))}
-              </ul>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Link to={`${routes.postsPagePath()}/${post.id}/edit`}>{t('edit')}</Link>
-              <Form onSubmit={() => removePost(post.id)}>
-                <Button type="submit" variant="link">Удалить</Button>
-              </Form>
-            </Col>
-          </Row>
-          <Row>
-            <Link to={`${routes.commentsPagePath()}/${post.id}/new`}>{t('createComment')}</Link>
-          </Row>
-        </Container>
-      </Card.Body>
-    </Card>
+      <br />
+
+      <h4>{t('comments')}:</h4>
+
+      {comments?.map((comment) => (
+        <Card>
+          <Card.Body>
+            <p>{comment.body}</p>
+            <Container>
+              <Row>
+                <Col>
+                  {t('author')}
+                </Col>
+                <Col>
+                  {`${comment.author?.firstName ?? ''} ${comment.author?.lastName ?? ''}`}
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  {t('createDate')}
+                </Col>
+                <Col>
+                  {new Date(comment.createdAt).toLocaleString('ru')}
+                </Col>
+              </Row>
+            </Container>
+          </Card.Body>
+        </Card>)
+      )}
+    </>
   );
 };
 

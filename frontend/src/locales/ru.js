@@ -64,6 +64,9 @@ const ru = {
     postEditing: 'Редактирование поста',
     postEdited: 'Пост отредактирован',
     createPost: 'Создать пост',
+    createComment: 'Комментировать',
+    comments: 'Комментарии',
+    commentCreated: 'Комментарий создан',
   },
 };
 
