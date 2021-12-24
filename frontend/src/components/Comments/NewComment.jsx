@@ -1,6 +1,6 @@
 // @ts-check
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, Button } from 'react-bootstrap';
 import { useFormik } from 'formik';
@@ -23,29 +23,6 @@ const NewComment = () => {
   const auth = useAuth();
   const notify = useNotify();
   const params = useParams();
-
-  // const [posts, setPosts] = useState([]);
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const { data } = await axios.get(routes.apiPosts(), { headers: auth.getAuthHeader() });
-  //       setPosts(data);
-  //     } catch (e) {
-  //       if (e.response?.status === 401) {
-  //         const from = { pathname: routes.loginPagePath() };
-  //         navigate(from);
-  //         notify.addErrors([ { defaultMessage: t('Доступ запрещён! Пожалуйста, авторизируйтесь.') } ]);
-  //       } else if (e.response?.status === 422 && e.response?.data) {
-  //         notify.addErrors(e.response?.data);
-  //       } else {
-  //         notify.addErrors([{ defaultMessage: e.message }]);
-  //       }
-  //     }
-  //   };
-  //   fetchData();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
 
   const f = useFormik({
     initialValues: {
