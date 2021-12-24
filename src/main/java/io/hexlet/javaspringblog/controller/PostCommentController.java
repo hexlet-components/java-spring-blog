@@ -1,7 +1,7 @@
-package io.hexlet.javaspringblog.controllers;
+package io.hexlet.javaspringblog.controller;
 
-import io.hexlet.javaspringblog.model.PostComment;
 import io.hexlet.javaspringblog.dto.PostCommentDto;
+import io.hexlet.javaspringblog.model.PostComment;
 import io.hexlet.javaspringblog.repository.PostCommentRepository;
 import io.hexlet.javaspringblog.service.PostCommentService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,9 +20,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import static io.hexlet.javaspringblog.controllers.PostCommentController.COMMENT_CONTROLLER_PATH;
+import static io.hexlet.javaspringblog.controller.PostCommentController.COMMENT_CONTROLLER_PATH;
+import static org.springframework.http.HttpStatus.CREATED;
 
 @AllArgsConstructor
 @RestController
@@ -70,6 +72,7 @@ public class PostCommentController {
     @Operation(summary = "Create New Comment")
     @ApiResponse(responseCode = "201", description = "Comment created")
     @PostMapping
+    @ResponseStatus(CREATED)
     public PostComment createComment(
             @Parameter(description = "Comment to save")
             @Valid

@@ -1,14 +1,9 @@
 package io.hexlet.javaspringblog.service;
 
 import io.hexlet.javaspringblog.dto.PostDto;
-import io.hexlet.javaspringblog.model.PostComment;
 import io.hexlet.javaspringblog.model.Post;
 import io.hexlet.javaspringblog.model.User;
 import io.hexlet.javaspringblog.repository.PostRepository;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,7 +1,6 @@
 package io.hexlet.javaspringblog.model;
 
 import java.util.Date;
-import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -9,6 +8,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,12 +19,6 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import static javax.persistence.GenerationType.AUTO;
 import static javax.persistence.TemporalType.TIMESTAMP;
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-
-import lombok.*;
-import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.FetchType.EAGER;
 
 @Entity
 @Getter
@@ -60,4 +54,7 @@ public class Post {
     @Temporal(TIMESTAMP)
     private Date createdAt;
 
+    public Post(final Long id) {
+        this.id = id;
+    }
 }
