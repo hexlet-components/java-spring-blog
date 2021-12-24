@@ -58,7 +58,7 @@ const NewComment = () => {
         log('comment.create', comment);
 
         await axios.post(routes.apiComments(), comment, { headers: auth.getAuthHeader() });
-        const from = { pathname: routes.commentsPagePath() };
+        const from = { pathname: `${routes.postsPagePath()}/${params.postId}` };
         navigate(from);
         notify.addMessage(t('commentCreated'));
       } catch (e) {
@@ -87,6 +87,7 @@ const NewComment = () => {
         <Form.Group className="mb-3">
           <Form.Label>{t('naming')}</Form.Label>
           <Form.Control
+            as="textarea"
             className="mb-2"
             disabled={f.isSubmitting}
             onChange={f.handleChange}
