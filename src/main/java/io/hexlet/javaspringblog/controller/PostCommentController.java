@@ -1,13 +1,16 @@
-package io.hexlet.javaspringblog.controllers;
+package io.hexlet.javaspringblog.controller;
 
+import io.hexlet.javaspringblog.dto.PostCommentDto;
 import io.hexlet.javaspringblog.model.PostComment;
-import io.hexlet.javaspringblog.repositories.PostCommentRepository;
+import io.hexlet.javaspringblog.repository.PostCommentRepository;
+import io.hexlet.javaspringblog.service.PostCommentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.List;
 import javax.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,10 +20,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import static io.hexlet.javaspringblog.controllers.PostCommentController.COMMENT_CONTROLLER_PATH;
+import static io.hexlet.javaspringblog.controller.PostCommentController.COMMENT_CONTROLLER_PATH;
+import static org.springframework.http.HttpStatus.CREATED;
 
+@AllArgsConstructor
 @RestController
 @RequestMapping("${base-url}" + COMMENT_CONTROLLER_PATH)
 public class PostCommentController {
@@ -38,10 +44,7 @@ public class PostCommentController {
 
 
     private final PostCommentRepository commentRepository;
-
-    public PostCommentController(final PostCommentRepository commentRepository) {
-        this.commentRepository = commentRepository;
-    }
+    private final PostCommentService postCommentService;
 
     @Operation(summary = "Get All Comments for Post")
     @ApiResponses(value = {
@@ -69,26 +72,27 @@ public class PostCommentController {
     @Operation(summary = "Create New Comment")
     @ApiResponse(responseCode = "201", description = "Comment created")
     @PostMapping
+    @ResponseStatus(CREATED)
     public PostComment createComment(
             @Parameter(description = "Comment to save")
             @Valid
             @RequestBody
-            final PostComment comment) {
-        return commentRepository.save(comment);
+            final PostCommentDto commentDto) {
+        return postCommentService.createNewPostComment(commentDto);
     }
 
     @Operation(summary = "Update Existing Comment")
     @ApiResponse(responseCode = "200", description = "Comment updated")
-    @PutMapping
+    @PutMapping(ID)
     @PreAuthorize(ONLY_COMMENT_OWNER_BY_DTO)
     public PostComment updateComment(
+            @Parameter(description = "Post comment id")
+            @PathVariable final Long id,
             @Parameter(description = "Comment to update")
             @Valid
             @RequestBody
-            final PostComment newComment) {
-        final PostComment oldComment = commentRepository.findById(newComment.getId()).get();
-        oldComment.setBody(newComment.getBody());
-        return commentRepository.save(oldComment);
+            final PostCommentDto dto) {
+        return postCommentService.updatePostComment(id, dto);
     }
 
     @Operation(summary = "Delete Comment by Id")

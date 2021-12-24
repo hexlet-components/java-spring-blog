@@ -1,4 +1,4 @@
-package io.hexlet.javaspringblog.repositories;
+package io.hexlet.javaspringblog.repository;
 
 import io.hexlet.javaspringblog.model.Post;
 import org.springframework.data.jpa.repository.JpaRepository;

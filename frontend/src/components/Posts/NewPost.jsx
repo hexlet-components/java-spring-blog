@@ -79,6 +79,8 @@ const NewPost = () => {
         <Form.Group className="mb-3">
           <Form.Label>{t('Текст')}</Form.Label>
           <Form.Control
+            as="textarea"
+            rows={3}
             className="mb-2"
             disabled={f.isSubmitting}
             onChange={f.handleChange}
@@ -87,7 +89,7 @@ const NewPost = () => {
             isInvalid={f.errors.body && f.touched.body}
             name="body"
             id="body"
-            type="textarea" />
+          />
           <Form.Control.Feedback type="invalid">
             {t(f.errors.body)}
           </Form.Control.Feedback>

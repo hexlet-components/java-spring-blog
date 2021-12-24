@@ -75,7 +75,9 @@ const Posts = () => {
           {posts.map((post) => (
             <tr key={post.id}>
               <td>{post.id}</td>
-              <td>{post.title}</td>
+              <td>
+                <Link to={`${routes.postsPagePath()}/${post.id}`}>{post.title}</Link>
+              </td>
               <td>
                 <Link to={`${routes.postsPagePath()}/${post.id}/edit`}>{t('edit')}</Link>
                 <Form onSubmit={(event) => removePost(event, post.id)}>

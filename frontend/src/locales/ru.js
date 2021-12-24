@@ -58,6 +58,15 @@ const ru = {
     lastName: 'Фамилия',
     userDeleteDenied: 'Вы не можете редактировать или удалять другого пользователя',
     userDeleted: 'Пользователь удалён',
+    posts: 'Посты',
+    postCreating: 'Создание поста',
+    postCreated: 'Пост создан',
+    postEditing: 'Редактирование поста',
+    postEdited: 'Пост отредактирован',
+    createPost: 'Создать пост',
+    createComment: 'Комментировать',
+    comments: 'Комментарии',
+    commentCreated: 'Комментарий создан',
   },
 };
 

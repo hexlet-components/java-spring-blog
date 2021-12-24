@@ -18,8 +18,13 @@ import Users from './Users/Users.jsx';
 import EditUser from './Users/EditUser.jsx';
 
 import Posts from './Posts/Posts.jsx';
+import Post from './Posts/Post.jsx';
 import EditPost from './Posts/EditPost.jsx';
 import NewPost from './Posts/NewPost.jsx';
+
+import Comments from './Comments/Comments.jsx';
+import EditComment from './Comments/EditComment.jsx';
+import NewComment from './Comments/NewComment.jsx';
 
 import routes from '../routes.js';
 import Notification from './Notification.jsx';
@@ -87,8 +92,15 @@ const App = () => {
 
           <Route path={routes.postsPagePath()}>
             <Route path="" element={<Posts />} />
-            <Route path=":statusId/edit" element={<EditPost />} />
+            <Route path=":postId" element={<Post />} />
+            <Route path=":postId/edit" element={<EditPost />} />
             <Route path="new" element={<NewPost />} />
+          </Route>
+
+          <Route path={routes.commentsPagePath()}>
+            <Route path="" element={<Comments />} />
+            <Route path=":commentId/edit" element={<EditComment />} />
+            <Route path=":postId/new" element={<NewComment />} />
           </Route>
 
           <Route path={routes.usersPagePath()}>
