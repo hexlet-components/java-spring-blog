@@ -5,6 +5,7 @@ import io.hexlet.javaspringblog.model.User;
 import io.hexlet.javaspringblog.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,13 +16,15 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
+    private final PasswordEncoder passwordEncoder;
+
     @Override
     public User createNewUser(final UserCreateDto registrationDto) {
         final User user = new User();
         user.setEmail(registrationDto.getEmail());
         user.setFirstName(registrationDto.getFirstName());
         user.setLastName(registrationDto.getLastName());
-        user.setPassword(registrationDto.getPassword());
+        user.setPassword(passwordEncoder.encode(registrationDto.getPassword()));
         return userRepository.save(user);
     }
 

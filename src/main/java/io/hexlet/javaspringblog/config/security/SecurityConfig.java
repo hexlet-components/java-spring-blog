@@ -59,11 +59,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(final HttpSecurity http) throws Exception {
 
-        http.headers().frameOptions().sameOrigin();
-        http.csrf().ignoringAntMatchers("/h2console/**");
-        http.authorizeRequests().antMatchers("/h2console/**").permitAll();
-
         http.csrf().disable()
+                .headers().frameOptions().sameOrigin()
+                .and()
                 .authorizeRequests()
                 .requestMatchers(publicUrls).permitAll()
                 .anyRequest().authenticated()

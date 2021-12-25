@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,10 +17,12 @@ public class TokenAuthenticationService implements UserAuthenticationService {
 
     private final UserRepository userRepository;
 
+    private final PasswordEncoder passwordEncoder;
+
     @Override
     public String login(final String username, final String password) {
         return userRepository.findByEmail(username)
-                .filter(user -> user.getPassword().equals(password))
+                .filter(user -> passwordEncoder.matches(password, user.getPassword()))
                 .map(user -> tokenService.expiring(Map.of("username", username)))
                 .orElseThrow(() -> new UsernameNotFoundException("invalid login and/or password"));
     }
