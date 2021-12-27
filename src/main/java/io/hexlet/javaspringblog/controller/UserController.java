@@ -51,8 +51,9 @@ public class UserController {
         return authenticationService.login(dto.getEmail(), dto.getPassword());
     }
 
-
+    // Content используется для укзания содержимого ответа
     @ApiResponses(@ApiResponse(responseCode = "200", content =
+        // Указываем тип содержимого ответа
         @Content(schema = @Schema(implementation = User.class))
     ))
     @GetMapping
