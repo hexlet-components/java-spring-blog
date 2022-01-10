@@ -3,7 +3,7 @@ package io.hexlet.javaspringblog.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.hexlet.javaspringblog.config.SpringConfigForIT;
 import io.hexlet.javaspringblog.dto.LoginDto;
-import io.hexlet.javaspringblog.dto.UserCreateDto;
+import io.hexlet.javaspringblog.dto.UserDto;
 import io.hexlet.javaspringblog.model.User;
 import io.hexlet.javaspringblog.repository.UserRepository;
 import io.hexlet.javaspringblog.utils.TestUtils;
@@ -144,10 +144,10 @@ public class UserControllerIT {
 
         final Long userId = userRepository.findByEmail(TEST_USERNAME).get().getId();
 
-        final var userCreateDto = new UserCreateDto(TEST_USERNAME_2, "new name", "new last name", "new pwd");
+        final var userDto = new UserDto(TEST_USERNAME_2, "new name", "new last name", "new pwd");
 
         final var updateRequest = put(USER_CONTROLLER_PATH + ID, userId)
-                .content(asJson(userCreateDto))
+                .content(asJson(userDto))
                 .contentType(APPLICATION_JSON);
 
         utils.perform(updateRequest, TEST_USERNAME).andExpect(status().isOk());
@@ -173,7 +173,7 @@ public class UserControllerIT {
     @Test
     public void deleteUserFails() throws Exception {
         utils.regDefaultUser();
-        utils.regUser(new UserCreateDto(
+        utils.regUser(new UserDto(
                 TEST_USERNAME_2,
                 "fname",
                 "lname",
