@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.hexlet.javaspringblog.component.JWTHelper;
-import io.hexlet.javaspringblog.dto.UserCreateDto;
 import io.hexlet.javaspringblog.dto.UserDto;
 import io.hexlet.javaspringblog.model.User;
 import io.hexlet.javaspringblog.repository.PostCommentRepository;
