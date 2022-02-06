@@ -1,6 +1,6 @@
 package io.hexlet.javaspringblog.controller;
 
-import io.hexlet.javaspringblog.dto.UserCreateDto;
+import io.hexlet.javaspringblog.dto.UserDto;
 import io.hexlet.javaspringblog.model.User;
 import io.hexlet.javaspringblog.repository.UserRepository;
 import io.hexlet.javaspringblog.service.UserService;
@@ -48,8 +48,9 @@ public class UserController {
         return userService.createNewUser(dto);
     }
 
-
+    // Content используется для укзания содержимого ответа
     @ApiResponses(@ApiResponse(responseCode = "200", content =
+        // Указываем тип содержимого ответа
         @Content(schema = @Schema(implementation = User.class))
     ))
     @GetMapping
@@ -67,13 +68,8 @@ public class UserController {
 
     @PutMapping(ID)
     @PreAuthorize(ONLY_OWNER_BY_ID)
-    public User edit(@PathVariable final long id, @RequestBody @Valid final UserCreateDto dto) {
-        final User userToUpdate = userRepository.findById(id).get();
-        userToUpdate.setEmail(dto.getEmail());
-        userToUpdate.setFirstName(dto.getFirstName());
-        userToUpdate.setLastName(dto.getLastName());
-        userToUpdate.setPassword(dto.getPassword());
-        return userRepository.save(userToUpdate);
+    public User update(@PathVariable final long id, @RequestBody @Valid final UserDto dto) {
+        return userService.updateUser(id, dto);
     }
 
     @DeleteMapping(ID)

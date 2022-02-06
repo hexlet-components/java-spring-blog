@@ -67,6 +67,8 @@ const ru = {
     createComment: 'Комментировать',
     comments: 'Комментарии',
     commentCreated: 'Комментарий создан',
+    userEdit: 'Изменение пользователя',
+    userEdited: 'Пользователь изменен',
   },
 };
 

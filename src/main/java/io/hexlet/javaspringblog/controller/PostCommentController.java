@@ -4,10 +4,12 @@ import io.hexlet.javaspringblog.dto.PostCommentDto;
 import io.hexlet.javaspringblog.model.PostComment;
 import io.hexlet.javaspringblog.repository.PostCommentRepository;
 import io.hexlet.javaspringblog.service.PostCommentService;
+// Аннотации Swagger для документированя методов контроллера
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 import java.util.List;
 import javax.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -46,13 +48,19 @@ public class PostCommentController {
     private final PostCommentRepository commentRepository;
     private final PostCommentService postCommentService;
 
+    // Аннотация отмечает метод, как OpenApi операцию
+    // и определяет краткое описание этой операции
     @Operation(summary = "Get All Comments for Post")
+    // Используется, как контейнер для нескольких аннотаций @ApiResponse
     @ApiResponses(value = {
+            // Аннотация используется, чтобы указать, какой ответ возвращает операция
             @ApiResponse(responseCode = "200", description = "Post found"),
             @ApiResponse(responseCode = "404", description = "Post with that id not found")
     })
     @GetMapping
     public List<PostComment> getAllCommentsForPost(
+            // Аннотация используется, чтобы отметить параметр метода, как параметр операции
+            // и дать его краткое описание
             @Parameter(description = "Id of post comment for which should be found")
             @RequestParam
             final Long postId) {

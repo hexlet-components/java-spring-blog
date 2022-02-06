@@ -1,6 +1,6 @@
 package io.hexlet.javaspringblog.service;
 
-import io.hexlet.javaspringblog.dto.UserCreateDto;
+import io.hexlet.javaspringblog.dto.UserDto;
 import io.hexlet.javaspringblog.model.User;
 import io.hexlet.javaspringblog.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -24,13 +24,23 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public User createNewUser(final UserCreateDto registrationDto) {
+    public User createNewUser(final UserDto userDto) {
         final User user = new User();
-        user.setEmail(registrationDto.getEmail());
-        user.setFirstName(registrationDto.getFirstName());
-        user.setLastName(registrationDto.getLastName());
-        user.setPassword(passwordEncoder.encode(registrationDto.getPassword()));
+        user.setEmail(userDto.getEmail());
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         return userRepository.save(user);
+    }
+
+    @Override
+    public User updateUser(final long id, final UserDto userDto) {
+        final User userToUpdate = userRepository.findById(id).get();
+        userToUpdate.setEmail(userDto.getEmail());
+        userToUpdate.setFirstName(userDto.getFirstName());
+        userToUpdate.setLastName(userDto.getLastName());
+        userToUpdate.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        return userRepository.save(userToUpdate);
     }
 
     @Override

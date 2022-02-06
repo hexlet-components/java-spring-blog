@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.hexlet.javaspringblog.component.JWTHelper;
 import io.hexlet.javaspringblog.dto.UserCreateDto;
+import io.hexlet.javaspringblog.dto.UserDto;
 import io.hexlet.javaspringblog.model.User;
 import io.hexlet.javaspringblog.repository.PostCommentRepository;
 import io.hexlet.javaspringblog.repository.PostRepository;
@@ -27,14 +28,14 @@ public class TestUtils {
     public static final String TEST_USERNAME = "email@email.com";
     public static final String TEST_USERNAME_2 = "email2@email.com";
 
-    private final UserCreateDto testRegistrationDto = new UserCreateDto(
+    private final UserDto testRegistrationDto = new UserDto(
             TEST_USERNAME,
             "fname",
             "lname",
             "pwd"
     );
 
-    public UserCreateDto getTestRegistrationDto() {
+    public UserDto getTestRegistrationDto() {
         return testRegistrationDto;
     }
 
@@ -67,7 +68,7 @@ public class TestUtils {
         return regUser(testRegistrationDto);
     }
 
-    public ResultActions regUser(final UserCreateDto dto) throws Exception {
+    public ResultActions regUser(final UserDto dto) throws Exception {
         final var request = post(USER_CONTROLLER_PATH)
                 .content(asJson(dto))
                 .contentType(APPLICATION_JSON);
