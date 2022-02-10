@@ -19,7 +19,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static io.hexlet.javaspringblog.config.SpringConfigForIT.TEST_PROFILE;
-import static io.hexlet.javaspringblog.controller.AuthController.LOGIN;
+import static io.hexlet.javaspringblog.config.security.SecurityConfig.LOGIN;
 import static io.hexlet.javaspringblog.controller.UserController.ID;
 import static io.hexlet.javaspringblog.controller.UserController.USER_CONTROLLER_PATH;
 import static io.hexlet.javaspringblog.utils.TestUtils.TEST_USERNAME;

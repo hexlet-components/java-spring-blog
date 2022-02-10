@@ -3,12 +3,12 @@ package io.hexlet.javaspringblog.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.hexlet.javaspringblog.component.JWTHelper;
 import io.hexlet.javaspringblog.dto.UserDto;
 import io.hexlet.javaspringblog.model.User;
 import io.hexlet.javaspringblog.repository.PostCommentRepository;
 import io.hexlet.javaspringblog.repository.PostRepository;
 import io.hexlet.javaspringblog.repository.UserRepository;
-import io.hexlet.javaspringblog.service.TokenService;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -51,7 +51,7 @@ public class TestUtils {
     private PostRepository postRepository;
 
     @Autowired
-    private TokenService tokenService;
+    private JWTHelper jwtHelper;
 
     public void tearDown() {
         postCommentRepository.deleteAll();
@@ -76,7 +76,7 @@ public class TestUtils {
     }
 
     public ResultActions perform(final MockHttpServletRequestBuilder request, final String byUser) throws Exception {
-        final String token = tokenService.expiring(Map.of("username", byUser));
+        final String token = jwtHelper.expiring(Map.of("username", byUser));
         request.header(AUTHORIZATION, token);
 
         return perform(request);

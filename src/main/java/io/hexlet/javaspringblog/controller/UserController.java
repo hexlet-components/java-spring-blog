@@ -3,13 +3,12 @@ package io.hexlet.javaspringblog.controller;
 import io.hexlet.javaspringblog.dto.UserDto;
 import io.hexlet.javaspringblog.model.User;
 import io.hexlet.javaspringblog.repository.UserRepository;
-import io.hexlet.javaspringblog.service.UserAuthenticationService;
 import io.hexlet.javaspringblog.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -40,15 +39,13 @@ public class UserController {
 
     private final UserService userService;
     private final UserRepository userRepository;
-    private final UserAuthenticationService authenticationService;
 
     @Operation(summary = "Create new user")
     @ApiResponse(responseCode = "201", description = "User created")
     @PostMapping
     @ResponseStatus(CREATED)
-    public String registerNew(@RequestBody @Valid final UserDto dto) {
-        userService.createNewUser(dto);
-        return authenticationService.login(dto.getEmail(), dto.getPassword());
+    public User registerNew(@RequestBody @Valid final UserDto dto) {
+        return userService.createNewUser(dto);
     }
 
     // Content используется для укзания содержимого ответа
