@@ -1,17 +1,21 @@
 // @ts-check
 
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Form, Button } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import axios from 'axios';
 import * as yup from 'yup';
-import { useNavigate } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
-import { useAuth, useNotify } from '../hooks/index.js';
+import handleError from '../utils.js';
+import { actions as usersActions } from '../slices/usersSlice.js';
+import { useNotify } from '../hooks/index.js';
 import routes from '../routes.js';
 
 import getLogger from '../lib/logger.js';
+
 const log = getLogger('registration');
 log.enabled = true;
 
@@ -19,43 +23,38 @@ const getValidationSchema = () => yup.object().shape({});
 
 const Registration = () => {
   const { t } = useTranslation();
-  const auth = useAuth();
   const notify = useNotify();
-  const navigate = useNavigate();
+  const history = useHistory();
+  const dispatch = useDispatch();
 
   const f = useFormik({
     initialValues: {
-      name: '',
-      surname: '',
+      firstName: '',
+      lastName: '',
       email: '',
       password: '',
     },
     validationSchema: getValidationSchema(),
-    onSubmit: async (userData, { setSubmitting }) => {
+    onSubmit: async (userData, { setSubmitting, setErrors }) => {
       try {
         const user = {
           ...userData,
-          firstName: userData.name,
-          lastName: userData.surname,
         };
-        const { data: token } = await axios.post(routes.apiUsers(), user);
+        const { data } = await axios.post(routes.apiUsers(), user);
 
-        auth.logIn({ ...userData, token });
-
-        const from = { pathname: routes.homePagePath() };
-        notify.addMessage(t('registrationSuccess'));
-        navigate(from);
-        // dispatch(actions.addTask(task));
+        dispatch(usersActions.addUser(data));
+        const from = { pathname: routes.loginPagePath() };
+        history.push(from, { message: 'registrationSuccess' });
       } catch (e) {
         log('create.error', e);
         setSubmitting(false);
-        // TODO: убрать обработку ошибок в ErrorBoundaries
-        if (e.response?.status === 400) {
-          notify.addErrors([{ defaultMessage: t('registrationFail') }]);
-        } else if (e.response?.status === 422 && e.response?.data) {
-          notify.addErrors(e.response?.data);
+        if (e.response?.status === 422 && Array.isArray(e.response.data)) {
+          const errors = e.response.data
+            .reduce((acc, err) => ({ ...acc, [err.field]: err.defaultMessage }), {});
+          setErrors(errors);
+          notify.addError('registrationFail');
         } else {
-          notify.addErrors([{ defaultMessage: e.message }]);
+          handleError(e, notify, history);
         }
       }
     },
@@ -67,34 +66,42 @@ const Registration = () => {
     <>
       <h1 className="my-4">{t('signup')}</h1>
       <Form onSubmit={f.handleSubmit}>
-        <Form.Group className="mb-3" controlId="name">
-          <Form.Label>{t('name')}</Form.Label>
+        <Form.Group className="mb-3">
+          <Form.Label htmlFor="firstName">{t('name')}</Form.Label>
           <Form.Control
             type="text"
-            value={f.values.name}
+            value={f.values.firstName}
             disabled={f.isSubmitting}
             onChange={f.handleChange}
             onBlur={f.handleBlur}
-            isInvalid={f.errors.name && f.touched.name}
-            name="name"
+            isInvalid={f.errors.firstName && f.touched.firstName}
+            id="firstName"
+            name="firstName"
           />
+          <Form.Control.Feedback type="invalid">
+            {t(f.errors.firstName)}
+          </Form.Control.Feedback>
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="surname">
-          <Form.Label>{t('surname')}</Form.Label>
+        <Form.Group className="mb-3">
+          <Form.Label htmlFor="lastName">{t('surname')}</Form.Label>
           <Form.Control
             type="text"
-            value={f.values.surname}
+            value={f.values.lastName}
             disabled={f.isSubmitting}
             onChange={f.handleChange}
             onBlur={f.handleBlur}
-            isInvalid={f.errors.surname && f.touched.surname}
-            name="surname"
+            isInvalid={f.errors.lastName && f.touched.lastName}
+            id="lastName"
+            name="lastName"
           />
+          <Form.Control.Feedback type="invalid">
+            {t(f.errors.lastName)}
+          </Form.Control.Feedback>
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="email">
-          <Form.Label>{t('email')}</Form.Label>
+        <Form.Group className="mb-3">
+          <Form.Label htmlFor="email">{t('email')}</Form.Label>
           <Form.Control
             type="email"
             value={f.values.email}
@@ -102,12 +109,16 @@ const Registration = () => {
             onChange={f.handleChange}
             onBlur={f.handleBlur}
             isInvalid={f.errors.email && f.touched.email}
+            id="email"
             name="email"
           />
+          <Form.Control.Feedback type="invalid">
+            {t(f.errors.email)}
+          </Form.Control.Feedback>
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="password">
-          <Form.Label>{t('password')}</Form.Label>
+        <Form.Group className="mb-3">
+          <Form.Label htmlFor="password">{t('password')}</Form.Label>
           <Form.Control
             type="password"
             value={f.values.password}
@@ -115,12 +126,16 @@ const Registration = () => {
             onChange={f.handleChange}
             onBlur={f.handleBlur}
             isInvalid={f.errors.password && f.touched.password}
+            id="password"
             name="password"
           />
+          <Form.Control.Feedback type="invalid">
+            {t(f.errors.password)}
+          </Form.Control.Feedback>
         </Form.Group>
 
         <Button variant="primary" type="submit">
-          {t('create')}
+          {t('save')}
         </Button>
       </Form>
     </>

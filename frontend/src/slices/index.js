@@ -1,25 +1,16 @@
 // @ts-check
 
-import { combineReducers } from '@reduxjs/toolkit';
-import labelsSlice, { actions as labelsActions } from './labelsSlice.js';
-import tasksSlice, { actions as tasksActions } from './tasksSlice.js';
-import statusesSlice, { actions as statusesActions } from './statusesSlice.js';
-import executorsSlice, { actions as executorsActions } from './executorsSlice.js';
+import { configureStore } from '@reduxjs/toolkit';
+import usersReducer from './usersSlice.js';
+import postsReducer from './postsSlice.js';
+import commentsReducer from './commentsSlice.js';
+import notifyReducer from './notificationSlice.js';
 
-const actions = {
-  ...labelsActions,
-  ...tasksActions,
-  ...statusesActions,
-  ...executorsActions,
-};
-
-export {
-  actions,
-};
-
-export default combineReducers({
-  labelsSlice,
-  tasksSlice,
-  statusesSlice,
-  executorsSlice,
+export default configureStore({
+  reducer: {
+    users: usersReducer,
+    posts: postsReducer,
+    comments: commentsReducer,
+    notify: notifyReducer,
+  },
 });

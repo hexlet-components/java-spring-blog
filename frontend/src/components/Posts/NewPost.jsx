@@ -1,26 +1,32 @@
 // @ts-check
 
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Form, Button } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+
+import { actions as postsActions } from '../../slices/postsSlice.js';
 
 import routes from '../../routes.js';
 import { useAuth, useNotify } from '../../hooks/index.js';
+import handleError from '../../utils.js';
 
 import getLogger from '../../lib/logger.js';
+
 const log = getLogger('client');
 
 const getValidationSchema = () => yup.object().shape({});
 
 const NewPost = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
+  const history = useHistory();
   const auth = useAuth();
   const notify = useNotify();
+  const dispatch = useDispatch();
 
   const f = useFormik({
     initialValues: {
@@ -33,22 +39,22 @@ const NewPost = () => {
       try {
         log('post.create', post);
 
-        await axios.post(routes.apiPosts(), post, { headers: auth.getAuthHeader() });
+        const { data } = await axios
+          .post(routes.apiPosts(), post, { headers: auth.getAuthHeader() });
+        dispatch(postsActions.addPost(data));
+
         const from = { pathname: routes.postsPagePath() };
-        navigate(from);
-        notify.addMessage(t('postCreated'));
+        history.push(from, { message: 'postCreated' });
       } catch (e) {
-        log('post.create.error', e);
+        log('label.create.error', e);
         setSubmitting(false);
-        if (e.response?.status === 401) {
-          const from = { pathname: routes.loginPagePath() };
-          navigate(from);
-          notify.addErrors([ { defaultMessage: t('Доступ запрещён! Пожалуйста, авторизируйтесь.') } ]);
-        } else if (e.response?.status === 422 && e.response?.data) {
-          const errors = e.response?.data.reduce((acc, err) => ({ ...acc, [err.field]: err.defaultMessage }), {});
+        if (e.response?.status === 422 && Array.isArray(e.response?.data)) {
+          const errors = e.response.data
+            .reduce((acc, err) => ({ ...acc, [err.field]: err.defaultMessage }), {});
           setErrors(errors);
+          notify.addError('postCreateFail');
         } else {
-          notify.addErrors([{ defaultMessage: e.message }]);
+          handleError(e, notify, history, auth);
         }
       }
     },
@@ -61,7 +67,7 @@ const NewPost = () => {
       <h1 className="my-4">{t('postCreating')}</h1>
       <Form onSubmit={f.handleSubmit}>
         <Form.Group className="mb-3">
-          <Form.Label>{t('naming')}</Form.Label>
+          <Form.Label htmlFor="title">{t('naming')}</Form.Label>
           <Form.Control
             className="mb-2"
             disabled={f.isSubmitting}
@@ -71,13 +77,14 @@ const NewPost = () => {
             isInvalid={f.errors.title && f.touched.title}
             name="title"
             id="title"
-            type="text" />
+            type="text"
+          />
           <Form.Control.Feedback type="invalid">
             {t(f.errors.title)}
           </Form.Control.Feedback>
         </Form.Group>
         <Form.Group className="mb-3">
-          <Form.Label>{t('Текст')}</Form.Label>
+          <Form.Label htmlFor="body">{t('Текст')}</Form.Label>
           <Form.Control
             as="textarea"
             rows={3}
@@ -103,4 +110,3 @@ const NewPost = () => {
 };
 
 export default NewPost;
-
