@@ -1,18 +1,23 @@
 // @ts-check
 
 import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Form, Button } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import handleError from '../../utils.js';
+
+import { actions as commentsActions } from '../../slices/commentsSlice.js';
+import { selectors as selectorsPosts } from '../../slices/postsSlice.js';
 
 import routes from '../../routes.js';
 import { useAuth, useNotify } from '../../hooks/index.js';
 
 import getLogger from '../../lib/logger.js';
+
 const log = getLogger('client');
 
 const getValidationSchema = () => yup.object().shape({});
@@ -21,27 +26,21 @@ const EditComment = () => {
   const { t } = useTranslation();
   const [comment, setComment] = useState({});
   const params = useParams();
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const history = useHistory();
   const auth = useAuth();
   const notify = useNotify();
 
-  const [posts, setPosts] = useState([]);
+  const posts = useSelector(selectorsPosts.selectAll);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(`${routes.apiComments()}/${params.commentId}`, { headers: auth.getAuthHeader() });
+        const { data } = await axios
+          .get(routes.apiComment(params.commentId), { headers: auth.getAuthHeader() });
         setComment(data);
-        const { data: postsData } = await axios.get(routes.apiPosts(), { headers: auth.getAuthHeader() });
-        setPosts(postsData);
       } catch (e) {
-        if (e.response?.status === 401) {
-          const from = { pathname: routes.loginPagePath() };
-          navigate(from);
-          notify.addErrors([ { defaultMessage: t('Доступ запрещён! Пожалуйста, авторизируйтесь.') } ]);
-        } else {
-          notify.addErrors([{ defaultMessage: e.message }]);
-        }
+        handleError(e, notify, history, auth);
       }
     };
     fetchData();
@@ -56,27 +55,25 @@ const EditComment = () => {
     },
     validationSchema: getValidationSchema(),
     onSubmit: async (data, { setSubmitting, setErrors }) => {
-      const post = posts.find((p) => p.id.toString() === data.post);
-      const comment = { ...data, post };
+      const currentPost = posts.find((p) => p.id.toString() === data.post);
+      const currentComment = { ...data, post: currentPost };
       try {
         log('comment.edit', comment);
-        await axios.put(`${routes.apiComments()}/${params.commentId}`, comment, { headers: auth.getAuthHeader() });
+        await axios.put(routes.apiComment(params.commentId),
+          currentComment, { headers: auth.getAuthHeader() });
         const from = { pathname: routes.commentsPagePath() };
-        navigate(from);
-        notify.addMessage(t('commentEdited'));
-        // dispatch(actions.addStatus(comment));
+        dispatch(commentsActions.updateComment(data));
+        history.push(from, { message: 'commentEdited' });
       } catch (e) {
-        log('comment.edit.error', e);
+        log('label.edit.error', e);
         setSubmitting(false);
-        if (e.response?.status === 401) {
-          const from = { pathname: routes.commentsPagePath() };
-          navigate(from);
-          notify.addErrors([ { defaultMessage: t('Доступ запрещён! Пожалуйста, авторизируйтесь.') } ]);
-        } else if (e.response?.status === 422) {
-          const errors = e.response?.data.reduce((acc, err) => ({ ...acc, [err.field]: err.defaultMessage }), {});
+        if (e.response?.status === 422 && Array.isArray(e.response?.data)) {
+          const errors = e.response.data
+            .reduce((acc, err) => ({ ...acc, [err.field]: err.defaultMessage }), {});
           setErrors(errors);
+          notify.addError('commentEditFail');
         } else {
-          notify.addErrors([{ defaultMessage: e.message }]);
+          handleError(e, notify, history);
         }
       }
     },
@@ -89,7 +86,7 @@ const EditComment = () => {
       <h1 className="my-4">{t('commentEditing')}</h1>
       <Form onSubmit={f.handleSubmit}>
         <Form.Group className="mb-3">
-          <Form.Label>{t('naming')}</Form.Label>
+          <Form.Label htmlFor="body">{t('naming')}</Form.Label>
           <Form.Control
             className="mb-2"
             disabled={f.isSubmitting}
@@ -99,22 +96,24 @@ const EditComment = () => {
             isInvalid={f.errors.body && f.touched.body}
             name="body"
             id="body"
-            type="text" />
+            type="text"
+          />
           <Form.Control.Feedback type="invalid">
             {t(f.errors.body)}
           </Form.Control.Feedback>
         </Form.Group>
         <Form.Group className="mb-3" controlId="post">
-          <Form.Label>{t('post')}</Form.Label>
+          <Form.Label htmlFor="post">{t('post')}</Form.Label>
           <Form.Select
             value={f.values.post}
             disabled={f.isSubmitting}
             onChange={f.handleChange}
             onBlur={f.handleBlur}
             isInvalid={f.errors.post && f.touched.post}
+            id="post"
             name="post"
           >
-            <option value=""></option>
+            <option value="" />
             {posts.map((post) => <option key={post.id} value={post.id}>{post.title}</option>)}
           </Form.Select>
           <Form.Control.Feedback type="invalid">

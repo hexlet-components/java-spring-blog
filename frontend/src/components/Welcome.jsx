@@ -14,7 +14,7 @@ const Welcome = () => {
           {t('welcome.body')}
         </div>
         <hr />
-        <Button variant="primary" className="btn-lg">{t('welcome.buttonText')}</Button>
+        <Button variant="primary" href="https://ru.hexlet.io/" className="btn-lg">{t('welcome.buttonText')}</Button>
       </Card.Body>
     </Card>
   );

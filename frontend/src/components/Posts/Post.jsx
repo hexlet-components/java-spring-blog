@@ -1,17 +1,27 @@
 // @ts-check
 
 import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
-import { Card, Button, Container, Row, Col, Form } from 'react-bootstrap';
+import {
+  Card,
+  Button,
+  Container,
+  Row,
+  Col,
+  Form,
+} from 'react-bootstrap';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { useParams, useHistory, Link } from 'react-router-dom';
+
+import { actions as postsActions } from '../../slices/postsSlice.js';
 
 import routes from '../../routes.js';
 import { useAuth, useNotify } from '../../hooks/index.js';
+import handleError from '../../utils.js';
 
 import getLogger from '../../lib/logger.js';
+
 const log = getLogger('client');
 log.enabled = true;
 
@@ -20,7 +30,8 @@ const Post = () => {
   const params = useParams();
   const auth = useAuth();
   const notify = useNotify();
-  const navigate = useNavigate();
+  const history = useHistory();
+  const dispatch = useDispatch();
 
   const [post, setPost] = useState({});
   const [comments, setComments] = useState([]);
@@ -35,21 +46,13 @@ const Post = () => {
           { data: postData },
           { data: commentsData },
         ] = await Promise.all([
-          axios.get(`${routes.apiPosts()}/${params.postId}`, { headers: auth.getAuthHeader() }),
+          axios.get(routes.apiPost(params.postId), { headers: auth.getAuthHeader() }),
           axios.get(routes.apiComments(), { headers: auth.getAuthHeader(), params: requestParams }),
         ]);
         setPost(postData);
         setComments(commentsData);
       } catch (e) {
-        if (e.response?.status === 401) {
-          const from = { pathname: routes.loginPagePath() };
-          navigate(from);
-          notify.addErrors([ { defaultMessage: t('Доступ запрещён! Пожалуйста, авторизируйтесь.') } ]);
-        } else if (e.response?.status === 422 && Array.isArray(e.response?.data)) {
-          notify.addErrors(e.response?.data);
-        } else {
-          notify.addErrors([{ defaultMessage: e.message }]);
-        }
+        handleError(e, notify, history);
       }
     };
     fetchData();
@@ -58,24 +61,15 @@ const Post = () => {
 
   const removePost = async (id) => {
     try {
-      await axios.delete(`${routes.apiPosts()}/${id}`, { headers: auth.getAuthHeader() });
+      await axios.delete(routes.apiPost(id), { headers: auth.getAuthHeader() });
+      dispatch(postsActions.removePost(id));
       const from = { pathname: routes.homePagePath() };
-      navigate(from);
-      notify.addMessage(t('Задача удалена'));
+      history.push(from, { message: 'postCreated' });
+      notify.addMessage(t('postDeleted'));
     } catch (e) {
-      if (e.response?.status === 401) {
-        const from = { pathname: routes.loginPagePath() };
-        navigate(from);
-        notify.addErrors([ { defaultMessage: t('Доступ запрещён! Пожалуйста, авторизируйтесь.') } ]);
-      } else if (e.response?.status === 403) {
-        notify.addErrors([{ defaultMessage: t('Задачу может удалить только её автор') }]);
-      } else if (e.response?.status === 422 && Array.isArray(e.response?.data)) {
-        notify.addErrors(e.response?.data);
-      } else {
-        notify.addErrors([{ defaultMessage: e.message }]);
-      }
+      handleError(e, notify, history, auth);
     }
-  }
+  };
 
   return (
     <>
@@ -91,7 +85,7 @@ const Post = () => {
                 {t('author')}
               </Col>
               <Col>
-                {`${post.author?.firstName ?? ''} ${post.author?.lastName ?? ''}`}
+                {post.author ? `${post.author.firstName} ${post.author.lastName}` : ''}
               </Col>
             </Row>
             <Row>
@@ -104,14 +98,14 @@ const Post = () => {
             </Row>
             <Row>
               <Col>
-                <Link to={`${routes.postsPagePath()}/${post.id}/edit`}>{t('edit')}</Link>
+                <Link to={routes.postEditPagePath(post.id)}>{t('edit')}</Link>
                 <Form onSubmit={() => removePost(post.id)}>
                   <Button type="submit" variant="link">Удалить</Button>
                 </Form>
               </Col>
             </Row>
             <Row>
-              <Link to={`${routes.commentsPagePath()}/${post.id}/new`}>{t('createComment')}</Link>
+              <Link to={routes.newCommentPagePath(post.id)}>{t('createComment')}</Link>
             </Row>
           </Container>
         </Card.Body>
@@ -119,10 +113,13 @@ const Post = () => {
 
       <br />
 
-      <h4>{t('comments')}:</h4>
+      <h4>
+        {t('comments')}
+        :
+      </h4>
 
       {comments?.map((comment) => (
-        <Card>
+        <Card key={comment.id}>
           <Card.Body>
             <p>{comment.body}</p>
             <Container>
@@ -131,7 +128,9 @@ const Post = () => {
                   {t('author')}
                 </Col>
                 <Col>
-                  {`${comment.author?.firstName ?? ''} ${comment.author?.lastName ?? ''}`}
+                  {comment.author.firstName}
+                  &nbsp;
+                  {comment.author.lastName}
                 </Col>
               </Row>
               <Row>
@@ -144,8 +143,8 @@ const Post = () => {
               </Row>
             </Container>
           </Card.Body>
-        </Card>)
-      )}
+        </Card>
+      ))}
     </>
   );
 };

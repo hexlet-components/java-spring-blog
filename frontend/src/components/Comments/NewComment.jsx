@@ -1,28 +1,34 @@
 // @ts-check
 
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Form, Button } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
+
+import handleError from '../../utils.js';
+
+import { actions as commentsActions } from '../../slices/commentsSlice.js';
 
 import routes from '../../routes.js';
 import { useAuth, useNotify } from '../../hooks/index.js';
 
 import getLogger from '../../lib/logger.js';
+
 const log = getLogger('client');
 
 const getValidationSchema = () => yup.object().shape({});
 
 const NewComment = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
+  const params = useParams();
+  const dispatch = useDispatch();
+  const history = useHistory();
   const auth = useAuth();
   const notify = useNotify();
-  const params = useParams();
 
   const f = useFormik({
     initialValues: {
@@ -35,21 +41,19 @@ const NewComment = () => {
         log('comment.create', comment);
 
         await axios.post(routes.apiComments(), comment, { headers: auth.getAuthHeader() });
-        const from = { pathname: `${routes.postsPagePath()}/${params.postId}` };
-        navigate(from);
-        notify.addMessage(t('commentCreated'));
+        dispatch(commentsActions.updateComment(data));
+        const from = { pathname: routes.postPagePath(params.postId) };
+        history.push(from, { message: 'commentCreated' });
       } catch (e) {
-        log('comment.create.error', e);
+        log('label.edit.error', e);
         setSubmitting(false);
-        if (e.response?.status === 401) {
-          const from = { pathname: routes.loginPagePath() };
-          navigate(from);
-          notify.addErrors([ { defaultMessage: t('Доступ запрещён! Пожалуйста, авторизируйтесь.') } ]);
-        } else if (e.response?.status === 422 && e.response?.data) {
-          const errors = e.response?.data.reduce((acc, err) => ({ ...acc, [err.field]: err.defaultMessage }), {});
+        if (e.response?.status === 422 && Array.isArray(e.response?.data)) {
+          const errors = e.response.data
+            .reduce((acc, err) => ({ ...acc, [err.field]: err.defaultMessage }), {});
           setErrors(errors);
+          notify.addError('commentCreateFail');
         } else {
-          notify.addErrors([{ defaultMessage: e.message }]);
+          handleError(e, notify, history);
         }
       }
     },
@@ -73,7 +77,8 @@ const NewComment = () => {
             isInvalid={f.errors.body && f.touched.body}
             name="body"
             id="body"
-            type="text" />
+            type="text"
+          />
           <Form.Control.Feedback type="invalid">
             {t(f.errors.body)}
           </Form.Control.Feedback>
@@ -88,4 +93,3 @@ const NewComment = () => {
 };
 
 export default NewComment;
-
