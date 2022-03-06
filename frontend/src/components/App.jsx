@@ -1,123 +1,152 @@
 // @ts-check
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  Routes,
+  Switch,
   Route,
-  useNavigate,
+  useHistory,
 } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import axios from 'axios';
 
-import { AuthContext } from '../contexts/index.js';
+import Notification from './Notification.jsx';
+
 import Navbar from './Navbar.jsx';
 import Welcome from './Welcome.jsx';
 import Login from './Login.jsx';
 import Registration from './Registration.jsx';
 import NotFoundPage from './NotFoundPage.jsx';
-import Users from './Users/Users.jsx';
+import UsersComponent from './Users/Users.jsx';
 import EditUser from './Users/EditUser.jsx';
-
-import Posts from './Posts/Posts.jsx';
-import Post from './Posts/Post.jsx';
-import EditPost from './Posts/EditPost.jsx';
-import NewPost from './Posts/NewPost.jsx';
 
 import Comments from './Comments/Comments.jsx';
 import EditComment from './Comments/EditComment.jsx';
 import NewComment from './Comments/NewComment.jsx';
 
-import routes from '../routes.js';
-import Notification from './Notification.jsx';
+import Post from './Posts/Post.jsx';
+import Posts from './Posts/Posts.jsx';
+import NewPost from './Posts/NewPost.jsx';
+import EditPost from './Posts/EditPost.jsx';
 
-import { useNotify } from '../hooks/index.js';
+import routes from '../routes.js';
+
+import { actions as usersActions } from '../slices/usersSlice.js';
+import { actions as postsActions } from '../slices/postsSlice.js';
+
+import { useNotify, useAuth } from '../hooks/index.js';
+import handleError from '../utils.js';
 
 import getLogger from '../lib/logger.js';
+
 const log = getLogger('App');
 log.enabled = true;
 
-const AuthProvider = ({ children }) => {
-  const currentUser = JSON.parse(localStorage.getItem('user'));
-  const navigate = useNavigate();
-  const [user, setUser] = useState(currentUser ? currentUser : null);
-
-  const logIn = (userData) => {
-    userData.username = userData.name;
-    localStorage.setItem('user', JSON.stringify(userData));
-    setUser(userData);
-  };
-
-  const logOut = () => {
-    localStorage.removeItem('user');
-    setUser(null);
-    const from = { pathname: routes.homePagePath() };
-
-    navigate(from);
-  };
-
-  const getAuthHeader = () => {
-    const userData = JSON.parse(localStorage.getItem('user'));
-
-    return userData?.token ? { Authorization: `Bearer ${userData.token}` } : {};
-  };
-
-  return (
-    <AuthContext.Provider value={{
-      logIn, logOut, getAuthHeader, user,
-    }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
-};
-
 const App = () => {
   const notify = useNotify();
-  const navigate = useNavigate();
+  const history = useHistory();
+  const auth = useAuth();
+  const dispatch = useDispatch();
+  const [isLoading, setLoading] = useState(true);
+
   useEffect(() => {
-    // TODO: перенести нотификацию в слайсы
-    notify.clean();
+    setLoading(true);
+    const dataRoutes = [
+      {
+        name: 'users',
+        getData: async () => {
+          const { data } = await axios.get(routes.apiUsers());
+          if (!Array.isArray(data)) {
+            notify.addError('Сервер не вернул список пользователей');
+            dispatch(usersActions.addUsers([]));
+            return;
+          }
+          dispatch(usersActions.addUsers(data));
+        },
+        isSecurity: false,
+      },
+      {
+        name: 'posts',
+        getData: async () => {
+          const { data } = await axios.get(routes.apiPosts(), { headers: auth.getAuthHeader() });
+          if (!Array.isArray(data)) {
+            notify.addError('Сервер не вернул список постов');
+            dispatch(postsActions.addPosts([]));
+            return;
+          }
+          dispatch(postsActions.addPosts(data));
+        },
+        isSecurity: true,
+      },
+    ];
+    const promises = dataRoutes.filter(({ isSecurity }) => (isSecurity ? auth.user : true))
+      .map(({ getData }) => getData());
+    Promise.all(promises)
+      .catch((error) => handleError(error, notify, history, auth))
+      .finally(() => setLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [navigate]);
+  }, [auth.user]);
+
+  const PrivateRoute = ({ children }) => {
+    if (!auth.user) {
+      const from = { pathname: routes.homePagePath() };
+      history.push(from, { message: 'accessDenied', type: 'error' });
+      return null;
+    }
+    return children;
+  };
+
+  if (isLoading) {
+    return null;
+  }
 
   return (
-    <AuthProvider>
+    <>
       <Navbar />
       <div className="container wrapper flex-grow-1">
         <Notification />
         <h1 className="my-4">{null}</h1>
-        <Routes>
-          <Route path={routes.homePagePath()} element={<Welcome />} />
-          <Route path={routes.loginPagePath()} element={<Login />} />
-          <Route path={routes.signupPagePath()} element={<Registration />} />
+        <Switch>
+          <Route exact path={routes.homePagePath()} component={Welcome} />
+          <Route path={routes.loginPagePath()} component={Login} />
+          <Route path={routes.signupPagePath()} component={Registration} />
 
-          <Route path={routes.postsPagePath()}>
-            <Route path="" element={<Posts />} />
-            <Route path=":postId" element={<Post />} />
-            <Route path=":postId/edit" element={<EditPost />} />
-            <Route path="new" element={<NewPost />} />
+          <Route exact path={routes.usersPagePath()}><UsersComponent /></Route>
+          <Route path={routes.userEditPagePath(':userId')}>
+            <PrivateRoute><EditUser /></PrivateRoute>
           </Route>
 
-          <Route path={routes.commentsPagePath()}>
-            <Route path="" element={<Comments />} />
-            <Route path=":commentId/edit" element={<EditComment />} />
-            <Route path=":postId/new" element={<NewComment />} />
+          <Route exact path={routes.commentsPagePath()}>
+            <PrivateRoute><Comments /></PrivateRoute>
+          </Route>
+          <Route path={routes.commentEditPagePath(':commentId')}>
+            <PrivateRoute><EditComment /></PrivateRoute>
+          </Route>
+          <Route path={routes.newCommentPagePath(':postId')}>
+            <PrivateRoute><NewComment /></PrivateRoute>
           </Route>
 
-          <Route path={routes.usersPagePath()}>
-            <Route path="" element={<Users />} />
-            <Route path=":userId/edit" element={<EditUser />} />
+          <Route exact path={routes.postsPagePath()}>
+            <PrivateRoute><Posts /></PrivateRoute>
+          </Route>
+          <Route path={routes.newPostPagePath()}>
+            <PrivateRoute><NewPost /></PrivateRoute>
+          </Route>
+          <Route path={routes.postEditPagePath(':postId')}>
+            <PrivateRoute><EditPost /></PrivateRoute>
+          </Route>
+          <Route path={routes.postPagePath(':postId')}>
+            <PrivateRoute><Post /></PrivateRoute>
           </Route>
 
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
+          <Route path="*" component={NotFoundPage} />
+        </Switch>
       </div>
       <footer>
         <div className="container my-5 pt-4 border-top">
           <a rel="noreferrer" href="https://ru.hexlet.io">Hexlet</a>
         </div>
       </footer>
-      <ToastContainer />
-    </AuthProvider>
+    </>
   );
 };
 
