@@ -21,7 +21,7 @@ public class AuthController {
 
     @PostMapping
     public String login(@RequestBody final LoginDto loginDto) {
-        return authenticationService.login(loginDto.getUsername(), loginDto.getPassword());
+        return authenticationService.login(loginDto.getEmail(), loginDto.getPassword());
     }
 
 }

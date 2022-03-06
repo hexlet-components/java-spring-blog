@@ -36,7 +36,7 @@ public class PostController {
     public static final String BY = "/by";
 
     private static final String ONLY_AUTHOR_BY_ID = """
-            @PostRepository.findById(#id).get().getAuthor().getEmail() == authentication.getName()
+            @postRepository.findById(#id).get().getAuthor().getEmail() == authentication.getName()
         """;
 
     private final PostRepository postRepository;
