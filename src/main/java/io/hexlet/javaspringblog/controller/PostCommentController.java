@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+// Для авторизованных запросов в сваггере
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import java.util.List;
 import javax.validation.Valid;
@@ -30,6 +32,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 
 @AllArgsConstructor
 @RestController
+@SecurityRequirement(name = "javainuseapi")
 @RequestMapping("${base-url}" + COMMENT_CONTROLLER_PATH)
 public class PostCommentController {
 
