@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import com.rollbar.notifier.Rollbar;
 
 import static io.hexlet.javaspringblog.controller.UserController.USER_CONTROLLER_PATH;
 import static org.springframework.http.HttpStatus.CREATED;
@@ -39,6 +40,7 @@ public class UserController {
 
     private final UserService userService;
     private final UserRepository userRepository;
+    private final Rollbar rollbar;
 
     @Operation(summary = "Create new user")
     @ApiResponse(responseCode = "201", description = "User created")
@@ -55,6 +57,7 @@ public class UserController {
     ))
     @GetMapping
     public List<User> getAll() {
+        rollbar.debug("Here is some debug message");
         return userRepository.findAll()
                 .stream()
                 .toList();

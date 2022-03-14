@@ -49,6 +49,7 @@ dependencies {
         'org.liquibase:liquibase-core:4.6.1',
         'com.querydsl:querydsl-core:5.0.0',
         'com.querydsl:querydsl-jpa:5.0.0',
+        'com.rollbar:rollbar-spring-boot-webmvc:1.8.1'
     )
 
     liquibaseRuntime(
