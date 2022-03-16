@@ -21,8 +21,11 @@ import org.springframework.beans.factory.annotation.Value;
 public class RollbarConfig {
 
     // Добавляем токен через переменные окружения
-    @Value("${rollbar_token}")
+    @Value("${rollbar_token:}")
     private String rollbarToken;
+
+    @Value("${spring.profiles.active:}")
+    private String activeProfile;
 
     /**
      * Register a Rollbar bean to configure App with Rollbar.
@@ -37,6 +40,7 @@ public class RollbarConfig {
 
     return RollbarSpringConfigBuilder.withAccessToken(accessToken)
             .environment("development")
+            .enabled(activeProfile == "prod")
             .build();
     }
 }
