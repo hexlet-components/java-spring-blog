@@ -10,8 +10,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.beans.factory.annotation.Value;
 
 
-@Configuration()
-@EnableWebMvc
+@Configuration
 @ComponentScan({
 
 // UPDATE TO YOUR PROJECT PACKAGE
