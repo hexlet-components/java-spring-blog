@@ -17,7 +17,7 @@ const buildUrl = (part) => () => {
 const buildLocalUrl = (part) => () => `/${part}`;
 
 const routes = {
-  homePagePath: buildLocalUrl(''),
+  homePagePath: buildLocalUrl('/'),
   loginPagePath: buildLocalUrl('login'),
   signupPagePath: buildLocalUrl('signup'),
   usersPagePath: buildLocalUrl('users'),
