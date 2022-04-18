@@ -17,10 +17,5 @@ spring:
         enabled: true
 
   jpa:
-    # hibernate:
-    #   ddl-auto: create-drop
-    generate-ddl: true
-
-  sql:
-    init:
-      mode: always
+    hibernate:
+      ddl-auto: create-drop
