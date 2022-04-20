@@ -4,8 +4,6 @@ WORKDIR /app
 
 COPY ./ .
 
-RUN ./gradlew update
+RUN gradle installDist
 
-CMD ["./gradlew", "bootRun", "--args='--spring.profiles.active=prod'"]
-
-EXPOSE $PORT
+CMD build/install/app/bin/app
