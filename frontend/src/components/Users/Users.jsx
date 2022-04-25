@@ -36,7 +36,7 @@ const UsersComponent = () => {
       notify.addMessage('userDeleted');
       dispatch(actions.removeUser(id));
     } catch (e) {
-      if (e.response?.status === 403) {
+      if (e.response?.status === 403 || e.response?.data.message === 'No value present') {
         notify.addErrors([{ text: 'userDeleteDenied' }]);
       } else {
         handleError(e, notify, history, auth);
