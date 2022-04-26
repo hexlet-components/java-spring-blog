@@ -2,6 +2,8 @@
 
 ![build](https://github.com/hexlet-components/java-spring-blog/workflows/Build/badge.svg)
 
+Demo: https://java-spring-blog.hexlet.app/
+
 ## Tools
 
 * [Heroku Cli](https://devcenter.heroku.com/articles/heroku-cli)
