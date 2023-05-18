@@ -1,5 +1,5 @@
 server:
-  port: ${PORT:5000}
+  port: ${PORT:5001}
 
 base-url: /api
 
@@ -8,8 +8,8 @@ spring:
     name: hexletBlog
 
   liquibase:
-    enabled: true
-    change-log: classpath:db/changelog/changelog-master.xml
+#    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.yaml
 
   mvc:
     hiddenmethod:

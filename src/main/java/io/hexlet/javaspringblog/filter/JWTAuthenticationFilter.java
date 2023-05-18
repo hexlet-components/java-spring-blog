@@ -6,9 +6,11 @@ import io.hexlet.javaspringblog.dto.LoginDto;
 import java.io.IOException;
 import java.util.Map;
 import java.util.stream.Collectors;
-import javax.servlet.FilterChain;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,6 +25,8 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     private final JWTHelper jwtHelper;
+
+
 
     public JWTAuthenticationFilter(final AuthenticationManager authenticationManager,
                                    final RequestMatcher loginRequest,
