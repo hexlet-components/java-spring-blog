@@ -46,9 +46,8 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
                 .map(claims -> claims.get(SPRING_SECURITY_FORM_USERNAME_KEY))
                 .map(Object::toString)
                 .map(this::buildAuthToken)
-                .orElseThrow();
-
-
+                .orElse(null);
+        
         SecurityContextHolder.getContext().setAuthentication(authToken);
         filterChain.doFilter(request, response);
     }
