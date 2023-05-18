@@ -47,7 +47,6 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
                 .map(Object::toString)
                 .map(this::buildAuthToken)
                 .orElse(null);
-        
         SecurityContextHolder.getContext().setAuthentication(authToken);
         filterChain.doFilter(request, response);
     }
