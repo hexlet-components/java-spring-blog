@@ -1,6 +1,6 @@
 const ru = {
   translation: {
-    hexletTodo: 'Менеджер задач',
+    hexletTodo: 'Блог',
     users: 'Пользователи',
     login: 'Вход',
     signup: 'Регистрация',

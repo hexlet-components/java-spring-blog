@@ -24,6 +24,12 @@ import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 @ControllerAdvice
 public class BaseExceptionHandler {
 
+    @ResponseStatus(UNAUTHORIZED)
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public String userNitFoundExceptionHandler(UsernameNotFoundException exception) {
+        return exception.getMessage();
+    }
+
     @ResponseStatus(INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public String generalExceptionHandler(Exception exception) {
@@ -60,9 +66,5 @@ public class BaseExceptionHandler {
         return exception.getMessage();
     }
 
-    @ResponseStatus(UNAUTHORIZED)
-    @ExceptionHandler(UsernameNotFoundException.class)
-    public String userNitFoundExceptionHandler(UsernameNotFoundException exception) {
-        return exception.getMessage();
-    }
+
 }

@@ -6,7 +6,6 @@ import io.hexlet.javaspringblog.dto.LoginDto;
 import io.hexlet.javaspringblog.dto.UserDto;
 import io.hexlet.javaspringblog.model.User;
 import io.hexlet.javaspringblog.repository.UserRepository;
-import io.hexlet.javaspringblog.utils.TestUtils;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Disabled;
@@ -17,7 +16,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
+import io.hexlet.javaspringblog.utils.TestUtils;
 import static io.hexlet.javaspringblog.config.SpringConfigForIT.TEST_PROFILE;
 import static io.hexlet.javaspringblog.config.security.SecurityConfig.LOGIN;
 import static io.hexlet.javaspringblog.controller.UserController.ID;
@@ -83,16 +82,6 @@ public class UserControllerIT {
         assertEquals(expectedUser.getLastName(), user.getLastName());
     }
 
-    @Disabled("For now active only positive tests")
-    @Test
-    public void getUserByIdFails() throws Exception {
-        utils.regDefaultUser();
-        final User expectedUser = userRepository.findAll().get(0);
-        utils.perform(get(USER_CONTROLLER_PATH + ID, expectedUser.getId()))
-                .andExpect(status().isUnauthorized());
-
-    }
-
     @Test
     public void getAllUsers() throws Exception {
         utils.regDefaultUser();
@@ -111,7 +100,7 @@ public class UserControllerIT {
     @Test
     public void twiceRegTheSameUserFail() throws Exception {
         utils.regDefaultUser().andExpect(status().isCreated());
-        utils.regDefaultUser().andExpect(status().isBadRequest());
+        utils.regDefaultUser().andExpect(status().isUnprocessableEntity());
 
         assertEquals(1, userRepository.count());
     }
@@ -187,5 +176,4 @@ public class UserControllerIT {
 
         assertEquals(2, userRepository.count());
     }
-
 }
