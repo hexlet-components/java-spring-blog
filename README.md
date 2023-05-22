@@ -6,14 +6,14 @@ Demo: https://java-spring-blog.hexlet.app/
 
 ## Tools
 
-* [Heroku Cli](https://devcenter.heroku.com/articles/heroku-cli)
+* [Railway](https://railway.app)
 * [LiveReload](https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei)
 * [checkstyle](https://github.com/checkstyle/checkstyle)
 
 ## Development
 
 ```bash
-# http://localhost:5000
+# http://localhost:5001
 make start
 
 make test
