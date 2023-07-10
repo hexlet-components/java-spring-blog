@@ -121,34 +121,34 @@ liquibase {
 // Сборка фронтенда.
 // Выполняется только если ничего не изменилось.
 // *****************************************************************************
-// frontend {
-//     nodeVersion = '16.13.1'
-//     installScript = 'install'
-//     assembleScript = 'run build'
-//     packageJsonDirectory = file("${projectDir}/frontend")
-// }
+frontend {
+    nodeVersion = '16.13.1'
+    installScript = 'install'
+    assembleScript = 'run build'
+    packageJsonDirectory = file("${projectDir}/frontend")
+}
 
-// def configFrontendTasks = {
-//     inputs.files(fileTree("$projectDir/frontend").exclude('build', 'node_modules'))
-//     outputs.dir("$buildDir/resources/main/static")
-// }
+def configFrontendTasks = {
+    inputs.files(fileTree("$projectDir/frontend").exclude('build', 'node_modules'))
+    outputs.dir("$buildDir/resources/main/static")
+}
 
-// assembleFrontend {
-//     configure configFrontendTasks
+assembleFrontend {
+    configure configFrontendTasks
 
-//     doLast {
-//         copy {
-//             from "$projectDir/frontend/build"
-//             into "$buildDir/resources/main/static"
-//         }
-//     }
-// }
+    doLast {
+        copy {
+            from "$projectDir/frontend/build"
+            into "$buildDir/resources/main/static"
+        }
+    }
+}
 
-// installFrontend {
-//     configure configFrontendTasks
-// }
+installFrontend {
+    configure configFrontendTasks
+}
 
-// processResources.dependsOn assembleFrontend
+processResources.dependsOn assembleFrontend
 // *****************************************************************************
 
 // Таска нужная heroku для деплоя
