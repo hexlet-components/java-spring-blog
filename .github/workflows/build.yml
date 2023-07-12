@@ -13,7 +13,7 @@ jobs:
       - name: Set up openJDK
         uses: actions/setup-java@v1
         with:
-          java-version: '17'
+          java-version: '20'
       - run: make build
 
   deploy:

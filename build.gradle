@@ -75,17 +75,21 @@ dependencies {
 }
 
 wrapper {
-    gradleVersion = '7.4'
+    gradleVersion = '8.2'
     distributionType = Wrapper.DistributionType.ALL
 }
 
 compileJava {
-    options.release = 17
+    options.release = 20
     options.encoding = 'UTF-8'
 }
 
 test {
     useJUnitPlatform()
+}
+
+checkstyle {
+  toolVersion '10.12.1'
 }
 
 // Настраиваем таску diffChangeLog таким образом,
