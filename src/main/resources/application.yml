@@ -1,0 +1,26 @@
+---
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+
+spring:
+  jpa:
+    generate-ddl: true
+    show-sql: true
+  output:
+    ansi:
+      enabled: always
+
+sentry:
+  dsn: https://examplePublicKey@o0.ingest.sentry.io/0
+  tracesSampleRate: 1.0
+
+rsa:
+  private-key: classpath:certs/private.pem
+  public-key: classpath:certs/public.pem
+
+server:
+  servlet:
+    context-path: /api

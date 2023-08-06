@@ -42,3 +42,6 @@ out/
 node
 
 .env
+
+node_modules
+.tmp

@@ -1,5 +1,9 @@
 # java-spring-blog
 
+## Sources
+
+* https://www.danvega.dev/blog/2022/09/06/spring-security-jwt/
+
 ![build](https://github.com/hexlet-components/java-spring-blog/workflows/Build/badge.svg)
 
 Demo: https://java-spring-blog.hexlet.app/

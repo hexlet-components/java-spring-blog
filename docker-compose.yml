@@ -1,0 +1,22 @@
+---
+version: '3'
+services:
+  frontend:
+    build: frontend
+    command: npm run dev -- --host
+    volumes:
+      - ./frontend:/frontend
+    ports:
+      - 5173:5173
+  backend:
+    build: .
+    volumes:
+      - .:/backend
+    command: make dev
+    ports:
+      - 8080:8080
+  classes:
+    build: .
+    volumes:
+      - .:/backend
+    command: make reload-classes

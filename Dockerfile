@@ -4,20 +4,21 @@ ARG GRADLE_VERSION=8.2
 
 RUN apt-get update && apt-get install -yq make unzip
 
-RUN wget -q https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip \
-    && unzip gradle-${GRADLE_VERSION}-bin.zip \
-    && rm gradle-${GRADLE_VERSION}-bin.zip
+# RUN wget -q https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip \
+#   && unzip gradle-${GRADLE_VERSION}-bin.zip \
+#   && rm gradle-${GRADLE_VERSION}-bin.zip
+#
+# ENV GRADLE_HOME=/opt/gradle
+#
+# RUN mv gradle-${GRADLE_VERSION} ${GRADLE_HOME}
 
-ENV GRADLE_HOME=/opt/gradle
+# ENV PATH=$PATH:$GRADLE_HOME/bin
 
-RUN mv gradle-${GRADLE_VERSION} ${GRADLE_HOME}
+WORKDIR /backend
 
-ENV PATH=$PATH:$GRADLE_HOME/bin
+# COPY ./ .
 
-WORKDIR /app
-
-COPY ./ .
-
-RUN gradle installDist
-
-CMD build/install/app/bin/app
+# RUN gradle installDist
+#
+# CMD build/install/app/bin/app
+ENV GRADLE_USER_HOME /backend/.gradle/home
