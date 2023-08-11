@@ -19,14 +19,17 @@ WORKDIR /backend
 COPY gradle gradle
 COPY gradle.properties .
 COPY build.gradle.kts .
+COPY settings.gradle.kts .
 COPY gradlew .
 
 RUN ./gradlew --no-daemon dependencies
 
-COPY . .
+COPY lombok.config .
+COPY system.properties .
+COPY src src
 
 RUN ./gradlew --no-daemon build
 
-CMD ./gradlew bootRun
+ENV JAVA_OPTS "-Xmx512M -Xms512M"
 
-# ENV GRADLE_USER_HOME /backend/.gradle/home
+CMD ./gradlew bootRun
