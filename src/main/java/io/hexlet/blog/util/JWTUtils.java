@@ -1,4 +1,4 @@
-package io.hexlet.blog.lib;
+package io.hexlet.blog.util;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;

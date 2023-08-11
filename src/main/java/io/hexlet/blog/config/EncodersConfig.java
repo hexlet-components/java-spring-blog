@@ -17,7 +17,7 @@ import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 
-import io.hexlet.blog.components.RsaKeyProperties;
+import io.hexlet.blog.component.RsaKeyProperties;
 import lombok.AllArgsConstructor;
 
 @Configuration

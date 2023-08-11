@@ -1,4 +1,4 @@
-package io.hexlet.blog.components;
+package io.hexlet.blog.component;
 
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;

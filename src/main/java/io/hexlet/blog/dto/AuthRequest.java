@@ -1,4 +1,4 @@
-package io.hexlet.blog.data;
+package io.hexlet.blog.dto;
 
 public record AuthRequest(String username, String password) {
 }

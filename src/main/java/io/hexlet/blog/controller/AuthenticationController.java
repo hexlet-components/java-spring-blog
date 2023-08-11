@@ -1,4 +1,4 @@
-package io.hexlet.blog.controllers;
+package io.hexlet.blog.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.hexlet.blog.data.AuthRequest;
-import io.hexlet.blog.lib.JWTUtils;
+import io.hexlet.blog.dto.AuthRequest;
+import io.hexlet.blog.util.JWTUtils;
 import lombok.AllArgsConstructor;
 
 @RestController

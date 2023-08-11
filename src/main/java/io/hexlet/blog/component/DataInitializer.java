@@ -1,4 +1,4 @@
-package io.hexlet.blog.components;
+package io.hexlet.blog.component;
 
 import java.util.stream.IntStream;
 
@@ -7,11 +7,11 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
-import io.hexlet.blog.models.Post;
-import io.hexlet.blog.models.User;
-import io.hexlet.blog.repositories.PostRepository;
-import io.hexlet.blog.repositories.UserRepository;
-import io.hexlet.blog.services.CustomUserDetailsService;
+import io.hexlet.blog.model.Post;
+import io.hexlet.blog.model.User;
+import io.hexlet.blog.repository.PostRepository;
+import io.hexlet.blog.repository.UserRepository;
+import io.hexlet.blog.service.CustomUserDetailsService;
 import lombok.AllArgsConstructor;
 import net.datafaker.Faker;
 

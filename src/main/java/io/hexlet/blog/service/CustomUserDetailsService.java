@@ -1,4 +1,4 @@
-package io.hexlet.blog.services;
+package io.hexlet.blog.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -7,8 +7,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 
-import io.hexlet.blog.models.User;
-import io.hexlet.blog.repositories.UserRepository;
+import io.hexlet.blog.model.User;
+import io.hexlet.blog.repository.UserRepository;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsManager {

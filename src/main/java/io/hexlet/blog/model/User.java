@@ -1,4 +1,4 @@
-package io.hexlet.blog.models;
+package io.hexlet.blog.model;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 

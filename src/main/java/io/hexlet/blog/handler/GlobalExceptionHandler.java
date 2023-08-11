@@ -1,4 +1,4 @@
-package io.hexlet.blog.handlers;
+package io.hexlet.blog.handler;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

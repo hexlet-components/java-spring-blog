@@ -16,9 +16,17 @@ RUN apt-get update && apt-get install -yq make unzip
 
 WORKDIR /backend
 
-# COPY ./ .
+COPY gradle gradle
+COPY gradle.properties .
+COPY build.gradle.kts .
+COPY gradlew .
 
-# RUN gradle installDist
-#
-# CMD build/install/app/bin/app
-ENV GRADLE_USER_HOME /backend/.gradle/home
+RUN ./gradlew --no-daemon dependencies
+
+COPY . .
+
+RUN ./gradlew --no-daemon build
+
+CMD ./gradlew bootRun
+
+# ENV GRADLE_USER_HOME /backend/.gradle/home

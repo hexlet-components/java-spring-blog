@@ -1,4 +1,4 @@
-package io.hexlet.blog.dtos;
+package io.hexlet.blog.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,7 +7,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @Setter
 @Getter
-public class UserDTO {
+public class PostDTO {
     private Long id;
-    private String username;
+    private Long authorId;
+    private String slug;
+    private String name;
 }

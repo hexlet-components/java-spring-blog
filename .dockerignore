@@ -1,1 +1,7 @@
 .git
+node_modules
+build
+bin
+.idea
+.gradle
+.tmp

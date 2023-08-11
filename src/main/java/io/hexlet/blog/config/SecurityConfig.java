@@ -17,7 +17,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
-import io.hexlet.blog.services.CustomUserDetailsService;
+import io.hexlet.blog.service.CustomUserDetailsService;
 import lombok.AllArgsConstructor;
 
 @Configuration

@@ -1,4 +1,4 @@
-package io.hexlet.blog.controllers;
+package io.hexlet.blog.controller;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,8 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.hexlet.blog.dtos.UserDTO;
-import io.hexlet.blog.repositories.UserRepository;
+import io.hexlet.blog.dto.UserDTO;
+import io.hexlet.blog.repository.UserRepository;
 import lombok.AllArgsConstructor;
 
 @RestController

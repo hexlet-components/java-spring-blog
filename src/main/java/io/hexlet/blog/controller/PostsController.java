@@ -1,4 +1,4 @@
-package io.hexlet.blog.controllers;
+package io.hexlet.blog.controller;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.hexlet.blog.dtos.PostDTO;
+import io.hexlet.blog.dto.PostDTO;
 import io.hexlet.blog.exception.ResourceNotFoundException;
-import io.hexlet.blog.models.Post;
-import io.hexlet.blog.repositories.PostRepository;
+import io.hexlet.blog.model.Post;
+import io.hexlet.blog.repository.PostRepository;
 import lombok.AllArgsConstructor;
 
 @RestController
