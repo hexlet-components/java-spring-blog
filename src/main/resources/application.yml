@@ -22,5 +22,6 @@ rsa:
   public-key: classpath:certs/public.pem
 
 server:
+  address: 0.0.0.0
   servlet:
     context-path: /api
