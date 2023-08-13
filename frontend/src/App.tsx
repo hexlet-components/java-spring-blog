@@ -3,13 +3,12 @@ import jsonServerProvider from "ra-data-json-server";
 import {
   Admin,
   Resource,
-  ShowGuesser,
   fetchUtils,
 } from "react-admin";
 
 import { Dashboard } from "./components/Dashboard";
 import authProvider from "./authProvider";
-import { PostCreate, PostEdit, PostList } from "./components/posts";
+import { PostCreate, PostEdit, PostList, PostShow } from "./components/posts";
 
 const httpClient = (url: string, options: any = {}) => {
   if (!options.headers) {
@@ -20,7 +19,7 @@ const httpClient = (url: string, options: any = {}) => {
   return fetchUtils.fetchJson(url, options);
 };
 
-const dataProvider = jsonServerProvider("//localhost/api", httpClient);
+const dataProvider = jsonServerProvider("/api", httpClient);
 
 const App = () => (
   <Admin
@@ -33,7 +32,7 @@ const App = () => (
       name="posts"
       create={PostCreate}
       list={PostList}
-      show={ShowGuesser}
+      show={PostShow}
       edit={PostEdit}
     />
   </Admin>

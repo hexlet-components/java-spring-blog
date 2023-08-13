@@ -1,4 +1,4 @@
-package io.hexlet.blog.controller;
+package io.hexlet.blog.controller.api;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -7,6 +7,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.hexlet.blog.dto.UserDTO;
@@ -15,6 +16,7 @@ import lombok.AllArgsConstructor;
 
 @RestController
 @AllArgsConstructor
+@RequestMapping("/api")
 public class UsersController {
     @Autowired
     private final UserRepository repository;

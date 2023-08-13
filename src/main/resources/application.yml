@@ -2,8 +2,17 @@
 logging:
   level:
     org:
+      zalando:
+        logbook: TRACE
       springframework:
-        security: DEBUG
+        security: INFO
+
+logbook:
+  strategy: status-at-least
+  minimum-status: 200
+  format:
+    style: http
+  # filter.enabled: false
 
 spring:
   jpa:
@@ -23,5 +32,3 @@ rsa:
 
 server:
   address: 0.0.0.0
-  servlet:
-    context-path: /api

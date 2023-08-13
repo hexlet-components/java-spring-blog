@@ -30,6 +30,9 @@ COPY src src
 
 RUN ./gradlew --no-daemon build
 
+COPY frontend frontend
+RUN cd frontend && npm run build
+
 ENV JAVA_OPTS "-Xmx512M -Xms512M"
 
 CMD ./gradlew bootRun

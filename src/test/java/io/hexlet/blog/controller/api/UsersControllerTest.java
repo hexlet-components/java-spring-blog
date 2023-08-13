@@ -1,4 +1,4 @@
-package io.hexlet.blog.controllers;
+package io.hexlet.blog.controller.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -14,9 +14,9 @@ public class UsersControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    // @Test
-    public void testIndex() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/users"))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-    }
+    // // @Test
+    // public void testIndex() throws Exception {
+    //     mockMvc.perform(MockMvcRequestBuilders.get("/api/users"))
+    //             .andExpect(MockMvcResultMatchers.status().isOk());
+    // }
 }

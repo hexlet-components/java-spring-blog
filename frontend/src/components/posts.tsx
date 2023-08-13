@@ -5,7 +5,9 @@ import {
   Edit,
   List,
   ReferenceField,
+  Show,
   SimpleForm,
+  SimpleShowLayout,
   TextField,
   TextInput,
 } from "react-admin";
@@ -43,4 +45,19 @@ export const PostList = () => (
       <DateField source="createdAt" showTime />
     </Datagrid>
   </List>
+);
+
+export const PostShow = () => (
+  <Show>
+    <SimpleShowLayout>
+      <TextField source="id" />
+      <ReferenceField source="authorId" reference="users">
+        <TextField source="username" />
+      </ReferenceField>
+      <TextField source="slug" />
+      <TextField source="name" />
+      <TextField source="body" />
+      <DateField source="createdAt" showTime />
+    </SimpleShowLayout>
+  </Show>
 );
