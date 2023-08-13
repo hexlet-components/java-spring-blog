@@ -35,5 +35,6 @@ RUN ./gradlew --no-daemon build
 COPY --from=frontend /frontend/dist /backend/src/main/resources/static
 
 ENV JAVA_OPTS "-Xmx512M -Xms512M"
+EXPOSE 8080
 
-CMD ./gradlew bootRun
+CMD java -jar build/libs/HexletSpringBlog-1.0-SNAPSHOT.jar
