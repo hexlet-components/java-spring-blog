@@ -12,4 +12,5 @@ public class PostDTO {
     private Long authorId;
     private String slug;
     private String name;
+    private String body;
 }

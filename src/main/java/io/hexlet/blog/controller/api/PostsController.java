@@ -15,10 +15,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import io.hexlet.blog.dto.PostDTO;
 import io.hexlet.blog.exception.ResourceNotFoundException;
 import io.hexlet.blog.model.Post;
 import io.hexlet.blog.repository.PostRepository;
+import io.hexlet.blog.util.UserUtils;
 import lombok.AllArgsConstructor;
 
 @RestController
@@ -30,6 +33,9 @@ public class PostsController {
 
     @Autowired
     private ModelMapper mm;
+
+    @Autowired
+    private UserUtils userUtils;
 
     @GetMapping("/posts")
     ResponseEntity<List<PostDTO>> index() {
@@ -44,8 +50,13 @@ public class PostsController {
     }
 
     @PostMapping("/posts")
-    PostDTO create(@RequestBody Post postData) {
-        var post = repository.save(postData);
+    PostDTO create(@RequestBody PostDTO postData) throws JsonProcessingException {
+        var post = new Post();
+        post.setName(postData.getName());
+        post.setSlug(postData.getSlug());
+        post.setBody(postData.getBody());
+        post.setAuthor(userUtils.getCurrentUser());
+        repository.save(post);
         var postDTO = mm.map(post, PostDTO.class);
         return postDTO;
     }
@@ -53,7 +64,7 @@ public class PostsController {
     @GetMapping("/posts/{id}")
     PostDTO show(@PathVariable Long id) {
         var post = repository.findById(id)
-        .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
+        .orElseThrow(() -> new ResourceNotFoundException("Not Found: " + id));
         var postDTO = mm.map(post, PostDTO.class);
         return postDTO;
     }

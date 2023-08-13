@@ -1,19 +1,26 @@
 ---
 logging:
   level:
+    root: WARN
     org:
       zalando:
         logbook: TRACE
       springframework:
-        security: INFO
+        # web: DEBUG
+        security: DEBUG
 
 logbook:
   strategy: status-at-least
-  minimum-status: 200
+  minimum-status: 400
   format:
     style: http
 
 spring:
+  # mvc:
+  #   log-request-details: true
+  #   log-resolved-exception: true
+  # codec:
+  #   log-request-details: true
   jpa:
     generate-ddl: true
     show-sql: true

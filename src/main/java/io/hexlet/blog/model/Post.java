@@ -43,9 +43,6 @@ public class Post {
     @NotNull
     private User author;
 
-    // @Column(name = "author", insertable = false, updatable = false)
-    // private Long authorId;
-
     @Column(unique = true)
     @ToString.Include
     private String slug;

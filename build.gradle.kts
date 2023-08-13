@@ -28,6 +28,7 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-security")
   implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 
+  implementation("org.springframework.security:spring-security-test")
   implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
 
   implementation("org.modelmapper:modelmapper:3.1.1")
@@ -37,8 +38,9 @@ dependencies {
   implementation("io.sentry:sentry-spring-boot-starter-jakarta:6.28.0")
   runtimeOnly("com.h2database:h2")
   testImplementation("org.springframework.boot:spring-boot-starter-test")
-  testImplementation(platform("org.junit:junit-bom:5.9.1"))
+  testImplementation(platform("org.junit:junit-bom"))
   testImplementation("org.junit.jupiter:junit-jupiter")
+  implementation("org.jeasy:easy-random-core:5.0.0")
 }
 
 tasks.test {
@@ -47,6 +49,8 @@ tasks.test {
   testLogging {
     exceptionFormat = TestExceptionFormat.FULL
     events = mutableSetOf(TestLogEvent.FAILED, TestLogEvent.PASSED, TestLogEvent.SKIPPED)
-    // showStandardStreams = true
+    // showStackTraces = true
+    // showCauses = true
+    showStandardStreams = true
   }
 }
