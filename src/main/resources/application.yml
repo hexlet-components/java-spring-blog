@@ -12,7 +12,6 @@ logbook:
   minimum-status: 200
   format:
     style: http
-  # filter.enabled: false
 
 spring:
   jpa:
