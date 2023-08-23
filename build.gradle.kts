@@ -4,14 +4,13 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 plugins {
   application
   // "checkstyle"
-  id("io.freefair.lombok") version "8.1.0"
+  id("io.freefair.lombok") version "8.2.2"
   id("org.springframework.boot") version "3.1.2"
-  id("io.spring.dependency-management") version "1.1.2"
+  id("io.spring.dependency-management") version "1.1.3"
   id("com.github.ben-manes.versions") version "0.47.0"
 }
 
 group = "io.hexlet.blog"
-
 version = "1.0-SNAPSHOT"
 
 application { mainClass.set("io.hexlet.blog.Application") }
@@ -29,7 +28,7 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 
   implementation("org.springframework.security:spring-security-test")
-  implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
+  implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
 
   implementation("org.modelmapper:modelmapper:3.1.1")
   implementation("org.zalando:logbook-spring-boot-starter:3.3.0")

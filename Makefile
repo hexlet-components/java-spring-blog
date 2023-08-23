@@ -1,6 +1,6 @@
 setup:
 	cd frontend && npm install
-	gradle wrapper --gradle-version 8.2.1
+	gradle wrapper --gradle-version 8.3
 	gradle build
 
 frontend:
