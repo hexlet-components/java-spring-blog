@@ -78,7 +78,7 @@ public class PostsController {
     }
 
     @DeleteMapping("/posts/{id}")
-    void deleteEmployee(@PathVariable Long id) {
+    void delete(@PathVariable Long id) {
         repository.deleteById(id);
     }
 }
