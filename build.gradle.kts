@@ -36,10 +36,10 @@ dependencies {
   implementation("net.datafaker:datafaker:2.0.1")
 
   implementation("io.sentry:sentry-spring-boot-starter-jakarta:6.28.0")
-  runtimeOnly("com.h2database:h2")
+  runtimeOnly("com.h2database:h2:2.2.220")
   testImplementation("org.springframework.boot:spring-boot-starter-test")
-  testImplementation(platform("org.junit:junit-bom"))
-  testImplementation("org.junit.jupiter:junit-jupiter")
+  testImplementation(platform("org.junit:junit-bom:5.10.0"))
+  testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
 
 }
 
