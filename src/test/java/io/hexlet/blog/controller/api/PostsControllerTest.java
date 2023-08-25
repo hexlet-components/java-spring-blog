@@ -55,10 +55,9 @@ public class PostsControllerTest {
 
     @Test
     public void testCreate() throws Exception {
-        var data = new PostDTO();
-        data.setSlug("someslug");
-        data.setName("somename");
-        data.setBody("somebody");
+        var data = Instancio.of(Post.class)
+                .ignore(field(Post.class, "id"))
+                .create();
 
         var request = post("/api/posts")
                 .with(token)

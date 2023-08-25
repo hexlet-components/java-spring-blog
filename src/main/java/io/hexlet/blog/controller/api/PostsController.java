@@ -22,6 +22,7 @@ import io.hexlet.blog.exception.ResourceNotFoundException;
 import io.hexlet.blog.model.Post;
 import io.hexlet.blog.repository.PostRepository;
 import io.hexlet.blog.util.UserUtils;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 @RestController
@@ -50,7 +51,7 @@ public class PostsController {
     }
 
     @PostMapping("/posts")
-    PostDTO create(@RequestBody PostDTO postData) throws JsonProcessingException {
+    PostDTO create(@Valid @RequestBody Post postData) throws JsonProcessingException {
         var post = new Post();
         post.setName(postData.getName());
         post.setSlug(postData.getSlug());
@@ -70,11 +71,11 @@ public class PostsController {
     }
 
     @PutMapping("/posts/{id}")
-    void update(@RequestBody Post newPost, @PathVariable Long id) {
+    void update(@RequestBody @Valid Post postData, @PathVariable Long id) {
         var post = repository.findById(id)
         .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
-        post.setName(newPost.getName());
-        post.setBody(newPost.getBody());
+        post.setName(postData.getName());
+        post.setBody(postData.getBody());
     }
 
     @DeleteMapping("/posts/{id}")
