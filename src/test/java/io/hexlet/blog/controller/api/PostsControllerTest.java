@@ -6,6 +6,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +20,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.hexlet.blog.dto.PostDTO;
 import io.hexlet.blog.model.Post;
 import io.hexlet.blog.repository.PostRepository;
 import io.hexlet.blog.util.UserUtils;
@@ -49,8 +49,11 @@ public class PostsControllerTest {
 
     @Test
     public void testIndex() throws Exception {
-        mockMvc.perform(get("/api/posts").with(jwt()))
-                .andExpect(status().isOk());
+        var result = mockMvc.perform(get("/api/posts").with(jwt()))
+                .andExpect(status().isOk())
+                .andReturn();
+        var body = result.getResponse().getContentAsString();
+        assertThatJson(body).isArray();
     }
 
     @Test
@@ -80,7 +83,14 @@ public class PostsControllerTest {
         postRepository.save(post);
 
         var request = get("/api/posts/" + post.getId()).with(jwt());
-        mockMvc.perform(request)
-                .andExpect(status().isOk());
+        var result = mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andReturn();
+        var body = result.getResponse().getContentAsString();
+        assertThatJson(body).and(
+            v -> v.node("slug").isEqualTo(post.getSlug()),
+            v -> v.node("name").isEqualTo(post.getName()),
+            v -> v.node("body").isEqualTo(post.getBody())
+        );
     }
 }
