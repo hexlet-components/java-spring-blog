@@ -11,22 +11,22 @@
   },
   "dependencies": {
     "axios": "^1.4.0",
-    "npm-check-updates": "^16.10.17",
-    "ra-data-json-server": "^4.12.2",
+    "npm-check-updates": "^16.13.1",
+    "ra-data-json-server": "^4.13.2",
     "react": "^18.2.0",
-    "react-admin": "^4.12.3",
+    "react-admin": "^4.13.2",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@types/react": "^18.2.18",
+    "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.7",
-    "@typescript-eslint/eslint-plugin": "^6.2.1",
-    "@typescript-eslint/parser": "^6.2.1",
+    "@typescript-eslint/eslint-plugin": "^6.4.1",
+    "@typescript-eslint/parser": "^6.4.1",
     "@vitejs/plugin-react": "^4.0.4",
-    "eslint": "^8.46.0",
+    "eslint": "^8.48.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
-    "typescript": "^5.1.6",
-    "vite": "^4.4.8"
+    "typescript": "^5.2.2",
+    "vite": "^4.4.9"
   }
 }
