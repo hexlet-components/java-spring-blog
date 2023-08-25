@@ -5,7 +5,7 @@ plugins {
   application
   // "checkstyle"
   id("io.freefair.lombok") version "8.2.2"
-  id("org.springframework.boot") version "3.1.2"
+  id("org.springframework.boot") version "3.1.3"
   id("io.spring.dependency-management") version "1.1.3"
   id("com.github.ben-manes.versions") version "0.47.0"
 }
@@ -31,15 +31,16 @@ dependencies {
   implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
 
   implementation("org.modelmapper:modelmapper:3.1.1")
-  implementation("org.zalando:logbook-spring-boot-starter:3.3.0")
 
+  implementation("org.instancio:instancio-junit:3.2.0")
   implementation("net.datafaker:datafaker:2.0.1")
+
   implementation("io.sentry:sentry-spring-boot-starter-jakarta:6.28.0")
   runtimeOnly("com.h2database:h2")
   testImplementation("org.springframework.boot:spring-boot-starter-test")
   testImplementation(platform("org.junit:junit-bom"))
   testImplementation("org.junit.jupiter:junit-jupiter")
-  implementation("org.jeasy:easy-random-core:5.0.0")
+
 }
 
 tasks.test {

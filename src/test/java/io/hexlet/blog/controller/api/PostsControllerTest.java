@@ -1,11 +1,13 @@
 package io.hexlet.blog.controller.api;
 
+import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +22,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.hexlet.blog.dto.PostDTO;
 import io.hexlet.blog.model.Post;
 import io.hexlet.blog.repository.PostRepository;
-import io.hexlet.blog.util.ModelFaker;
 import io.hexlet.blog.util.UserUtils;
 
 @SpringBootTest
@@ -39,20 +40,17 @@ public class PostsControllerTest {
     @Autowired
     private UserUtils userUtils;
 
-    @Autowired
-    private ModelFaker modelFaker;
-
-    @Test
-    public void testIndex() throws Exception {
-        mockMvc.perform(get("/api/posts").with(jwt()))
-                .andExpect(status().isOk());
-    }
-
     private JwtRequestPostProcessor token;
 
     @BeforeEach
     public void setUp() {
         token = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
+    }
+
+    @Test
+    public void testIndex() throws Exception {
+        mockMvc.perform(get("/api/posts").with(jwt()))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -76,7 +74,9 @@ public class PostsControllerTest {
 
     @Test
     public void testShow() throws Exception {
-        var post = modelFaker.fake(Post.class);
+        var post = Instancio.of(Post.class)
+                .ignore(field(Post.class, "id"))
+                .create();
         post.setAuthor(userUtils.getTestUser());
         postRepository.save(post);
 

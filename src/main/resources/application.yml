@@ -3,8 +3,6 @@ logging:
   level:
     root: WARN
     org:
-      zalando:
-        logbook: TRACE
       springframework:
         # web: DEBUG
         security: DEBUG
