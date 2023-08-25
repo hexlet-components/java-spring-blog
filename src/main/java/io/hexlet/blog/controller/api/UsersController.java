@@ -1,7 +1,6 @@
 package io.hexlet.blog.controller.api;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +28,7 @@ public class UsersController {
         var users = repository.findAll();
         var result = users.stream()
                 .map((user) -> mm.map(user, UserDTO.class))
-                .collect(Collectors.toList());
+        .toList();
         return ResponseEntity.ok()
                 .header("X-Total-Count", String.valueOf(users.size()))
                 .body(result);
