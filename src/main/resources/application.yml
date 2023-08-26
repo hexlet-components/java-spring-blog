@@ -7,12 +7,6 @@ logging:
         # web: DEBUG
         security: DEBUG
 
-logbook:
-  strategy: status-at-least
-  minimum-status: 400
-  format:
-    style: http
-
 spring:
   # mvc:
   #   log-request-details: true
