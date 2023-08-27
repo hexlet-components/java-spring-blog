@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import lombok.AllArgsConstructor;
+import net.datafaker.Faker;
 
 @SpringBootApplication
 @AllArgsConstructor
@@ -17,5 +18,10 @@ public class Application {
     @Bean
     public ModelMapper getModelMapper() {
         return new ModelMapper();
+    }
+
+    @Bean
+    public Faker getFaker() {
+        return new Faker();
     }
 }

@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.hexlet.blog.model.Post;
 import io.hexlet.blog.repository.PostRepository;
+import io.hexlet.blog.util.ModelGenerator;
 import io.hexlet.blog.util.UserUtils;
 
 @SpringBootTest
@@ -35,6 +36,9 @@ public class PostsControllerTest {
     private ObjectMapper om;
 
     @Autowired
+    private ModelGenerator modelGenerator;
+
+    @Autowired
     private PostRepository postRepository;
 
     @Autowired
@@ -45,6 +49,10 @@ public class PostsControllerTest {
     @BeforeEach
     public void setUp() {
         token = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
+        var testPost = Instancio.of(modelGenerator.getPostModel())
+                .create();
+        testPost.setAuthor(userUtils.getTestUser());
+        postRepository.save(testPost);
     }
 
     @Test
@@ -58,8 +66,7 @@ public class PostsControllerTest {
 
     @Test
     public void testCreate() throws Exception {
-        var data = Instancio.of(Post.class)
-                .ignore(field(Post.class, "id"))
+        var data = Instancio.of(modelGenerator.getPostModel())
                 .create();
 
         var request = post("/api/posts")
@@ -68,7 +75,7 @@ public class PostsControllerTest {
                 .content(om.writeValueAsString(data));
 
         mockMvc.perform(request)
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
 
         var post = postRepository.findBySlug(data.getSlug());
         assertNotNull(post.get());
@@ -76,8 +83,7 @@ public class PostsControllerTest {
 
     @Test
     public void testShow() throws Exception {
-        var post = Instancio.of(Post.class)
-                .ignore(field(Post.class, "id"))
+        var post = Instancio.of(modelGenerator.getPostModel())
                 .create();
         post.setAuthor(userUtils.getTestUser());
         postRepository.save(post);

@@ -40,6 +40,7 @@ public class PostsController {
     private UserUtils userUtils;
 
     @GetMapping("/posts")
+    @ResponseStatus(HttpStatus.OK)
     ResponseEntity<List<PostDTO>> index() {
         var posts = repository.findAll();
         var result = posts.stream()
@@ -65,6 +66,7 @@ public class PostsController {
     }
 
     @GetMapping("/posts/{id}")
+    @ResponseStatus(HttpStatus.OK)
     PostDTO show(@PathVariable Long id) {
         var post = repository.findById(id)
         .orElseThrow(() -> new ResourceNotFoundException("Not Found: " + id));
@@ -73,6 +75,7 @@ public class PostsController {
     }
 
     @PutMapping("/posts/{id}")
+    @ResponseStatus(HttpStatus.OK)
     void update(@RequestBody @Valid Post postData, @PathVariable Long id) {
         var post = repository.findById(id)
         .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
@@ -81,6 +84,7 @@ public class PostsController {
     }
 
     @DeleteMapping("/posts/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     void delete(@PathVariable Long id) {
         repository.deleteById(id);
     }
