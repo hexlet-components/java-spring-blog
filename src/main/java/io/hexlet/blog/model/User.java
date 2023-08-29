@@ -35,8 +35,7 @@ import lombok.ToString;
 @ToString(includeFieldNames = true, onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "users")
-public class User implements UserDetails {
-
+public class User implements UserDetails, BaseEntity {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @ToString.Include

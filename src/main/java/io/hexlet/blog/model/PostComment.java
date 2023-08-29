@@ -31,7 +31,7 @@ import lombok.ToString;
 @ToString(includeFieldNames = true, onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "post_comments")
-public class PostComment {
+public class PostComment implements BaseEntity {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
