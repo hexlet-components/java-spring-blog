@@ -71,7 +71,6 @@ public class PostsController {
     }
 
     @PatchMapping("/posts/{id}")
-
     @ResponseStatus(HttpStatus.OK)
     PostDTO update(@RequestBody @Valid PostDTO postData, @PathVariable Long id) {
         var post = repository.findById(id)
