@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -58,6 +59,21 @@ public class Application {
             .filter(p -> p.getSlug().equals(id))
             .findFirst();
         return page;
+    }
+
+    @PutMapping("/pages/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Page update(@PathVariable String id, @RequestBody Page data) {
+        var maybePage = pages.stream()
+            .filter(p -> p.getSlug().equals(id))
+            .findFirst();
+        if (maybePage.isPresent()) {
+            var page = maybePage.get();
+            page.setSlug(data.getSlug());
+            page.setName(data.getName());
+            page.setBody(data.getBody());
+        }
+        return data;
     }
 
     @DeleteMapping("/pages/{id}")
