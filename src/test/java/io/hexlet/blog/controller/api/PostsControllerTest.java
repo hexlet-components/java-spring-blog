@@ -75,8 +75,8 @@ public class PostsControllerTest {
         mockMvc.perform(request)
                 .andExpect(status().isCreated());
 
-        var post = postRepository.findBySlug(data.getSlug());
-        assertNotNull(post.get());
+        var post = postRepository.findBySlug(data.getSlug()).get();
+        assertNotNull(post);
     }
 
     @Test

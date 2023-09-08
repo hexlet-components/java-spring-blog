@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +27,7 @@ import net.datafaker.Faker;
 @SpringBootApplication
 @AllArgsConstructor
 @RestController
+@EnableJpaAuditing
 @RequestMapping("/api")
 public class Application {
     private List<Page> pages = new ArrayList<Page>();
