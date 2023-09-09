@@ -1,11 +1,14 @@
 package io.hexlet.blog.controller.api;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.Date;
 
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
@@ -77,6 +80,7 @@ public class PostsControllerTest {
 
         var post = postRepository.findBySlug(data.getSlug()).get();
         assertNotNull(post);
+        assertThat(post.getName()).isEqualTo(data.getName());
     }
 
     @Test
