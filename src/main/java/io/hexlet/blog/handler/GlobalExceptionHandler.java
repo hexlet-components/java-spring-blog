@@ -9,10 +9,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import io.hexlet.blog.exception.ResourceNotFoundException;
-import lombok.NoArgsConstructor;
 
 @ControllerAdvice
-@NoArgsConstructor
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
