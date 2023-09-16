@@ -36,7 +36,7 @@ dependencies {
 
 
     implementation("org.instancio:instancio-junit:3.2.0")
-    implementation("net.javacrumbs.json-unit:json-unit-assertj:3.0.0")
+    implementation("net.javacrumbs.json-unit:json-unit-assertj:3.2.2")
     implementation("net.datafaker:datafaker:2.0.1")
 
     // implementation("io.sentry:sentry-spring-boot-starter-jqueryakarta:6.28.0")

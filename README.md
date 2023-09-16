@@ -1,5 +1,10 @@
 # java-spring-blog
 
+## Required
+
+* Heroku CLI
+* Caddy
+
 ## Sources
 
 * https://www.danvega.dev/blog/2022/09/06/spring-security-jwt/
@@ -10,15 +15,13 @@ Demo: https://java-spring-blog.hexlet.app/
 
 ## Tools
 
-* [Railway](https://railway.app)
-* [LiveReload](https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei)
 * [checkstyle](https://github.com/checkstyle/checkstyle)
 
 ## Development
 
 ```bash
-# http://localhost:5001
-make start
+# https://localhost
+make dev
 
 make test
 ```

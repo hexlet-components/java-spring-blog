@@ -1,4 +1,4 @@
-FROM node:20 AS frontend
+FROM node:20.6.1 AS frontend
 
 WORKDIR /frontend
 
@@ -19,7 +19,6 @@ RUN apt-get update && apt-get install -yq make unzip
 WORKDIR /backend
 
 COPY gradle gradle
-COPY gradle.properties .
 COPY build.gradle.kts .
 COPY settings.gradle.kts .
 COPY gradlew .
@@ -27,7 +26,6 @@ COPY gradlew .
 RUN ./gradlew --no-daemon dependencies
 
 COPY lombok.config .
-COPY system.properties .
 COPY src src
 
 COPY --from=frontend /frontend/dist /backend/src/main/resources/static
