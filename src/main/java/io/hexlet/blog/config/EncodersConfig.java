@@ -18,14 +18,12 @@ import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 
 import io.hexlet.blog.component.RsaKeyProperties;
-import lombok.AllArgsConstructor;
 
 @Configuration
-@AllArgsConstructor
 public class EncodersConfig {
 
     @Autowired
-    private final RsaKeyProperties rsaKeys;
+    private RsaKeyProperties rsaKeys;
 
     @Bean
     public PasswordEncoder passwordEncoder() {

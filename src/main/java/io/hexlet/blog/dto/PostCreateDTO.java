@@ -1,17 +1,21 @@
 package io.hexlet.blog.dto;
 
-import java.util.Date;
-
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
-public class PostDTO {
-    private Long id;
+public class PostCreateDTO {
+    @NotNull
     private Long authorId;
+
+    @NotNull
     private String slug;
+
+    @NotNull
     private String name;
+
+    @NotNull
     private String body;
-    private Date createdAt;
 }

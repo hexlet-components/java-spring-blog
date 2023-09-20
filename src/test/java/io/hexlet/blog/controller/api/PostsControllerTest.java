@@ -1,18 +1,18 @@
 package io.hexlet.blog.controller.api;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.Date;
 
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,6 +22,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.hexlet.blog.dto.PostUpdateDTO;
+import io.hexlet.blog.mapper.PostMapper;
 import io.hexlet.blog.repository.PostRepository;
 import io.hexlet.blog.util.ModelGenerator;
 import io.hexlet.blog.util.UserUtils;
@@ -35,6 +37,9 @@ public class PostsControllerTest {
 
     @Autowired
     private ObjectMapper om;
+
+    @Autowired
+    private PostMapper postMapper;
 
     @Autowired
     private ModelGenerator modelGenerator;
@@ -58,7 +63,7 @@ public class PostsControllerTest {
 
     @Test
     public void testIndex() throws Exception {
-        var result = mockMvc.perform(get("/api/posts").with(jwt()))
+        var result = mockMvc.perform(get("/api/posts").with(token))
                 .andExpect(status().isOk())
                 .andReturn();
         var body = result.getResponse().getContentAsString();
@@ -69,11 +74,13 @@ public class PostsControllerTest {
     public void testCreate() throws Exception {
         var data = Instancio.of(modelGenerator.getPostModel())
                 .create();
+        data.setAuthor(userUtils.getTestUser());
+        var dto = postMapper.map(data);
 
         var request = post("/api/posts")
                 .with(token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(om.writeValueAsString(data));
+                .content(om.writeValueAsString(dto));
 
         mockMvc.perform(request)
                 .andExpect(status().isCreated());
@@ -81,6 +88,28 @@ public class PostsControllerTest {
         var post = postRepository.findBySlug(data.getSlug()).get();
         assertNotNull(post);
         assertThat(post.getName()).isEqualTo(data.getName());
+    }
+
+    @Test
+    public void testUpdate() throws Exception {
+        var post = Instancio.of(modelGenerator.getPostModel())
+                .create();
+        post.setAuthor(userUtils.getTestUser());
+        postRepository.save(post);
+
+        var data = new PostUpdateDTO();
+        data.setName(JsonNullable.of("new name"));
+
+        var request = put("/api/posts/" + post.getId())
+                .with(token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(om.writeValueAsString(data));
+
+        mockMvc.perform(request)
+                .andExpect(status().isOk());
+
+        post = postRepository.findById(post.getId()).get();
+        assertThat(post.getName()).isEqualTo(data.getName().get());
     }
 
     @Test
