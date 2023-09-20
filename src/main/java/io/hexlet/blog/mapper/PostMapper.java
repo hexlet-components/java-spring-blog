@@ -1,6 +1,5 @@
 package io.hexlet.blog.mapper;
 
-import org.mapstruct.InheritConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
