@@ -21,11 +21,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.hexlet.blog.model.Page;
-import lombok.AllArgsConstructor;
 import net.datafaker.Faker;
 
 @SpringBootApplication
-@AllArgsConstructor
 @RestController
 @EnableJpaAuditing
 @RequestMapping("/api")

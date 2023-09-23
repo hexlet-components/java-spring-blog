@@ -27,7 +27,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 
-    implementation("org.springframework.security:spring-security-test")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
 
     implementation("org.openapitools:jackson-databind-nullable:0.2.6")
@@ -42,6 +41,7 @@ dependencies {
 
     // implementation("io.sentry:sentry-spring-boot-starter-jqueryakarta:6.28.0")
     runtimeOnly("com.h2database:h2:2.2.222")
+    testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
