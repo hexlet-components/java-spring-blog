@@ -21,7 +21,7 @@ public class CustomUserDetailsService implements UserDetailsManager {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        var user = userRepository.findByUsername(email)
+        var user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         return user;
     }
@@ -29,7 +29,7 @@ public class CustomUserDetailsService implements UserDetailsManager {
     @Override
     public void createUser(UserDetails userData) {
         var user = new User();
-        user.setUsername(userData.getUsername());
+        user.setEmail(userData.getUsername());
         String hashedPassword = passwordEncoder.encode(userData.getPassword());
         user.setPassword(hashedPassword);
         userRepository.save(user);

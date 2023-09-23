@@ -32,11 +32,11 @@ public class DataInitializer implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         var email = "hexlet@example.com";
         var userData = new User();
-        userData.setUsername(email);
+        userData.setEmail(email);
         userData.setPassword("qwerty");
         userService.createUser(userData);
 
-        var user = userRepository.findByUsername(email).get();
+        var user = userRepository.findByEmail(email).get();
 
         var faker = new Faker();
         IntStream.range(1, 10).forEach(i -> {

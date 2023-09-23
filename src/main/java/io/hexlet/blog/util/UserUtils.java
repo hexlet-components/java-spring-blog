@@ -20,10 +20,10 @@ public class UserUtils {
             return null;
         }
         var email = authentication.getName();
-        return userRepository.findByUsername(email).get();
+        return userRepository.findByEmail(email).get();
     }
 
     public User getTestUser() {
-        return userRepository.findByUsername("hexlet@example.com").get();
+        return userRepository.findByEmail("hexlet@example.com").get();
     }
 }

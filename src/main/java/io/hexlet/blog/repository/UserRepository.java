@@ -9,5 +9,5 @@ import io.hexlet.blog.model.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findByUsername(String email);
+    Optional<User> findByEmail(String email);
 }

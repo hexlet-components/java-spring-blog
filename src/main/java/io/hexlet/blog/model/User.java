@@ -19,6 +19,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -43,8 +44,9 @@ public class User implements UserDetails, BaseEntity {
 
     // EMAIL
     @Column(unique = true)
+    @Email
     @ToString.Include
-    private String username;
+    private String email;
 
     // @NotBlank
     @ToString.Include
@@ -70,7 +72,7 @@ public class User implements UserDetails, BaseEntity {
 
     @Override
     public String getUsername() {
-        return username;
+        return email;
     }
 
     @Override

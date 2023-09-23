@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import io.hexlet.blog.model.Post;
+import io.hexlet.blog.model.User;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import net.datafaker.Faker;
@@ -15,6 +16,7 @@ import net.datafaker.Faker;
 @Component
 public class ModelGenerator {
     private Model<Post> postModel;
+    private Model<User> userModel;
 
     @Autowired
     private Faker faker;
@@ -22,6 +24,12 @@ public class ModelGenerator {
     @PostConstruct
     private void init() {
         postModel = Instancio.of(Post.class)
+                .ignore(Select.field(Post::getId))
+                .supply(Select.field(Post::getName), () -> faker.gameOfThrones().house())
+                .supply(Select.field(Post::getBody), () -> faker.gameOfThrones().quote())
+                .toModel();
+
+        userModel = Instancio.of(User.class)
                 .ignore(Select.field(Post::getId))
                 .supply(Select.field(Post::getName), () -> faker.gameOfThrones().house())
                 .supply(Select.field(Post::getBody), () -> faker.gameOfThrones().quote())
