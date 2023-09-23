@@ -10,6 +10,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 
 import io.hexlet.blog.dto.UserDTO;
+import io.hexlet.blog.dto.UserUpdateDTO;
 import io.hexlet.blog.model.User;
 
 @Mapper(
@@ -20,8 +21,9 @@ import io.hexlet.blog.model.User;
 )
 public abstract class UserMapper {
     public abstract User map(UserDTO model);
+    public abstract User map(UserUpdateDTO model);
 
     public abstract UserDTO map(User model);
 
-    public abstract void update(UserDTO update, @MappingTarget User destination);
+    public abstract void update(UserUpdateDTO update, @MappingTarget User destination);
 }

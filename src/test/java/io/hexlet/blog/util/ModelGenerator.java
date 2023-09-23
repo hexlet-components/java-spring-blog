@@ -31,8 +31,7 @@ public class ModelGenerator {
 
         userModel = Instancio.of(User.class)
                 .ignore(Select.field(Post::getId))
-                .supply(Select.field(Post::getName), () -> faker.gameOfThrones().house())
-                .supply(Select.field(Post::getBody), () -> faker.gameOfThrones().quote())
+                .supply(Select.field(User::getEmail), () -> faker.internet().emailAddress())
                 .toModel();
     }
 }
