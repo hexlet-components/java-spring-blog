@@ -6,10 +6,10 @@
     "start-frontend": "./bin/devServer.js"
   },
   "scripts": {
-    "dev": "npx vite --host",
-    "build": "npx tsc && npx vite build",
-    "lint": "npx eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "npx vite preview"
+    "dev": "vite --host",
+    "build": "tsc && npx vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
   },
   "dependencies": {
     "@types/react": "^18.2.21",
