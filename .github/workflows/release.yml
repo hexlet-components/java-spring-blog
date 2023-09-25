@@ -1,0 +1,31 @@
+name: On Release Frontend
+
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20.x'
+      - name: Install
+        run: make install -c frontend
+      - name: Run linter
+        run: make lint
+      - name: Run tests
+        run: make test
+      - name: Build dist
+        run: make build
+      - name: Publish
+        run: |
+          npm config set //registry.npmjs.org/:_authToken ${{ secrets.NPMJS_COM }}
+          make publish

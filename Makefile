@@ -1,10 +1,10 @@
 setup:
-	cd frontend && npm install
+	npm install
 	./gradlew wrapper --gradle-version 8.3
 	./gradlew build
 
 frontend:
-	cd frontend && npm run dev
+	npx start-frontend
 
 backend:
 	./gradlew bootRun --args='--spring.profiles.active=dev'
@@ -40,7 +40,7 @@ test:
 # 	./gradlew jacocoTestReport
 
 update-js-deps:
-	cd frontend && npx ncu -u
+	npx ncu -u
 
 check-java-deps:
 	./gradlew dependencyUpdates -Drevision=release

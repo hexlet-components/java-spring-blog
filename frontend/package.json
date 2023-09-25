@@ -1,32 +1,35 @@
 {
-  "name": "frontend",
-  "private": true,
-  "version": "0.0.0",
+  "name": "@hexlet/java-spring-blog-frontend",
+  "version": "1.0.0",
   "type": "module",
+  "bin": {
+    "start-frontend": "./bin/devServer.js"
+  },
   "scripts": {
-    "dev": "vite --host",
-    "build": "tsc && vite build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "dev": "npx vite --host",
+    "build": "npx tsc && npx vite build",
+    "lint": "npx eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "npx vite preview"
   },
   "dependencies": {
-    "axios": "^1.5.0",
-    "npm-check-updates": "^16.14.3",
-    "ra-data-json-server": "^4.14.1",
-    "react": "^18.2.0",
-    "react-admin": "^4.14.1",
-    "react-dom": "^18.2.0"
-  },
-  "devDependencies": {
     "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^6.7.0",
     "@typescript-eslint/parser": "^6.7.0",
     "@vitejs/plugin-react": "^4.0.4",
+    "axios": "^1.5.0",
+    "npm-check-updates": "^16.14.3",
+    "ra-data-json-server": "^4.14.1",
+    "react": "^18.2.0",
+    "react-admin": "^4.14.1",
+    "react-dom": "^18.2.0",
+    "typescript": "^5.2.2",
+    "url": "^0.11.3",
+    "vite": "^4.4.9"
+  },
+  "devDependencies": {
     "eslint": "^8.49.0",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.4.3",
-    "typescript": "^5.2.2",
-    "vite": "^4.4.9"
+    "eslint-plugin-react-refresh": "^0.4.3"
   }
 }
