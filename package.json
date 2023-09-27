@@ -10,6 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@hexlet/java-spring-blog-frontend": "^1.0.0"
+    "@hexlet/java-spring-blog-frontend": "file:./frontend"
   }
 }
