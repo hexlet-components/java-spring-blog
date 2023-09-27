@@ -1,11 +1,10 @@
 setup:
 	npm install
-	make -C frontend build
 	./gradlew wrapper --gradle-version 8.3
 	./gradlew build
 
 frontend:
-	npx start-frontend
+	make -C frontend start
 
 backend:
 	./gradlew bootRun --args='--spring.profiles.active=dev'

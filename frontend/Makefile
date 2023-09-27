@@ -1,5 +1,5 @@
 start:
-	npm start
+	npm run dev
 
 install:
 	npm i
