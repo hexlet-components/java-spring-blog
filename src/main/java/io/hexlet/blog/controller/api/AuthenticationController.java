@@ -10,14 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.hexlet.blog.dto.AuthRequest;
 import io.hexlet.blog.util.JWTUtils;
-import lombok.AllArgsConstructor;
 
 @RestController
-@AllArgsConstructor
 @RequestMapping("/api")
 public class AuthenticationController {
     @Autowired
-    private final JWTUtils jwtUtils;
+    private JWTUtils jwtUtils;
 
     @Autowired
     private AuthenticationManager authenticationManager;

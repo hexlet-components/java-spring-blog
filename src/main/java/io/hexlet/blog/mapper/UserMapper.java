@@ -1,9 +1,6 @@
 package io.hexlet.blog.mapper;
 
-import org.mapstruct.InheritConfiguration;
-import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;

@@ -2,12 +2,14 @@
 import jsonServerProvider from "ra-data-json-server";
 import {
   Admin,
+  ListGuesser,
   Resource,
+  ShowGuesser,
   fetchUtils,
 } from "react-admin";
 
-import { Dashboard } from "./components/Dashboard";
 import authProvider from "./authProvider";
+import { Dashboard } from "./components/Dashboard";
 import { PostCreate, PostEdit, PostList, PostShow } from "./components/posts";
 
 const httpClient = (url: string, options: any = {}) => {
@@ -34,6 +36,14 @@ const App = () => (
       list={PostList}
       show={PostShow}
       edit={PostEdit}
+    />
+
+    <Resource
+      name="users"
+      // create={CreateGuesser}
+      list={ListGuesser}
+      show={ShowGuesser}
+      // edit={PostEdit}
     />
   </Admin>
 );

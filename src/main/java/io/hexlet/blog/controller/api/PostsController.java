@@ -23,14 +23,12 @@ import io.hexlet.blog.mapper.PostMapper;
 import io.hexlet.blog.repository.PostRepository;
 import io.hexlet.blog.util.UserUtils;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 
 @RestController
-@AllArgsConstructor
 @RequestMapping("/api")
 public class PostsController {
     @Autowired
-    private final PostRepository repository;
+    private PostRepository repository;
 
     @Autowired
     private PostMapper postMapper;

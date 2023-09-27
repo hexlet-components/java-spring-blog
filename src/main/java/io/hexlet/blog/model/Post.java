@@ -43,7 +43,7 @@ public class Post implements BaseEntity {
 
     @Column(unique = true)
     @ToString.Include
-    @NotBlank
+    @NotNull
     private String slug;
 
     @NotBlank

@@ -17,15 +17,14 @@ import io.hexlet.blog.dto.UserDTO;
 import io.hexlet.blog.dto.UserUpdateDTO;
 import io.hexlet.blog.exception.ResourceNotFoundException;
 import io.hexlet.blog.mapper.UserMapper;
+import io.hexlet.blog.model.User;
 import io.hexlet.blog.repository.UserRepository;
-import lombok.AllArgsConstructor;
 
 @RestController
-@AllArgsConstructor
 @RequestMapping("/api")
 public class UsersController {
     @Autowired
-    private final UserRepository repository;
+    private UserRepository repository;
 
     @Autowired
     private UserMapper userMapper;
@@ -50,5 +49,13 @@ public class UsersController {
         repository.save(user);
         var userDTO = userMapper.map(user);
         return userDTO;
+    }
+
+    @GetMapping("/users/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    User show(@PathVariable Long id) {
+        var user = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
+        return user;
     }
 }
