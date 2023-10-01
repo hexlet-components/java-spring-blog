@@ -33,7 +33,7 @@ dependencies {
     implementation("org.mapstruct:mapstruct:1.5.5.Final")
     annotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")
 
-    implementation("io.github.wimdeblauwe:error-handling-spring-boot-starter:4.2.0")
+    // implementation("io.github.wimdeblauwe:error-handling-spring-boot-starter:4.2.0")
 
     implementation("org.instancio:instancio-junit:3.3.0")
     implementation("net.javacrumbs.json-unit:json-unit-assertj:3.2.2")

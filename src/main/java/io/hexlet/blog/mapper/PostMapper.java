@@ -20,12 +20,12 @@ import io.hexlet.blog.model.Post;
 )
 public abstract class PostMapper {
     @Mapping(target = "author", source = "authorId")
-    public abstract Post map(PostCreateDTO model);
+    public abstract Post map(PostCreateDTO dto);
     @Mapping(target = "author", source = "authorId")
-    public abstract Post map(PostUpdateDTO model);
+    public abstract Post map(PostUpdateDTO dto);
 
     @Mapping(source = "author.id", target = "authorId")
     public abstract PostDTO map(Post model);
 
-    public abstract void update(PostUpdateDTO update, @MappingTarget Post destination);
+    public abstract void update(PostUpdateDTO dto, @MappingTarget Post model);
 }
