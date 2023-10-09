@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -41,9 +42,9 @@ public class User implements UserDetails, BaseEntity {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Post> posts;
+    private List<Post> posts = new ArrayList<>();
 
     // EMAIL
     @Column(unique = true)

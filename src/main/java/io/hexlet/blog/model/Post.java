@@ -37,8 +37,8 @@ public class Post implements BaseEntity {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @NotNull
+    @ManyToOne(optional = false)
+    // @NotNull
     private User author;
 
     @Column(unique = true)

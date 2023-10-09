@@ -30,7 +30,8 @@ public class ModelGenerator {
                 .toModel();
 
         userModel = Instancio.of(User.class)
-                .ignore(Select.field(Post::getId))
+                .ignore(Select.field(User::getId))
+                .ignore(Select.field(User::getPosts))
                 .supply(Select.field(User::getEmail), () -> faker.internet().emailAddress())
                 .toModel();
     }

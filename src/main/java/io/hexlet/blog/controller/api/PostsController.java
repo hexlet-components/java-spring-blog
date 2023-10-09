@@ -81,7 +81,7 @@ public class PostsController {
 
     @DeleteMapping("/posts/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void delete(@PathVariable Long id) {
+    void destroy(@PathVariable Long id) {
         repository.deleteById(id);
     }
 }

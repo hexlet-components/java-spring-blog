@@ -9,7 +9,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.HashMap;
 
 import org.instancio.Instancio;
-import org.instancio.Select;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,10 +46,12 @@ public class UsersControllerTest {
 
     private JwtRequestPostProcessor token;
 
+    private User testUser;
+
     @BeforeEach
     public void setUp() {
         token = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
-        var testUser = Instancio.of(modelGenerator.getUserModel())
+        testUser = Instancio.of(modelGenerator.getUserModel())
                 .create();
         userRepository.save(testUser);
     }
@@ -63,16 +64,11 @@ public class UsersControllerTest {
 
     @Test
     public void testUpdate() throws Exception {
-        var user = Instancio.of(User.class)
-                .ignore(Select.field(User::getId))
-                .supply(Select.field(User::getEmail), () -> faker.internet().emailAddress())
-                .create();
-        userRepository.save(user);
 
         var data = new HashMap<>();
         data.put("firstName", "Mike");
 
-        var request = put("/api/users/" + user.getId())
+        var request = put("/api/users/" + testUser.getId())
                 .with(token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(data));
@@ -80,7 +76,7 @@ public class UsersControllerTest {
         mockMvc.perform(request)
                  .andExpect(status().isOk());
 
-        user = userRepository.findById(user.getId()).get();
+        var user = userRepository.findById(testUser.getId()).get();
         assertThat(user.getFirstName()).isEqualTo(("Mike"));
     }
 }

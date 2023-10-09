@@ -9,11 +9,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @Configuration
 public class JacksonConfig {
-    // TODO: not working
-    // @Bean
-    // public JsonNullableModule jsonNullableModule() {
-    //     return new JsonNullableModule();
-    // }
     @Bean
     Jackson2ObjectMapperBuilder objectMapperBuilder() {
         var builder = new Jackson2ObjectMapperBuilder();

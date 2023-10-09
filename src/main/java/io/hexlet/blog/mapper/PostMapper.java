@@ -21,8 +21,6 @@ import io.hexlet.blog.model.Post;
 public abstract class PostMapper {
     @Mapping(target = "author", source = "authorId")
     public abstract Post map(PostCreateDTO dto);
-    @Mapping(target = "author", source = "authorId")
-    public abstract Post map(PostUpdateDTO dto);
 
     @Mapping(source = "author.id", target = "authorId")
     public abstract PostDTO map(Post model);
