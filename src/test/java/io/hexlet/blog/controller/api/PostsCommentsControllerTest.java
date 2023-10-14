@@ -83,7 +83,7 @@ public class PostsCommentsControllerTest {
 
     @Test
     public void testFilteredIndex() throws Exception {
-        var result = mockMvc.perform(get("/api/posts_comments?post_id=" + testPost.getId()).with(token))
+        var result = mockMvc.perform(get("/api/posts_comments?postId=" + testPost.getId()).with(token))
                 .andExpect(status().isOk())
                 .andReturn();
         var body = result.getResponse().getContentAsString();
