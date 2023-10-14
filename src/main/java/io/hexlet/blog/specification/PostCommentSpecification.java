@@ -14,9 +14,7 @@ import io.hexlet.blog.model.PostComment;
 @Component
 public class PostCommentSpecification {
     public Specification<PostComment> build(PostCommentParamsDTO params) {
-        Specification<PostComment> spec = Specification.where(null);
-        return spec
-                .and(withPostId(params.getPostId()))
+        return withPostId(params.getPostId())
                 .and(withCreatedAtGt(params.getCreatedAtGt()));
     }
 
