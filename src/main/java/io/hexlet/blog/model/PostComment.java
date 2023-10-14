@@ -4,9 +4,10 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 
 import java.util.Date;
 
-import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,7 +33,8 @@ public class PostComment implements BaseEntity {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @CreatedBy
+    @JsonIgnore
+    @ManyToOne(optional = false)
     private User author;
 
     @NotNull

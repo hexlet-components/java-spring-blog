@@ -1,10 +1,9 @@
 package io.hexlet.blog.model;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@NoArgsConstructor
+// @NoArgsConstructor
 @Setter
 @Getter
 public class Page {

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.hexlet.blog.service.PostService;
 import io.hexlet.blog.dto.PostCreateDTO;
 import io.hexlet.blog.dto.PostDTO;
 import io.hexlet.blog.dto.PostUpdateDTO;
@@ -36,17 +37,17 @@ public class PostsController {
     @Autowired
     private UserUtils userUtils;
 
+    @Autowired
+    private PostService postService;
+
     @GetMapping("/posts")
     @ResponseStatus(HttpStatus.OK)
     ResponseEntity<List<PostDTO>> index() {
-        var posts = repository.findAll();
-        var result = posts.stream()
-                .map(postMapper::map)
-                .toList();
+        var posts = postService.getAll();
 
         return ResponseEntity.ok()
                 .header("X-Total-Count", String.valueOf(posts.size()))
-                .body(result);
+                .body(posts);
     }
 
     @PostMapping("/posts")
