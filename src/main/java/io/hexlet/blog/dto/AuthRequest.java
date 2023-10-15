@@ -1,4 +1,11 @@
 package io.hexlet.blog.dto;
 
-public record AuthRequest(String username, String password) {
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
+public class AuthRequest {
+    private String username;
+    private String password;
 }

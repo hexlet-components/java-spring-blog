@@ -33,7 +33,7 @@ public class DataInitializer implements ApplicationRunner {
         var email = "hexlet@example.com";
         var userData = new User();
         userData.setEmail(email);
-        userData.setPassword("qwerty");
+        userData.setPasswordDigest("qwerty");
         userService.createUser(userData);
 
         var user = userRepository.findByEmail(email).get();

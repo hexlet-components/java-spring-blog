@@ -18,17 +18,15 @@ import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 import io.hexlet.blog.service.CustomUserDetailsService;
-import lombok.AllArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
-@AllArgsConstructor
 public class SecurityConfig {
     @Autowired
-    private final JwtDecoder jwtDecoder;
+    private JwtDecoder jwtDecoder;
 
     @Autowired
-    private final PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private CustomUserDetailsService userService;

@@ -60,8 +60,7 @@ public class User implements UserDetails, BaseEntity {
     @ToString.Include
     private String lastName;
 
-    @NotBlank
-    private String password;
+    private String passwordDigest;
 
     @LastModifiedDate
     private Date updatedAt;
@@ -71,7 +70,7 @@ public class User implements UserDetails, BaseEntity {
 
     @Override
     public String getPassword() {
-        return password;
+        return passwordDigest;
     }
 
     @Override
