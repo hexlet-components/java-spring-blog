@@ -42,8 +42,7 @@ public class PostComment implements BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String body;
 
-    @NotNull
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Post post;
 
     @LastModifiedDate
