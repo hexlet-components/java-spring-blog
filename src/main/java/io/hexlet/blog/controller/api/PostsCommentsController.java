@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import io.hexlet.blog.dto.PostCommentDTO;
 import io.hexlet.blog.dto.PostCommentParamsDTO;
 import io.hexlet.blog.mapper.PostCommentMapper;
-import io.hexlet.blog.model.PostComment;
 import io.hexlet.blog.repository.PostCommentRepository;
 import io.hexlet.blog.specification.PostCommentSpecification;
 
