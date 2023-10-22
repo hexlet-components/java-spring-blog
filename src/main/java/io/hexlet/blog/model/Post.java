@@ -2,7 +2,7 @@ package io.hexlet.blog.model;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -58,8 +58,8 @@ public class Post implements BaseEntity {
     private String body;
 
     @LastModifiedDate
-    private Date updatedAt;
+    private LocalDate updatedAt;
 
     @CreatedDate
-    private Date createdAt;
+    private LocalDate createdAt;
 }

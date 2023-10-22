@@ -2,9 +2,9 @@ package io.hexlet.blog.model;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -17,13 +17,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -63,10 +61,10 @@ public class User implements UserDetails, BaseEntity {
     private String passwordDigest;
 
     @LastModifiedDate
-    private Date updatedAt;
+    private LocalDate updatedAt;
 
     @CreatedDate
-    private Date createdAt;
+    private LocalDate createdAt;
 
     @Override
     public String getPassword() {
