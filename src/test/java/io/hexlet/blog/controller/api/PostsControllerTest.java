@@ -111,6 +111,25 @@ public class PostsControllerTest {
     }
 
     @Test
+    public void testUpdateFailed() throws Exception {
+        postRepository.save(testPost);
+
+        var data = new PostUpdateDTO();
+        data.setName(JsonNullable.of("new name"));
+
+        var request = put("/api/posts/" + testPost.getId())
+                .with(jwt())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(om.writeValueAsString(data));
+
+        mockMvc.perform(request)
+                .andExpect(status().isForbidden());
+
+        var actualPost = postRepository.findById(testPost.getId()).get();
+        assertThat(actualPost.getName()).isEqualTo(testPost.getName());
+    }
+
+    @Test
     public void testShow() throws Exception {
         postRepository.save(testPost);
 
@@ -128,10 +147,20 @@ public class PostsControllerTest {
     @Test
     public void testDestroy() throws Exception {
         postRepository.save(testPost);
-        var request = delete("/api/posts/" + testPost.getId()).with(jwt());
+        var request = delete("/api/posts/" + testPost.getId()).with(token);
         mockMvc.perform(request)
                 .andExpect(status().isNoContent());
 
         assertThat(postRepository.existsById(testPost.getId())).isEqualTo(false);
+    }
+
+    @Test
+    public void testDestroyFailed() throws Exception {
+        postRepository.save(testPost);
+        var request = delete("/api/posts/" + testPost.getId()).with(jwt());
+        mockMvc.perform(request)
+                .andExpect(status().isForbidden());
+
+        assertThat(postRepository.existsById(testPost.getId())).isEqualTo(true);
     }
 }

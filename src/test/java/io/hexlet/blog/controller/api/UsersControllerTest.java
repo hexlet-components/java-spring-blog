@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.HashMap;
@@ -60,6 +61,19 @@ public class UsersControllerTest {
     public void testIndex() throws Exception {
         mockMvc.perform(get("/api/users").with(jwt()))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void testCreate() throws Exception {
+        var data = Instancio.of(modelGenerator.getUserModel())
+                .create();
+
+        var request = post("/api/users")
+                .with(token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(om.writeValueAsString(data));
+        mockMvc.perform(request)
+                .andExpect(status().isCreated());
     }
 
     @Test
