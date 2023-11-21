@@ -1,6 +1,7 @@
 package io.hexlet.blog.controller.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -74,6 +75,12 @@ public class UsersControllerTest {
                 .content(om.writeValueAsString(data));
         mockMvc.perform(request)
                 .andExpect(status().isCreated());
+
+        var user = userRepository.findByEmail(data.getEmail()).get();
+
+        assertNotNull(user);
+        assertThat(user.getFirstName()).isEqualTo(data.getFirstName());
+        assertThat(user.getLastName()).isEqualTo(data.getLastName());
     }
 
     @Test

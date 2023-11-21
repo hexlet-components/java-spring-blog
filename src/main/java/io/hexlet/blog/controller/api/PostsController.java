@@ -30,10 +30,6 @@ import jakarta.validation.Valid;
 @RequestMapping("/api")
 public class PostsController {
 
-    private static final String ONLY_AUTHOR = """
-                @postRepository.findById(#id).get().getAuthor().getEmail() == authentication.getName()
-            """;
-
     @Autowired
     private PostRepository repository;
 
@@ -77,7 +73,7 @@ public class PostsController {
 
     @PutMapping("/posts/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize(ONLY_AUTHOR)
+    @PreAuthorize("@userUtils.isAuthor(#id)")
     PostDTO update(@RequestBody @Valid PostUpdateDTO postData, @PathVariable Long id) {
         var post = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
@@ -89,7 +85,7 @@ public class PostsController {
 
     @DeleteMapping("/posts/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize(ONLY_AUTHOR)
+    @PreAuthorize("@userUtils.isAuthor(#id)")
     void destroy(@PathVariable Long id) {
         repository.deleteById(id);
     }

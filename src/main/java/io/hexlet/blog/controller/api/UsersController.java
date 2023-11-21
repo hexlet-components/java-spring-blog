@@ -36,7 +36,7 @@ public class UsersController {
         var users = repository.findAll();
         var result = users.stream()
                 .map(userMapper::map)
-        .toList();
+                .toList();
         return ResponseEntity.ok()
                 .header("X-Total-Count", String.valueOf(users.size()))
                 .body(result);
