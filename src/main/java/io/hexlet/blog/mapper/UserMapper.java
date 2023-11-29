@@ -1,5 +1,6 @@
 package io.hexlet.blog.mapper;
 
+import io.hexlet.blog.dto.UserCreateDTO;
 import org.mapstruct.BeforeMapping;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
@@ -26,21 +27,19 @@ public abstract class UserMapper {
     @Autowired
     private BCryptPasswordEncoder encoder;
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "email", source = "username")
     @Mapping(target = "passwordDigest", source = "password")
-    public abstract User map(UserDTO model);
+    public abstract User map(UserCreateDTO model);
 
     public abstract User map(UserUpdateDTO model);
 
-    @InheritInverseConfiguration
+    @Mapping(target = "username", source = "email")
     @Mapping(target = "password", ignore = true)
     public abstract UserDTO map(User model);
 
     public abstract void update(UserUpdateDTO update, @MappingTarget User destination);
 
     @BeforeMapping
-    public void encryptPassword(UserDTO data) {
+    public void encryptPassword(UserCreateDTO data) {
         var password = data.getPassword();
         data.setPassword(encoder.encode(password));
     }

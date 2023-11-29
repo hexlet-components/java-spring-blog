@@ -2,6 +2,7 @@ package io.hexlet.blog.controller.api;
 
 import java.util.List;
 
+import io.hexlet.blog.dto.UserCreateDTO;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,7 +45,7 @@ public class UsersController {
 
     @PostMapping("/users")
     @ResponseStatus(HttpStatus.CREATED)
-    UserDTO create(@Valid @RequestBody UserDTO userData) {
+    UserDTO create(@Valid @RequestBody UserCreateDTO userData) {
         var user = userMapper.map(userData);
         repository.save(user);
         return userMapper.map(user);
@@ -63,9 +64,9 @@ public class UsersController {
 
     @GetMapping("/users/{id}")
     @ResponseStatus(HttpStatus.OK)
-    User show(@PathVariable Long id) {
+    UserDTO show(@PathVariable Long id) {
         var user = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
-        return user;
+        return userMapper.map(user);
     }
 }
