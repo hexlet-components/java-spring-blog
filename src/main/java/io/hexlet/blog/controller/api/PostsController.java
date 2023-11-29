@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +29,7 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api")
 public class PostsController {
+
     @Autowired
     private PostRepository repository;
 
@@ -71,6 +73,7 @@ public class PostsController {
 
     @PutMapping("/posts/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("@userUtils.isAuthor(#id)")
     PostDTO update(@RequestBody @Valid PostUpdateDTO postData, @PathVariable Long id) {
         var post = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
@@ -82,6 +85,7 @@ public class PostsController {
 
     @DeleteMapping("/posts/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("@userUtils.isAuthor(#id)")
     void destroy(@PathVariable Long id) {
         repository.deleteById(id);
     }
