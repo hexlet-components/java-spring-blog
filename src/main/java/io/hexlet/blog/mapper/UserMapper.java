@@ -1,20 +1,19 @@
 package io.hexlet.blog.mapper;
 
-import io.hexlet.blog.dto.UserCreateDTO;
 import org.mapstruct.BeforeMapping;
-import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import io.hexlet.blog.dto.UserCreateDTO;
 import io.hexlet.blog.dto.UserDTO;
 import io.hexlet.blog.dto.UserUpdateDTO;
 import io.hexlet.blog.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Mapper(
         uses = {JsonNullableMapper.class, ReferenceMapper.class},

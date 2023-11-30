@@ -2,8 +2,6 @@ package io.hexlet.blog.controller.api;
 
 import java.util.List;
 
-import io.hexlet.blog.dto.UserCreateDTO;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,12 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.hexlet.blog.dto.UserCreateDTO;
 import io.hexlet.blog.dto.UserDTO;
 import io.hexlet.blog.dto.UserUpdateDTO;
 import io.hexlet.blog.exception.ResourceNotFoundException;
 import io.hexlet.blog.mapper.UserMapper;
-import io.hexlet.blog.model.User;
 import io.hexlet.blog.repository.UserRepository;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api")

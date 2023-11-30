@@ -15,7 +15,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 import io.hexlet.blog.service.CustomUserDetailsService;
@@ -36,18 +35,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, HandlerMappingIntrospector introspector)
             throws Exception {
-        // TODO: remove after merge
-        // https://github.com/spring-projects/spring-security/issues/13568#issuecomment-1645059215
-        var mvcMatcherBuilder = new MvcRequestMatcher.Builder(introspector);
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(mvcMatcherBuilder.pattern("/api/login")).permitAll()
-                        .requestMatchers(mvcMatcherBuilder.pattern("/api/pages/*")).permitAll()
-                        .requestMatchers(mvcMatcherBuilder.pattern("/api/pages")).permitAll()
-                        .requestMatchers(mvcMatcherBuilder.pattern("/")).permitAll()
-                        .requestMatchers(mvcMatcherBuilder.pattern("/index.html")).permitAll()
-                        .requestMatchers(mvcMatcherBuilder.pattern("/assets/**")).permitAll()
+                        .requestMatchers("/api/login").permitAll()
+                        .requestMatchers("/api/pages/*").permitAll()
+                        .requestMatchers("/api/pages").permitAll()
+                        .requestMatchers("/").permitAll()
+                        .requestMatchers("/index.html").permitAll()
+                        .requestMatchers("/assets/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .oauth2ResourceServer((rs) -> rs.jwt((jwt) -> jwt.decoder(jwtDecoder)))
