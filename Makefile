@@ -1,6 +1,6 @@
 setup:
 	npm install
-	./gradlew wrapper --gradle-version 8.4
+	./gradlew wrapper --gradle-version 8.5
 	./gradlew build
 
 frontend:
