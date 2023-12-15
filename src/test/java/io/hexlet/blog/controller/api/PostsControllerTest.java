@@ -30,6 +30,8 @@ import io.hexlet.blog.repository.PostRepository;
 import io.hexlet.blog.util.ModelGenerator;
 import io.hexlet.blog.util.UserUtils;
 
+import java.nio.charset.StandardCharsets;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 public class PostsControllerTest {
@@ -70,7 +72,7 @@ public class PostsControllerTest {
         var result = mockMvc.perform(get("/api/posts").with(token))
                 .andExpect(status().isOk())
                 .andReturn();
-        var body = result.getResponse().getContentAsString();
+        var body = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
         assertThatJson(body).isArray();
     }
 
@@ -137,7 +139,7 @@ public class PostsControllerTest {
         var result = mockMvc.perform(request)
                 .andExpect(status().isOk())
                 .andReturn();
-        var body = result.getResponse().getContentAsString();
+        var body = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
         assertThatJson(body).and(
                 v -> v.node("slug").isEqualTo(testPost.getSlug()),
                 v -> v.node("name").isEqualTo(testPost.getName()),

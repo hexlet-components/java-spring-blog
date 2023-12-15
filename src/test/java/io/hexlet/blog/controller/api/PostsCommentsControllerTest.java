@@ -21,6 +21,8 @@ import io.hexlet.blog.util.ModelGenerator;
 import io.hexlet.blog.util.UserUtils;
 import jakarta.transaction.Transactional;
 
+import java.nio.charset.StandardCharsets;
+
 @SpringBootTest
 @Transactional
 @AutoConfigureMockMvc
@@ -74,7 +76,7 @@ public class PostsCommentsControllerTest {
         var result = mockMvc.perform(get("/api/posts_comments").with(token))
                 .andExpect(status().isOk())
                 .andReturn();
-        var body = result.getResponse().getContentAsString();
+        var body = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
         assertThatJson(body)
             .node("content")
             .isArray()
@@ -86,7 +88,7 @@ public class PostsCommentsControllerTest {
         var result = mockMvc.perform(get("/api/posts_comments?postId=" + testPost.getId()).with(token))
                 .andExpect(status().isOk())
                 .andReturn();
-        var body = result.getResponse().getContentAsString();
+        var body = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
         assertThatJson(body)
             .node("content")
             .isArray()
