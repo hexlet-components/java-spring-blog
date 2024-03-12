@@ -29,12 +29,17 @@ import io.hexlet.blog.model.Post;
 import io.hexlet.blog.repository.PostRepository;
 import io.hexlet.blog.util.ModelGenerator;
 import io.hexlet.blog.util.UserUtils;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.nio.charset.StandardCharsets;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 public class PostsControllerTest {
+
+    @Autowired
+    private WebApplicationContext wac;
 
     @Autowired
     private MockMvc mockMvc;
@@ -60,6 +65,10 @@ public class PostsControllerTest {
 
     @BeforeEach
     public void setUp() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(wac)
+                .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
+                .build();
+
         token = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
         testPost = Instancio.of(modelGenerator.getPostModel())
                 .create();
@@ -72,7 +81,7 @@ public class PostsControllerTest {
         var result = mockMvc.perform(get("/api/posts").with(token))
                 .andExpect(status().isOk())
                 .andReturn();
-        var body = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
+        var body = result.getResponse().getContentAsString();
         assertThatJson(body).isArray();
     }
 
@@ -139,7 +148,7 @@ public class PostsControllerTest {
         var result = mockMvc.perform(request)
                 .andExpect(status().isOk())
                 .andReturn();
-        var body = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
+        var body = result.getResponse().getContentAsString();
         assertThatJson(body).and(
                 v -> v.node("slug").isEqualTo(testPost.getSlug()),
                 v -> v.node("name").isEqualTo(testPost.getName()),
