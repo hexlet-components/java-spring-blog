@@ -4,8 +4,8 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 plugins {
     application
     // "checkstyle"
-    id("io.freefair.lombok") version "8.4"
-    id("org.springframework.boot") version "3.2.0"
+    id("io.freefair.lombok") version "8.6"
+    id("org.springframework.boot") version "3.2.4"
     id("io.spring.dependency-management") version "1.1.4"
     id("com.github.ben-manes.versions") version "0.50.0"
 }
