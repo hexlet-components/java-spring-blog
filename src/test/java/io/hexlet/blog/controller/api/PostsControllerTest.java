@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import io.hexlet.blog.dto.PostDTO;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,7 @@ import io.hexlet.blog.model.Post;
 import io.hexlet.blog.repository.PostRepository;
 import io.hexlet.blog.util.ModelGenerator;
 import io.hexlet.blog.util.UserUtils;
+
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -55,6 +57,7 @@ public class PostsControllerTest {
     private JwtRequestPostProcessor token;
 
     private Post testPost;
+
 
     @BeforeEach
     public void setUp() {
@@ -137,11 +140,15 @@ public class PostsControllerTest {
         var result = mockMvc.perform(request)
                 .andExpect(status().isOk())
                 .andReturn();
+
         var body = result.getResponse().getContentAsString();
-        assertThatJson(body).and(
-                v -> v.node("slug").isEqualTo(testPost.getSlug()),
-                v -> v.node("name").isEqualTo(testPost.getName()),
-                v -> v.node("body").isEqualTo(testPost.getBody()));
+
+        PostDTO postDTO = om.readValue(body, PostDTO.class);
+        PostDTO testPostDTO = postMapper.map(testPost);
+
+        assertThat(postDTO.getName()).isEqualTo(testPostDTO.getName());
+        assertThat(postDTO.getSlug()).isEqualTo(testPostDTO.getSlug());
+        assertThat(postDTO.getBody()).isEqualTo(testPostDTO.getBody());
     }
 
     @Test
