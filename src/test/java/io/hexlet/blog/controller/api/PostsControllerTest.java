@@ -4,6 +4,7 @@ import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -19,6 +20,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,10 +31,18 @@ import io.hexlet.blog.model.Post;
 import io.hexlet.blog.repository.PostRepository;
 import io.hexlet.blog.util.ModelGenerator;
 import io.hexlet.blog.util.UserUtils;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+
+import java.nio.charset.StandardCharsets;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@WebAppConfiguration
 public class PostsControllerTest {
+
+    @Autowired
+    private WebApplicationContext wac;
 
     @Autowired
     private MockMvc mockMvc;
@@ -58,7 +68,13 @@ public class PostsControllerTest {
 
     @BeforeEach
     public void setUp() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(wac)
+                .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
+                .apply(springSecurity())
+                .build();
+
         token = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
+
         testPost = Instancio.of(modelGenerator.getPostModel())
                 .create();
         testPost.setAuthor(userUtils.getTestUser());
