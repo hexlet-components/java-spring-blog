@@ -27,6 +27,7 @@ import io.hexlet.blog.repository.UserRepository;
 import io.hexlet.blog.util.ModelGenerator;
 import net.datafaker.Faker;
 
+
 @SpringBootTest
 @AutoConfigureMockMvc
 public class UsersControllerTest {
@@ -76,7 +77,7 @@ public class UsersControllerTest {
         mockMvc.perform(request)
                 .andExpect(status().isCreated());
 
-        var user = userRepository.findByEmail(data.getEmail()).get();
+        var user = userRepository.findByEmail(data.getEmail()).orElseThrow();
 
         assertNotNull(user);
         assertThat(user.getFirstName()).isEqualTo(data.getFirstName());
@@ -97,7 +98,7 @@ public class UsersControllerTest {
         mockMvc.perform(request)
                  .andExpect(status().isOk());
 
-        var user = userRepository.findById(testUser.getId()).get();
+        var user = userRepository.findById(testUser.getId()).orElseThrow();
         assertThat(user.getFirstName()).isEqualTo(("Mike"));
     }
 }

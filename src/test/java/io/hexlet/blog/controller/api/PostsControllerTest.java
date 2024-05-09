@@ -89,7 +89,7 @@ public class PostsControllerTest {
         mockMvc.perform(request)
                 .andExpect(status().isCreated());
 
-        var post = postRepository.findBySlug(testPost.getSlug()).get();
+        var post = postRepository.findBySlug(testPost.getSlug()).orElseThrow();
         assertNotNull(post);
         assertThat(post.getName()).isEqualTo(testPost.getName());
     }
@@ -109,7 +109,7 @@ public class PostsControllerTest {
         mockMvc.perform(request)
                 .andExpect(status().isOk());
 
-        testPost = postRepository.findById(testPost.getId()).get();
+        testPost = postRepository.findById(testPost.getId()).orElseThrow();
         assertThat(testPost.getName()).isEqualTo(data.getName().get());
     }
 
@@ -128,7 +128,7 @@ public class PostsControllerTest {
         mockMvc.perform(request)
                 .andExpect(status().isForbidden());
 
-        var actualPost = postRepository.findById(testPost.getId()).get();
+        var actualPost = postRepository.findById(testPost.getId()).orElseThrow();
         assertThat(actualPost.getName()).isEqualTo(testPost.getName());
     }
 
