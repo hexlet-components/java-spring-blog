@@ -1,10 +1,11 @@
 package io.hexlet.blog.controller.api;
 
-import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,11 @@ import io.hexlet.blog.repository.PostRepository;
 import io.hexlet.blog.util.ModelGenerator;
 import io.hexlet.blog.util.UserUtils;
 import jakarta.transaction.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 
 @SpringBootTest
 @Transactional
@@ -44,6 +50,10 @@ public class PostsCommentsControllerTest {
     private JwtRequestPostProcessor token;
 
     private Post testPost;
+
+    @Autowired
+    private ObjectMapper om;
+
 
     @BeforeEach
     public void setUp() {
@@ -74,11 +84,20 @@ public class PostsCommentsControllerTest {
         var result = mockMvc.perform(get("/api/posts_comments").with(token))
                 .andExpect(status().isOk())
                 .andReturn();
+
         var body = result.getResponse().getContentAsString();
-        assertThatJson(body)
-            .node("content")
-            .isArray()
-            .hasSize(2);
+
+        var postComment = om.readValue(body, Map.class);
+
+        var content = postComment.get("content");
+
+        assertThat(content).isInstanceOf(ArrayList.class);
+        assertThat(((List<?>) content).size()).isEqualTo(2);
+
+//        assertThatJson(body)
+//            .node("content")
+//            .isArray()
+//            .hasSize(2);
     }
 
     @Test
@@ -87,10 +106,18 @@ public class PostsCommentsControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
         var body = result.getResponse().getContentAsString();
-        assertThatJson(body)
-            .node("content")
-            .isArray()
-            .hasSize(1);
+
+        var postComment = om.readValue(body, Map.class);
+
+        var content = postComment.get("content");
+
+        assertThat(content).isInstanceOf(ArrayList.class);
+        assertThat(((List<?>) content).size()).isEqualTo(1);
+
+//        assertThatJson(body)
+//            .node("content")
+//            .isArray()
+//            .hasSize(1);
     }
 }
 
