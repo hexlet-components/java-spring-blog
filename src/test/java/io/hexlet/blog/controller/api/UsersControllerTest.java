@@ -9,7 +9,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.HashMap;
+import java.util.List;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import io.hexlet.blog.dto.UserDTO;
+import io.hexlet.blog.mapper.UserMapper;
+import org.assertj.core.api.Assertions;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,6 +52,9 @@ public class UsersControllerTest {
     @Autowired
     private ObjectMapper om;
 
+    @Autowired
+    private UserMapper userMapper;
+
     private JwtRequestPostProcessor token;
 
     private User testUser;
@@ -61,8 +69,25 @@ public class UsersControllerTest {
 
     @Test
     public void testIndex() throws Exception {
-        mockMvc.perform(get("/api/users").with(jwt()))
-                .andExpect(status().isOk());
+//        mockMvc.perform(get("/api/users").with(jwt()))
+//                .andExpect(status().isOk());
+        var response = mockMvc.perform(get("/api/users").with(jwt()))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse();
+
+        String body = response.getContentAsString();
+
+        List<UserDTO> bodyDTO = om.readValue(body, new TypeReference<>() {
+        });
+        List<User> actual = bodyDTO.stream().map(userMapper::map).toList();
+
+        List<User> expected = userRepository.findAll();
+
+        Assertions.assertThat(actual).containsAll(expected);
+
+
+        //UserMapper: добавила конвертацию из dto в entity
     }
 
     @Test
