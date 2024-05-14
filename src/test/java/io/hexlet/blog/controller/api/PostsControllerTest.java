@@ -1,6 +1,5 @@
 package io.hexlet.blog.controller.api;
 
-import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
@@ -10,7 +9,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import io.hexlet.blog.dto.PostDTO;
+import org.assertj.core.api.Assertions;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,8 @@ import io.hexlet.blog.model.Post;
 import io.hexlet.blog.repository.PostRepository;
 import io.hexlet.blog.util.ModelGenerator;
 import io.hexlet.blog.util.UserUtils;
+
+import java.util.List;
 
 
 @SpringBootTest
@@ -70,11 +73,22 @@ public class PostsControllerTest {
     @Test
     public void testIndex() throws Exception {
         postRepository.save(testPost);
-        var result = mockMvc.perform(get("/api/posts").with(token))
+        var response = mockMvc.perform(get("/api/posts").with(token))
                 .andExpect(status().isOk())
-                .andReturn();
-        var body = result.getResponse().getContentAsString();
-        assertThatJson(body).isArray();
+                .andReturn()
+                .getResponse();
+
+        String body = response.getContentAsString();
+
+        List<PostDTO> bodyDTO = om.readValue(body, new TypeReference<>() {
+        });
+        List<Post> actual = bodyDTO.stream().map(postMapper::map).toList();
+
+        List<Post> expected = postRepository.findAll();
+
+        Assertions.assertThat(actual).containsAll(expected);
+
+        //PostMapper: добавила конвертацию из dto в entity
     }
 
     @Test
@@ -89,7 +103,8 @@ public class PostsControllerTest {
         mockMvc.perform(request)
                 .andExpect(status().isCreated());
 
-        var post = postRepository.findBySlug(testPost.getSlug()).orElseThrow();
+        Post post = postRepository.findBySlug(testPost.getSlug()).orElseThrow();
+
         assertNotNull(post);
         assertThat(post.getName()).isEqualTo(testPost.getName());
     }
