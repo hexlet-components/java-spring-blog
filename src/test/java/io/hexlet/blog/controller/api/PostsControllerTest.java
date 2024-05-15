@@ -68,95 +68,19 @@ public class PostsControllerTest {
         testPost = Instancio.of(modelGenerator.getPostModel())
                 .create();
         testPost.setAuthor(userUtils.getTestUser());
+        postRepository.save(testPost);
     }
 
     @Test
-    public void testIndex() throws Exception {
-        postRepository.save(testPost);
-        var response = mockMvc.perform(get("/api/posts").with(token))
+    public void testShow() throws Exception {
+        var request = get("/api/posts/" + testPost.getId()).with(jwt());
+
+        var response = mockMvc.perform(request)
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse();
 
         String body = response.getContentAsString();
-
-        List<PostDTO> bodyDTO = om.readValue(body, new TypeReference<>() {
-        });
-        List<Post> actual = bodyDTO.stream().map(postMapper::map).toList();
-
-        List<Post> expected = postRepository.findAll();
-
-        Assertions.assertThat(actual).containsAll(expected);
-
-        //PostMapper: добавила конвертацию из dto в entity
-    }
-
-    @Test
-    public void testCreate() throws Exception {
-        var dto = postMapper.map(testPost);
-
-        var request = post("/api/posts")
-                .with(token)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(om.writeValueAsString(dto));
-
-        mockMvc.perform(request)
-                .andExpect(status().isCreated());
-
-        Post post = postRepository.findBySlug(testPost.getSlug()).orElseThrow();
-
-        assertNotNull(post);
-        assertThat(post.getName()).isEqualTo(testPost.getName());
-    }
-
-    @Test
-    public void testUpdate() throws Exception {
-        postRepository.save(testPost);
-
-        var data = new PostUpdateDTO();
-        data.setName(JsonNullable.of("new name"));
-
-        var request = put("/api/posts/" + testPost.getId())
-                .with(token)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(om.writeValueAsString(data));
-
-        mockMvc.perform(request)
-                .andExpect(status().isOk());
-
-        testPost = postRepository.findById(testPost.getId()).orElseThrow();
-        assertThat(testPost.getName()).isEqualTo(data.getName().get());
-    }
-
-    @Test
-    public void testUpdateFailed() throws Exception {
-        postRepository.save(testPost);
-
-        var data = new PostUpdateDTO();
-        data.setName(JsonNullable.of("new name"));
-
-        var request = put("/api/posts/" + testPost.getId())
-                .with(jwt())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(om.writeValueAsString(data));
-
-        mockMvc.perform(request)
-                .andExpect(status().isForbidden());
-
-        var actualPost = postRepository.findById(testPost.getId()).orElseThrow();
-        assertThat(actualPost.getName()).isEqualTo(testPost.getName());
-    }
-
-    @Test
-    public void testShow() throws Exception {
-        postRepository.save(testPost);
-
-        var request = get("/api/posts/" + testPost.getId()).with(jwt());
-        var result = mockMvc.perform(request)
-                .andExpect(status().isOk())
-                .andReturn();
-
-        var body = result.getResponse().getContentAsString();
 
         PostDTO postDTO = om.readValue(body, PostDTO.class);
         PostDTO testPostDTO = postMapper.map(testPost);
@@ -167,9 +91,79 @@ public class PostsControllerTest {
     }
 
     @Test
+    public void testIndex() throws Exception {
+        var response = mockMvc.perform(get("/api/posts").with(token))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse();
+
+        String body = response.getContentAsString();
+
+        List<PostDTO> postDTOS = om.readValue(body, new TypeReference<>() {});
+
+        List<Post> actual = postDTOS.stream().map(postMapper::map).toList();
+        List<Post> expected = postRepository.findAll();
+
+        Assertions.assertThat(actual).containsAll(expected);
+    }
+
+    @Test
+    public void testCreate() throws Exception {
+        var newPostDTO = postMapper.map(Instancio.of(modelGenerator.getPostModel())
+                .create());
+
+        var request = post("/api/posts")
+                .with(token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(om.writeValueAsString(newPostDTO));
+
+        mockMvc.perform(request)
+                .andExpect(status().isCreated());
+
+        var actualPost = postRepository.findBySlug(newPostDTO.getSlug()).orElseThrow();
+
+        assertNotNull(actualPost);
+        assertThat(actualPost.getName()).isEqualTo(newPostDTO.getName());
+    }
+
+    @Test
+    public void testUpdate() throws Exception {
+        var postUpdateDTO = new PostUpdateDTO();
+        postUpdateDTO.setName(JsonNullable.of("new name"));
+
+        mockMvc.perform(put("/api/posts/" + testPost.getId())
+                        .with(token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(om.writeValueAsString(postUpdateDTO)))
+                .andExpect(status().isOk());
+
+        var actualPost = postRepository.findById(testPost.getId()).orElseThrow();
+
+        assertThat(actualPost.getName()).isEqualTo(postUpdateDTO.getName().get());
+    }
+
+    @Test
+    public void testUpdateFailed() throws Exception {
+        var postUpdateDTO = new PostUpdateDTO();
+        postUpdateDTO.setName(JsonNullable.of("new name"));
+
+        var request = put("/api/posts/" + testPost.getId())
+                .with(jwt())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(om.writeValueAsString(postUpdateDTO));
+
+        mockMvc.perform(request)
+                .andExpect(status().isForbidden());
+
+        var actualPost = postRepository.findById(testPost.getId()).orElseThrow();
+
+        assertThat(actualPost.getName()).isEqualTo(testPost.getName());
+    }
+
+    @Test
     public void testDestroy() throws Exception {
-        postRepository.save(testPost);
         var request = delete("/api/posts/" + testPost.getId()).with(token);
+
         mockMvc.perform(request)
                 .andExpect(status().isNoContent());
 
@@ -178,8 +172,8 @@ public class PostsControllerTest {
 
     @Test
     public void testDestroyFailed() throws Exception {
-        postRepository.save(testPost);
         var request = delete("/api/posts/" + testPost.getId()).with(jwt());
+
         mockMvc.perform(request)
                 .andExpect(status().isForbidden());
 
