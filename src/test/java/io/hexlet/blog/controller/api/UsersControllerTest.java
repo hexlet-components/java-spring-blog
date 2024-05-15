@@ -4,15 +4,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.HashMap;
 import java.util.List;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.hexlet.blog.dto.UserDTO;
+import io.hexlet.blog.dto.UserUpdateDTO;
 import io.hexlet.blog.mapper.UserMapper;
 import org.assertj.core.api.Assertions;
 import org.instancio.Instancio;
@@ -59,6 +58,7 @@ public class UsersControllerTest {
 
     private User testUser;
 
+
     @BeforeEach
     public void setUp() {
         token = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
@@ -68,9 +68,26 @@ public class UsersControllerTest {
     }
 
     @Test
+    public void testShow() throws Exception {
+        var response = mockMvc.perform(get("/api/users/"
+                        + testUser.getId()).with(jwt()))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse();
+
+        String body = response.getContentAsString();
+
+        UserDTO userDTO = om.readValue(body, UserDTO.class);
+
+        User user = userMapper.map(userDTO);
+
+        assertThat(user.getEmail()).isEqualTo(testUser.getEmail());
+        assertThat(user.getFirstName()).isEqualTo(testUser.getFirstName());
+        assertThat(user.getLastName()).isEqualTo(testUser.getLastName());
+    }
+
+    @Test
     public void testIndex() throws Exception {
-//        mockMvc.perform(get("/api/users").with(jwt()))
-//                .andExpect(status().isOk());
         var response = mockMvc.perform(get("/api/users").with(jwt()))
                 .andExpect(status().isOk())
                 .andReturn()
@@ -78,52 +95,49 @@ public class UsersControllerTest {
 
         String body = response.getContentAsString();
 
-        List<UserDTO> bodyDTO = om.readValue(body, new TypeReference<>() {
-        });
-        List<User> actual = bodyDTO.stream().map(userMapper::map).toList();
+        List<UserDTO> userDTOS = om.readValue(body, new TypeReference<>() {});
 
+        List<User> actual = userDTOS.stream().map(userMapper::map).toList();
         List<User> expected = userRepository.findAll();
 
         Assertions.assertThat(actual).containsAll(expected);
-
-
-        //UserMapper: добавила конвертацию из dto в entity
     }
 
     @Test
-    void testCreate() throws Exception {
-        var data = Instancio.of(modelGenerator.getUserModel())
+    public void testCreate() throws Exception {
+        User newUser = Instancio.of(modelGenerator.getUserModel())
                 .create();
 
         var request = post("/api/users")
                 .with(token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(om.writeValueAsString(data));
+                .content(om.writeValueAsString(newUser));
+
         mockMvc.perform(request)
                 .andExpect(status().isCreated());
 
-        var user = userRepository.findByEmail(data.getEmail()).orElseThrow();
+        var actualUser = userRepository.findByEmail(newUser.getEmail()).orElseThrow();
 
-        assertNotNull(user);
-        assertThat(user.getFirstName()).isEqualTo(data.getFirstName());
-        assertThat(user.getLastName()).isEqualTo(data.getLastName());
+        assertNotNull(actualUser);
+        assertThat(actualUser.getFirstName()).isEqualTo(newUser.getFirstName());
+        assertThat(actualUser.getLastName()).isEqualTo(newUser.getLastName());
     }
 
     @Test
     public void testUpdate() throws Exception {
 
-        var data = new HashMap<>();
-        data.put("firstName", "Mike");
+        var updateDTO = new UserUpdateDTO();
+        updateDTO.setFirstName("Mike");
 
-        var request = put("/api/users/" + testUser.getId())
-                .with(token)
+        var request = put("/api/users/" + testUser.getId()).with(token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(om.writeValueAsString(data));
+                .content(om.writeValueAsString(updateDTO));
 
         mockMvc.perform(request)
-                 .andExpect(status().isOk());
+                .andExpect(status().isOk());
 
-        var user = userRepository.findById(testUser.getId()).orElseThrow();
-        assertThat(user.getFirstName()).isEqualTo(("Mike"));
+        var actualUser = userRepository.findById(testUser.getId()).orElseThrow();
+
+        assertThat(actualUser.getFirstName()).isEqualTo((updateDTO.getFirstName()));
     }
 }
