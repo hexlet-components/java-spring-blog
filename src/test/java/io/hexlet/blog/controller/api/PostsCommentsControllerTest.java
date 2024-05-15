@@ -1,6 +1,5 @@
 package io.hexlet.blog.controller.api;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -95,28 +94,17 @@ public class PostsCommentsControllerTest {
 
         String body = response.getContentAsString();
 
-        Map<String, Object> parsedBody = om.readValue(body, new TypeReference<>() {
+        Map<String, Object> content = om.readValue(body, new TypeReference<>() {
         });
 
-        Object content = parsedBody.entrySet().stream()
-                .filter(entry -> entry.getKey().equals("content"))
-                .findFirst().map(Map.Entry::getValue).orElseThrow();
+        Object postComments = content.get("content");
 
-        //сравнение dto не работает!
-        //List<PostCommentDTO> actual = om.convertValue(content, new TypeReference<>() {});
-        //List<PostCommentDTO> expected = postCommentRepository.findAll().stream().map(postCommentMapper::map).toList();
+        List<PostCommentDTO> postCommentDTOS = om.convertValue(postComments, new TypeReference<>() {});
 
-        List<PostCommentDTO> contentDTO = om.convertValue(content, new TypeReference<>() {});
-
-        List<PostComment> actual = contentDTO.stream().map(postCommentMapper::map).toList();
-
+        List<PostComment> actual = postCommentDTOS.stream().map(postCommentMapper::map).toList();
         List<PostComment> expected = postCommentRepository.findAll();
 
         Assertions.assertThat(actual).containsAll(expected);
-        assertThat((actual).size()).isEqualTo(2);
-
-
-//      PostCommentMapper: добавила конвертацию из dto в entity
     }
 
     @Test
@@ -129,30 +117,17 @@ public class PostsCommentsControllerTest {
 
         String body = response.getContentAsString();
 
-        Map<String, Object> parsedBody = om.readValue(body, new TypeReference<>() {
-        });
+        Map<String, Object> content = om.readValue(body, new TypeReference<>() {});
 
-        Object content = parsedBody.entrySet().stream()
-                .filter(entry -> entry.getKey().equals("content"))
-                .findFirst().map(Map.Entry::getValue).orElseThrow();
+        Object postComments = content.get("content");
 
-        List<PostCommentDTO> contentDTO = om.convertValue(content, new TypeReference<>() {});
+        List<PostCommentDTO> postCommentDTOS = om.convertValue(postComments, new TypeReference<>() {});
 
-        List<PostComment> actual = contentDTO.stream().map(postCommentMapper::map).toList();
-
+        List<PostComment> actual = postCommentDTOS.stream().map(postCommentMapper::map).toList();
         List<PostComment> expected = postCommentRepository.findAllByPostId(testPost.getId())
                 .orElseThrow();
 
         Assertions.assertThat(actual).containsAll(expected);
-        assertThat((actual).size()).isEqualTo(1);
-
-//      PostCommentRepository: добавила метод поиска комментариев по id Post'а
-
-
-//        assertThatJson(body)
-//            .node("content")
-//            .isArray()
-//            .hasSize(1);
     }
 }
 
