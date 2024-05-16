@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import io.hexlet.blog.dto.PostCreateDTO;
 import io.hexlet.blog.dto.PostDTO;
 import org.assertj.core.api.Assertions;
 import org.instancio.Instancio;
@@ -109,25 +110,31 @@ public class PostsControllerTest {
 
     @Test
     public void testCreate() throws Exception {
-        var newPostDTO = postMapper.map(Instancio.of(modelGenerator.getPostModel())
-                .create());
+
+        var createDTO = new PostCreateDTO();
+        createDTO.setName("TestNameForPost");
+        createDTO.setBody("TestBodyForPost");
+        createDTO.setSlug("TestSlug");
+        createDTO.setAuthorId(userUtils.getTestUser().getId());
+
 
         var request = post("/api/posts")
                 .with(token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(om.writeValueAsString(newPostDTO));
+                .content(om.writeValueAsString(createDTO));
 
         mockMvc.perform(request)
                 .andExpect(status().isCreated());
 
-        var actualPost = postRepository.findBySlug(newPostDTO.getSlug()).orElseThrow();
+        var actualPost = postRepository.findBySlug(createDTO.getSlug()).orElseThrow();
 
         assertNotNull(actualPost);
-        assertThat(actualPost.getName()).isEqualTo(newPostDTO.getName());
+        assertThat(actualPost.getName()).isEqualTo(createDTO.getName());
     }
 
     @Test
     public void testUpdate() throws Exception {
+
         var postUpdateDTO = new PostUpdateDTO();
         postUpdateDTO.setName(JsonNullable.of("new name"));
 
@@ -144,6 +151,7 @@ public class PostsControllerTest {
 
     @Test
     public void testUpdateFailed() throws Exception {
+
         var postUpdateDTO = new PostUpdateDTO();
         postUpdateDTO.setName(JsonNullable.of("new name"));
 
