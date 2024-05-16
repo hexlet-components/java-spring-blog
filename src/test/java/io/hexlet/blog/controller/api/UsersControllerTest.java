@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.List;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import io.hexlet.blog.dto.UserCreateDTO;
 import io.hexlet.blog.dto.UserDTO;
 import io.hexlet.blog.dto.UserUpdateDTO;
 import io.hexlet.blog.mapper.UserMapper;
@@ -105,22 +106,26 @@ public class UsersControllerTest {
 
     @Test
     public void testCreate() throws Exception {
-        User newUser = Instancio.of(modelGenerator.getUserModel())
-                .create();
+
+        var createDTO = new UserCreateDTO();
+        createDTO.setEmail("testMail@example.com");
+        createDTO.setPassword("testPassword");
+        createDTO.setFirstName("Alice");
+        createDTO.setLastName("Fox");
 
         var request = post("/api/users")
                 .with(token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(om.writeValueAsString(newUser));
+                .content(om.writeValueAsString(createDTO));
 
         mockMvc.perform(request)
                 .andExpect(status().isCreated());
 
-        var actualUser = userRepository.findByEmail(newUser.getEmail()).orElseThrow();
+        var actualUser = userRepository.findByEmail(createDTO.getEmail()).orElseThrow();
 
         assertNotNull(actualUser);
-        assertThat(actualUser.getFirstName()).isEqualTo(newUser.getFirstName());
-        assertThat(actualUser.getLastName()).isEqualTo(newUser.getLastName());
+        assertThat(actualUser.getFirstName()).isEqualTo(createDTO.getFirstName());
+        assertThat(actualUser.getLastName()).isEqualTo(createDTO.getLastName());
     }
 
     @Test
