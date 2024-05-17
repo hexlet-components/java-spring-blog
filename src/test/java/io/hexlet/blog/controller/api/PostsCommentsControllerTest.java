@@ -94,8 +94,7 @@ public class PostsCommentsControllerTest {
 
         String body = response.getContentAsString();
 
-        Map<String, Object> content = om.readValue(body, new TypeReference<>() {
-        });
+        Map<String, Object> content = om.readValue(body, new TypeReference<>() {});
 
         Object postComments = content.get("content");
 
