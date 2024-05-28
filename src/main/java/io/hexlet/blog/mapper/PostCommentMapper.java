@@ -19,5 +19,9 @@ public abstract class PostCommentMapper {
     @Mapping(source = "author.id", target = "authorId")
     @Mapping(source = "post.id", target = "postId")
     public abstract PostCommentDTO map(PostComment model);
+
+    @Mapping(source = "authorId", target = "author.id")
+    @Mapping(source = "postId", target = "post.id")
+    public abstract PostComment map(PostCommentDTO model);
 }
 

@@ -25,5 +25,8 @@ public abstract class PostMapper {
     @Mapping(source = "author.id", target = "authorId")
     public abstract PostDTO map(Post model);
 
+    @Mapping(source = "authorId", target = "author.id")
+    public abstract Post map(PostDTO model);
+
     public abstract void update(PostUpdateDTO dto, @MappingTarget Post model);
 }
