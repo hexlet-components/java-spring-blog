@@ -1,5 +1,6 @@
 package io.hexlet.blog.controller.api;
 
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -30,7 +31,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.nio.charset.StandardCharsets;
-
 import java.util.List;
 import java.util.Map;
 
@@ -101,12 +101,10 @@ public class PostsCommentsControllerTest {
 
     @Test
     public void testIndex() throws Exception {
-        var response = mockMvc.perform(get("/api/posts_comments").with(token))
+        var result = mockMvc.perform(get("/api/posts_comments").with(token))
                 .andExpect(status().isOk())
-                .andReturn()
-                .getResponse();
-
-        String body = response.getContentAsString();
+                .andReturn();
+        var body = result.getResponse().getContentAsString();
 
         Map<String, Object> content = om.readValue(body, new TypeReference<>() {});
 
@@ -122,25 +120,13 @@ public class PostsCommentsControllerTest {
 
     @Test
     public void testFilteredIndex() throws Exception {
-        var response = mockMvc.perform(get("/api/posts_comments?postId="
-                        + testPost.getId()).with(token))
+        var result = mockMvc.perform(get("/api/posts_comments?postId=" + testPost.getId()).with(token))
                 .andExpect(status().isOk())
-                .andReturn()
-                .getResponse();
-
-        String body = response.getContentAsString();
-
-        Map<String, Object> content = om.readValue(body, new TypeReference<>() {});
-
-        Object postComments = content.get("content");
-
-        List<PostCommentDTO> postCommentDTOS = om.convertValue(postComments, new TypeReference<>() {});
-
-        List<PostComment> actual = postCommentDTOS.stream().map(postCommentMapper::map).toList();
-        List<PostComment> expected = postCommentRepository.findAllByPostId(testPost.getId())
-                .orElseThrow();
-
-        Assertions.assertThat(actual).containsAll(expected);
+                .andReturn();
+        var body = result.getResponse().getContentAsString();
+        assertThatJson(body)
+                .node("content")
+                .isArray()
+                .hasSize(1);
     }
 }
-

@@ -8,12 +8,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import java.util.List;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+
 import com.fasterxml.jackson.core.type.TypeReference;
-import io.hexlet.blog.dto.UserCreateDTO;
 import io.hexlet.blog.dto.UserDTO;
-import io.hexlet.blog.dto.UserUpdateDTO;
 import io.hexlet.blog.mapper.UserMapper;
 import org.assertj.core.api.Assertions;
 import org.instancio.Instancio;
@@ -118,43 +119,38 @@ public class UsersControllerTest {
 
     @Test
     public void testCreate() throws Exception {
-
-        var createDTO = new UserCreateDTO();
-        createDTO.setEmail("testMail@example.com");
-        createDTO.setPassword("testPassword");
-        createDTO.setFirstName("Alice");
-        createDTO.setLastName("Fox");
+        var data = Instancio.of(modelGenerator.getUserModel())
+                .create();
 
         var request = post("/api/users")
                 .with(token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(om.writeValueAsString(createDTO));
-
+                .content(om.writeValueAsString(data));
         mockMvc.perform(request)
                 .andExpect(status().isCreated());
 
-        var actualUser = userRepository.findByEmail(createDTO.getEmail()).orElseThrow();
+        var user = userRepository.findByEmail(data.getEmail()).get();
 
-        assertNotNull(actualUser);
-        assertThat(actualUser.getFirstName()).isEqualTo(createDTO.getFirstName());
-        assertThat(actualUser.getLastName()).isEqualTo(createDTO.getLastName());
+        assertNotNull(user);
+        assertThat(user.getFirstName()).isEqualTo(data.getFirstName());
+        assertThat(user.getLastName()).isEqualTo(data.getLastName());
     }
 
     @Test
     public void testUpdate() throws Exception {
 
-        var updateDTO = new UserUpdateDTO();
-        updateDTO.setFirstName("Mike");
+        var data = new HashMap<>();
+        data.put("firstName", "Mike");
 
-        var request = put("/api/users/" + testUser.getId()).with(token)
+        var request = put("/api/users/" + testUser.getId())
+                .with(token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(om.writeValueAsString(updateDTO));
+                .content(om.writeValueAsString(data));
 
         mockMvc.perform(request)
                 .andExpect(status().isOk());
 
-        var actualUser = userRepository.findById(testUser.getId()).orElseThrow();
-
-        assertThat(actualUser.getFirstName()).isEqualTo((updateDTO.getFirstName()));
+        var user = userRepository.findById(testUser.getId()).get();
+        assertThat(user.getFirstName()).isEqualTo(("Mike"));
     }
 }
