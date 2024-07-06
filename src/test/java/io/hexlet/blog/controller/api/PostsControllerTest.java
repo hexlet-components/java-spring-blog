@@ -85,35 +85,19 @@ public class PostsControllerTest {
     }
 
     @Test
-    public void testShow() throws Exception {
-        postRepository.save(testPost);
-
-        var request = get("/api/posts/" + testPost.getId()).with(jwt());
-        var result = mockMvc.perform(request)
-                .andExpect(status().isOk())
-                .andReturn();
-        var body = result.getResponse().getContentAsString();
-        assertThatJson(body).and(
-                v -> v.node("slug").isEqualTo(testPost.getSlug()),
-                v -> v.node("name").isEqualTo(testPost.getName()),
-                v -> v.node("body").isEqualTo(testPost.getBody()));
-    }
-
-    @Test
     public void testIndex() throws Exception {
         postRepository.save(testPost);
+
         var response = mockMvc.perform(get("/api/posts").with(token))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse();
-
-        String body = response.getContentAsString();
+        var body = response.getContentAsString();
 
         List<PostDTO> postDTOS = om.readValue(body, new TypeReference<>() {});
 
-        List<Post> actual = postDTOS.stream().map(postMapper::map).toList();
-        List<Post> expected = postRepository.findAll();
-
+        var actual = postDTOS.stream().map(postMapper::map).toList();
+        var expected = postRepository.findAll();
         Assertions.assertThat(actual).containsAll(expected);
     }
 
@@ -170,6 +154,21 @@ public class PostsControllerTest {
 
         var actualPost = postRepository.findById(testPost.getId()).get();
         assertThat(actualPost.getName()).isEqualTo(testPost.getName());
+    }
+
+    @Test
+    public void testShow() throws Exception {
+        postRepository.save(testPost);
+
+        var request = get("/api/posts/" + testPost.getId()).with(jwt());
+        var result = mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andReturn();
+        var body = result.getResponse().getContentAsString();
+        assertThatJson(body).and(
+                v -> v.node("slug").isEqualTo(testPost.getSlug()),
+                v -> v.node("name").isEqualTo(testPost.getName()),
+                v -> v.node("body").isEqualTo(testPost.getBody()));
     }
 
     @Test

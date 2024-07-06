@@ -10,7 +10,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.hexlet.blog.dto.PostCommentDTO;
 import io.hexlet.blog.mapper.PostCommentMapper;
-import io.hexlet.blog.model.PostComment;
 import org.assertj.core.api.Assertions;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
@@ -107,14 +106,12 @@ public class PostsCommentsControllerTest {
         var body = result.getResponse().getContentAsString();
 
         Map<String, Object> content = om.readValue(body, new TypeReference<>() {});
-
-        Object postComments = content.get("content");
+        var postComments = content.get("content");
 
         List<PostCommentDTO> postCommentDTOS = om.convertValue(postComments, new TypeReference<>() {});
 
-        List<PostComment> actual = postCommentDTOS.stream().map(postCommentMapper::map).toList();
-        List<PostComment> expected = postCommentRepository.findAll();
-
+        var actual = postCommentDTOS.stream().map(postCommentMapper::map).toList();
+        var expected = postCommentRepository.findAll();
         Assertions.assertThat(actual).containsAll(expected);
     }
 

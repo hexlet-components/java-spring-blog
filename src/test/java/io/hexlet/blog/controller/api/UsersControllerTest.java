@@ -1,5 +1,6 @@
 package io.hexlet.blog.controller.api;
 
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
@@ -82,38 +83,17 @@ public class UsersControllerTest {
     }
 
     @Test
-    public void testShow() throws Exception {
-        var response = mockMvc.perform(get("/api/users/"
-                        + testUser.getId()).with(jwt()))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse();
-
-        String body = response.getContentAsString();
-
-        UserDTO userDTO = om.readValue(body, UserDTO.class);
-
-        User user = userMapper.map(userDTO);
-
-        assertThat(user.getEmail()).isEqualTo(testUser.getEmail());
-        assertThat(user.getFirstName()).isEqualTo(testUser.getFirstName());
-        assertThat(user.getLastName()).isEqualTo(testUser.getLastName());
-    }
-
-    @Test
     public void testIndex() throws Exception {
         var response = mockMvc.perform(get("/api/users").with(jwt()))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse();
-
-        String body = response.getContentAsString();
+        var body = response.getContentAsString();
 
         List<UserDTO> userDTOS = om.readValue(body, new TypeReference<>() {});
 
-        List<User> actual = userDTOS.stream().map(userMapper::map).toList();
-        List<User> expected = userRepository.findAll();
-
+        var actual = userDTOS.stream().map(userMapper::map).toList();
+        var expected = userRepository.findAll();
         Assertions.assertThat(actual).containsAll(expected);
     }
 
@@ -152,5 +132,18 @@ public class UsersControllerTest {
 
         var user = userRepository.findById(testUser.getId()).get();
         assertThat(user.getFirstName()).isEqualTo(("Mike"));
+    }
+
+    @Test
+    public void testShow() throws Exception {
+        var request = get("/api/users/" + testUser.getId()).with(jwt());
+        var result = mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andReturn();
+        var body = result.getResponse().getContentAsString();
+        assertThatJson(body).and(
+                v -> v.node("username").isEqualTo(testUser.getEmail()),
+                v -> v.node("firstName").isEqualTo(testUser.getFirstName()),
+                v -> v.node("lastName").isEqualTo(testUser.getLastName()));
     }
 }
