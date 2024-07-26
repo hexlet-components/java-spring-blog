@@ -94,7 +94,7 @@ public class UsersControllerTest {
 
         var actual = userDTOS.stream().map(userMapper::map).toList();
         var expected = userRepository.findAll();
-        Assertions.assertThat(actual).containsAll(expected);
+        Assertions.assertThat(actual).containsExactlyInAnyOrderElementsOf(expected);
     }
 
     @Test

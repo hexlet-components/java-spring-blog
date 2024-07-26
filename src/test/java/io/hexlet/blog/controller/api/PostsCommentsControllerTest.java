@@ -112,7 +112,7 @@ public class PostsCommentsControllerTest {
 
         var actual = postCommentDTOS.stream().map(postCommentMapper::map).toList();
         var expected = postCommentRepository.findAll();
-        Assertions.assertThat(actual).containsAll(expected);
+        Assertions.assertThat(actual).containsExactlyInAnyOrderElementsOf(expected);
     }
 
     @Test

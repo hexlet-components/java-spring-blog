@@ -98,7 +98,7 @@ public class PostsControllerTest {
 
         var actual = postDTOS.stream().map(postMapper::map).toList();
         var expected = postRepository.findAll();
-        Assertions.assertThat(actual).containsAll(expected);
+        Assertions.assertThat(actual).containsExactlyInAnyOrderElementsOf(expected);
     }
 
     @Test
