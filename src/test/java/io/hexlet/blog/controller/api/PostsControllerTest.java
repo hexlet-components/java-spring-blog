@@ -11,6 +11,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import io.hexlet.blog.dto.PostDTO;
+import org.assertj.core.api.Assertions;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,6 +37,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
+
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -64,6 +69,7 @@ public class PostsControllerTest {
 
     private Post testPost;
 
+
     @BeforeEach
     public void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac)
@@ -81,11 +87,18 @@ public class PostsControllerTest {
     @Test
     public void testIndex() throws Exception {
         postRepository.save(testPost);
-        var result = mockMvc.perform(get("/api/posts").with(token))
+
+        var response = mockMvc.perform(get("/api/posts").with(token))
                 .andExpect(status().isOk())
-                .andReturn();
-        var body = result.getResponse().getContentAsString();
-        assertThatJson(body).isArray();
+                .andReturn()
+                .getResponse();
+        var body = response.getContentAsString();
+
+        List<PostDTO> postDTOS = om.readValue(body, new TypeReference<>() {});
+
+        var actual = postDTOS.stream().map(postMapper::map).toList();
+        var expected = postRepository.findAll();
+        Assertions.assertThat(actual).containsExactlyInAnyOrderElementsOf(expected);
     }
 
     @Test

@@ -6,6 +6,11 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.hexlet.blog.dto.PostCommentDTO;
+import io.hexlet.blog.mapper.PostCommentMapper;
+import org.assertj.core.api.Assertions;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,6 +30,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Map;
+
 
 @SpringBootTest
 @Transactional
@@ -52,6 +60,13 @@ public class PostsCommentsControllerTest {
     private JwtRequestPostProcessor token;
 
     private Post testPost;
+
+    @Autowired
+    private ObjectMapper om;
+
+    @Autowired
+    private PostCommentMapper postCommentMapper;
+
 
     @BeforeEach
     public void setUp() {
@@ -89,10 +104,15 @@ public class PostsCommentsControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
         var body = result.getResponse().getContentAsString();
-        assertThatJson(body)
-            .node("content")
-            .isArray()
-            .hasSize(2);
+
+        Map<String, Object> content = om.readValue(body, new TypeReference<>() {});
+        var postComments = content.get("content");
+
+        List<PostCommentDTO> postCommentDTOS = om.convertValue(postComments, new TypeReference<>() {});
+
+        var actual = postCommentDTOS.stream().map(postCommentMapper::map).toList();
+        var expected = postCommentRepository.findAll();
+        Assertions.assertThat(actual).containsExactlyInAnyOrderElementsOf(expected);
     }
 
     @Test
@@ -102,9 +122,8 @@ public class PostsCommentsControllerTest {
                 .andReturn();
         var body = result.getResponse().getContentAsString();
         assertThatJson(body)
-            .node("content")
-            .isArray()
-            .hasSize(1);
+                .node("content")
+                .isArray()
+                .hasSize(1);
     }
 }
-
