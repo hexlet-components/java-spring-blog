@@ -20,8 +20,12 @@ Demo: https://java-spring-blog.hexlet.app/
 ## Development
 
 ```bash
-# https://localhost
+make setup
+
 make dev
+# https://localhost
+# username: hexlet@example.com
+# password: qwerty
 
 make test
 ```
