@@ -13,8 +13,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.hexlet.blog.dto.PostDTO;
+import io.hexlet.blog.model.User;
+import io.hexlet.blog.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.instancio.Instancio;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openapitools.jackson.nullable.JsonNullable;
@@ -32,7 +35,6 @@ import io.hexlet.blog.mapper.PostMapper;
 import io.hexlet.blog.model.Post;
 import io.hexlet.blog.repository.PostRepository;
 import io.hexlet.blog.util.ModelGenerator;
-import io.hexlet.blog.util.UserUtils;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -63,11 +65,13 @@ public class PostsControllerTest {
     private PostRepository postRepository;
 
     @Autowired
-    private UserUtils userUtils;
+    private UserRepository userRepository;
 
     private JwtRequestPostProcessor token;
 
     private Post testPost;
+
+    private User testUser;
 
 
     @BeforeEach
@@ -77,11 +81,19 @@ public class PostsControllerTest {
                 .apply(springSecurity())
                 .build();
 
-        token = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
+        testUser = Instancio.of(modelGenerator.getUserModel()).create();
+        userRepository.save(testUser);
+        token = jwt().jwt(builder -> builder.subject(testUser.getEmail()));
 
         testPost = Instancio.of(modelGenerator.getPostModel())
                 .create();
-        testPost.setAuthor(userUtils.getTestUser());
+        testPost.setAuthor(testUser);
+    }
+
+    @AfterEach
+    public void clean() {
+        postRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test

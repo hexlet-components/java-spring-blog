@@ -19,6 +19,7 @@ import io.hexlet.blog.dto.UserDTO;
 import io.hexlet.blog.mapper.UserMapper;
 import org.assertj.core.api.Assertions;
 import org.instancio.Instancio;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,11 +76,14 @@ public class UsersControllerTest {
                 .apply(springSecurity())
                 .build();
 
-        token = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
-
-        testUser = Instancio.of(modelGenerator.getUserModel())
-                .create();
+        testUser = Instancio.of(modelGenerator.getUserModel()).create();
         userRepository.save(testUser);
+        token = jwt().jwt(builder -> builder.subject(testUser.getEmail()));
+    }
+
+    @AfterEach
+    public void clean() {
+        userRepository.deleteAll();
     }
 
     @Test
