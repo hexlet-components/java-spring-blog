@@ -1,38 +1,36 @@
 package io.hexlet.blog.controller.api;
 
-import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.hexlet.blog.dto.PostCommentDTO;
 import io.hexlet.blog.mapper.PostCommentMapper;
+import io.hexlet.blog.model.Post;
 import io.hexlet.blog.model.User;
+import io.hexlet.blog.repository.PostCommentRepository;
+import io.hexlet.blog.repository.PostRepository;
+import io.hexlet.blog.repository.UserRepository;
+import io.hexlet.blog.util.ModelGenerator;
 import org.assertj.core.api.Assertions;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor;
 import org.springframework.test.web.servlet.MockMvc;
-
-import io.hexlet.blog.model.Post;
-import io.hexlet.blog.repository.PostCommentRepository;
-import io.hexlet.blog.repository.PostRepository;
-import io.hexlet.blog.util.ModelGenerator;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import io.hexlet.blog.repository.UserRepository;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @SpringBootTest
@@ -72,6 +70,10 @@ public class PostsCommentsControllerTest {
 
     @BeforeEach
     public void setUp() {
+        postCommentRepository.deleteAll();
+        postRepository.deleteAll();
+        userRepository.deleteAll();
+
         mockMvc = MockMvcBuilders.webAppContextSetup(wac)
                 .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
                 .apply(springSecurity())
@@ -100,13 +102,6 @@ public class PostsCommentsControllerTest {
         testPostComment2.setPost(testPost2);
         testPostComment2.setAuthor(testUser);
         postCommentRepository.save(testPostComment2);
-    }
-
-    @AfterEach
-    public void clean() {
-        postCommentRepository.deleteAll();
-        postRepository.deleteAll();
-        userRepository.deleteAll();
     }
 
     @Test
