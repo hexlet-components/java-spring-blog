@@ -124,7 +124,7 @@ public class PostsControllerTest {
         mockMvc.perform(request)
                 .andExpect(status().isCreated());
 
-        var post = postRepository.findBySlug(testPost.getSlug()).orElseThrow();
+        var post = postRepository.findBySlug(testPost.getSlug()).orElse(null);
         assertNotNull(post);
         assertThat(post.getName()).isEqualTo(testPost.getName());
     }
