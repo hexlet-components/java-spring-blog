@@ -1,18 +1,16 @@
 package io.hexlet.blog.controller.api;
 
-import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.hexlet.blog.dto.PostDTO;
+import io.hexlet.blog.dto.PostUpdateDTO;
+import io.hexlet.blog.mapper.PostMapper;
+import io.hexlet.blog.model.Post;
+import io.hexlet.blog.model.User;
+import io.hexlet.blog.repository.PostCommentRepository;
+import io.hexlet.blog.repository.PostRepository;
+import io.hexlet.blog.repository.UserRepository;
+import io.hexlet.blog.util.ModelGenerator;
 import org.assertj.core.api.Assertions;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,20 +22,22 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor;
 import org.springframework.test.web.servlet.MockMvc;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import io.hexlet.blog.dto.PostUpdateDTO;
-import io.hexlet.blog.mapper.PostMapper;
-import io.hexlet.blog.model.Post;
-import io.hexlet.blog.repository.PostRepository;
-import io.hexlet.blog.util.ModelGenerator;
-import io.hexlet.blog.util.UserUtils;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @SpringBootTest
@@ -63,25 +63,36 @@ public class PostsControllerTest {
     private PostRepository postRepository;
 
     @Autowired
-    private UserUtils userUtils;
+    private UserRepository userRepository;
+
+    @Autowired
+    private PostCommentRepository postCommentRepository;
 
     private JwtRequestPostProcessor token;
 
     private Post testPost;
 
+    private User testUser;
+
 
     @BeforeEach
     public void setUp() {
+        postCommentRepository.deleteAll();
+        postRepository.deleteAll();
+        userRepository.deleteAll();
+
         mockMvc = MockMvcBuilders.webAppContextSetup(wac)
                 .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
                 .apply(springSecurity())
                 .build();
 
-        token = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
+        testUser = Instancio.of(modelGenerator.getUserModel()).create();
+        userRepository.save(testUser);
+        token = jwt().jwt(builder -> builder.subject(testUser.getEmail()));
 
         testPost = Instancio.of(modelGenerator.getPostModel())
                 .create();
-        testPost.setAuthor(userUtils.getTestUser());
+        testPost.setAuthor(testUser);
     }
 
     @Test
@@ -113,7 +124,7 @@ public class PostsControllerTest {
         mockMvc.perform(request)
                 .andExpect(status().isCreated());
 
-        var post = postRepository.findBySlug(testPost.getSlug()).get();
+        var post = postRepository.findBySlug(testPost.getSlug()).orElse(null);
         assertNotNull(post);
         assertThat(post.getName()).isEqualTo(testPost.getName());
     }
@@ -133,7 +144,7 @@ public class PostsControllerTest {
         mockMvc.perform(request)
                 .andExpect(status().isOk());
 
-        testPost = postRepository.findById(testPost.getId()).get();
+        testPost = postRepository.findById(testPost.getId()).orElseThrow();
         assertThat(testPost.getName()).isEqualTo(data.getName().get());
     }
 
@@ -152,7 +163,7 @@ public class PostsControllerTest {
         mockMvc.perform(request)
                 .andExpect(status().isForbidden());
 
-        var actualPost = postRepository.findById(testPost.getId()).get();
+        var actualPost = postRepository.findById(testPost.getId()).orElseThrow();
         assertThat(actualPost.getName()).isEqualTo(testPost.getName());
     }
 

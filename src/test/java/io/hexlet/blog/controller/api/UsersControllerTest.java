@@ -1,22 +1,13 @@
 package io.hexlet.blog.controller.api;
 
-import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.List;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.hexlet.blog.dto.UserDTO;
 import io.hexlet.blog.mapper.UserMapper;
+import io.hexlet.blog.model.User;
+import io.hexlet.blog.repository.UserRepository;
+import io.hexlet.blog.util.ModelGenerator;
+import net.datafaker.Faker;
 import org.assertj.core.api.Assertions;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,15 +18,22 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor;
 import org.springframework.test.web.servlet.MockMvc;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import io.hexlet.blog.model.User;
-import io.hexlet.blog.repository.UserRepository;
-import io.hexlet.blog.util.ModelGenerator;
-import net.datafaker.Faker;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.List;
+
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @SpringBootTest
@@ -70,16 +68,16 @@ public class UsersControllerTest {
 
     @BeforeEach
     public void setUp() {
+        userRepository.deleteAll();
+
         mockMvc = MockMvcBuilders.webAppContextSetup(wac)
                 .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
                 .apply(springSecurity())
                 .build();
 
-        token = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
-
-        testUser = Instancio.of(modelGenerator.getUserModel())
-                .create();
+        testUser = Instancio.of(modelGenerator.getUserModel()).create();
         userRepository.save(testUser);
+        token = jwt().jwt(builder -> builder.subject(testUser.getEmail()));
     }
 
     @Test
@@ -109,7 +107,7 @@ public class UsersControllerTest {
         mockMvc.perform(request)
                 .andExpect(status().isCreated());
 
-        var user = userRepository.findByEmail(data.getEmail()).get();
+        var user = userRepository.findByEmail(data.getEmail()).orElse(null);
 
         assertNotNull(user);
         assertThat(user.getFirstName()).isEqualTo(data.getFirstName());
@@ -130,7 +128,7 @@ public class UsersControllerTest {
         mockMvc.perform(request)
                 .andExpect(status().isOk());
 
-        var user = userRepository.findById(testUser.getId()).get();
+        var user = userRepository.findById(testUser.getId()).orElseThrow();
         assertThat(user.getFirstName()).isEqualTo(("Mike"));
     }
 
