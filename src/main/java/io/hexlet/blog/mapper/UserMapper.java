@@ -8,7 +8,7 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import io.hexlet.blog.dto.UserCreateDTO;
 import io.hexlet.blog.dto.UserDTO;
@@ -24,7 +24,7 @@ import io.hexlet.blog.model.User;
 public abstract class UserMapper {
 
     @Autowired
-    private BCryptPasswordEncoder encoder;
+    private PasswordEncoder encoder;
 
     @Mapping(target = "passwordDigest", source = "password")
     public abstract User map(UserCreateDTO model);
