@@ -7,8 +7,6 @@ import lombok.Setter;
 @Setter
 @Getter
 public class PostCreateDTO {
-    @NotNull
-    private Long authorId;
 
     @NotNull
     private String slug;

@@ -19,7 +19,6 @@ import io.hexlet.blog.model.Post;
     unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
 public abstract class PostMapper {
-    @Mapping(target = "author", source = "authorId")
     public abstract Post map(PostCreateDTO dto);
 
     @Mapping(source = "author.id", target = "authorId")
