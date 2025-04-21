@@ -111,10 +111,10 @@ public class PostsCommentsControllerTest {
                 .andReturn();
         var body = result.getResponse().getContentAsString();
 
-        Map<String, Object> content = om.readValue(body, new TypeReference<>() {});
+        Map<String, Object> content = om.readValue(body, new TypeReference<>() { });
         var postComments = content.get("content");
 
-        List<PostCommentDTO> postCommentDTOS = om.convertValue(postComments, new TypeReference<>() {});
+        List<PostCommentDTO> postCommentDTOS = om.convertValue(postComments, new TypeReference<>() { });
 
         var actual = postCommentDTOS.stream().map(postCommentMapper::map).toList();
         var expected = postCommentRepository.findAll();

@@ -1,4 +1,4 @@
-FROM node:20.6.1 AS frontend
+FROM node:23 AS frontend
 
 WORKDIR /frontend
 
@@ -25,12 +25,13 @@ RUN ./gradlew --no-daemon dependencies
 
 COPY lombok.config .
 COPY src src
+COPY config config
 
 COPY --from=frontend /frontend/dist /backend/src/main/resources/static
 
 RUN ./gradlew --no-daemon build
 
-ENV JAVA_OPTS "-Xmx512M -Xms512M"
+ENV JAVA_OPTS="-Xmx512M -Xms512M"
 EXPOSE 8080
 
-CMD java -jar build/libs/HexletSpringBlog-1.0-SNAPSHOT.jar
+CMD ["java", "-jar", "build/libs/HexletSpringBlog-1.0-SNAPSHOT.jar"]
