@@ -105,7 +105,7 @@ public class PostsControllerTest {
                 .getResponse();
         var body = response.getContentAsString();
 
-        List<PostDTO> postDTOS = om.readValue(body, new TypeReference<>() {});
+        List<PostDTO> postDTOS = om.readValue(body, new TypeReference<>() { });
 
         var actual = postDTOS.stream().map(postMapper::map).toList();
         var expected = postRepository.findAll();
