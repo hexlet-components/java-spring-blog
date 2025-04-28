@@ -1,6 +1,6 @@
 setup:
 	npm install
-	./gradlew wrapper --gradle-version 8.7
+	./gradlew wrapper --gradle-version 8.14
 	./gradlew build
 
 frontend:
@@ -40,7 +40,7 @@ test:
 # 	./gradlew jacocoTestReport
 
 update-js-deps:
-	npx ncu -u
+	cd frontend && npx ncu -u
 
 check-java-deps:
 	./gradlew dependencyUpdates -Drevision=release

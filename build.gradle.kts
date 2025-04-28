@@ -4,10 +4,10 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 plugins {
     application
     // "checkstyle"
-    id("io.freefair.lombok") version "8.6"
-    id("org.springframework.boot") version "3.2.4"
-    id("io.spring.dependency-management") version "1.1.4"
-    id("com.github.ben-manes.versions") version "0.50.0"
+    id("io.freefair.lombok") version "8.11"
+    id("org.springframework.boot") version "3.3.5"
+    id("io.spring.dependency-management") version "1.1.6"
+    id("com.github.ben-manes.versions") version "0.51.0"
 }
 
 group = "io.hexlet.blog"
@@ -30,22 +30,28 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
 
     implementation("org.openapitools:jackson-databind-nullable:0.2.6")
-    implementation("org.mapstruct:mapstruct:1.6.0.Beta1")
-    annotationProcessor("org.mapstruct:mapstruct-processor:1.6.0.Beta1")
+    implementation("org.mapstruct:mapstruct:1.6.3")
+    annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
 
     // implementation("io.github.wimdeblauwe:error-handling-spring-boot-starter:4.2.0")
 
-    implementation("org.instancio:instancio-junit:3.6.0")
-    implementation("net.javacrumbs.json-unit:json-unit-assertj:3.2.2")
-    implementation("net.datafaker:datafaker:2.0.2")
+    implementation("org.instancio:instancio-junit:5.0.2")
+    implementation("net.javacrumbs.json-unit:json-unit-assertj:4.0.0")
+    implementation("net.datafaker:datafaker:2.4.2")
 
-    runtimeOnly("com.h2database:h2:2.2.224")
+    runtimeOnly("com.h2database:h2:2.3.232")
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation(platform("org.junit:junit-bom:5.10.1"))
-    testImplementation("org.junit.jupiter:junit-jupiter:5.10.1")
-
+    testImplementation(platform("org.junit:junit-bom:5.11.3"))
+    testImplementation("org.junit.jupiter:junit-jupiter:5.11.3")
 }
+
+// spotless {
+//     java {
+//         // Use the default importOrder configuration
+//         importOrder()
+//     }
+// }
 
 tasks.test {
     useJUnitPlatform()
