@@ -1,6 +1,6 @@
 setup:
 	npm install
-	./gradlew wrapper --gradle-version 8.14
+	./gradlew wrapper --gradle-version 8.14.1
 	./gradlew build
 
 frontend:
@@ -42,8 +42,8 @@ test:
 update-js-deps:
 	cd frontend && npx ncu -u
 
-check-java-deps:
-	./gradlew dependencyUpdates -Drevision=release
+update-deps:
+	./gradlew refreshVersions
 
 # generate-migrations:
 # 	gradle diffChangeLog
