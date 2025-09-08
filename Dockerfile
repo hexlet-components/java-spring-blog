@@ -30,7 +30,7 @@ COPY --from=frontend /frontend/dist /backend/src/main/resources/static
 
 RUN ./gradlew --no-daemon build
 
-ENV JAVA_OPTS "-Xmx512M -Xms512M"
+ENV JAVA_OPTS="-XX:+UseContainerSupport -XX:MaxRAMPercentage=60.0 -XX:InitialRAMPercentage=50.0"
 EXPOSE 8080
 
 CMD java -jar build/libs/HexletSpringBlog-1.0-SNAPSHOT.jar
