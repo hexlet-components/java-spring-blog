@@ -8,12 +8,9 @@ import lombok.Setter;
 @Getter
 public class PostCreateDTO {
 
-    @NotNull
-    private String slug;
+    @NotNull private String slug;
 
-    @NotNull
-    private String name;
+    @NotNull private String name;
 
-    @NotNull
-    private String body;
+    @NotNull private String body;
 }

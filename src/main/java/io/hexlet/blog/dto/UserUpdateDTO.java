@@ -7,8 +7,6 @@ import lombok.Setter;
 @Setter
 @Getter
 public class UserUpdateDTO {
-    @NotNull
-    private String firstName;
+    @NotNull private String firstName;
     // private String lastName;
 }
-
