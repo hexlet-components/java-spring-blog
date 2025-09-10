@@ -1,19 +1,17 @@
 package io.hexlet.blog.component;
 
-import java.util.stream.IntStream;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
-import org.springframework.stereotype.Component;
-
 import io.hexlet.blog.model.Post;
 import io.hexlet.blog.model.User;
 import io.hexlet.blog.repository.PostRepository;
 import io.hexlet.blog.repository.UserRepository;
 import io.hexlet.blog.service.CustomUserDetailsService;
+import java.util.stream.IntStream;
 import lombok.AllArgsConstructor;
 import net.datafaker.Faker;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.stereotype.Component;
 
 @Component
 @AllArgsConstructor

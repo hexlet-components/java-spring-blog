@@ -1,6 +1,6 @@
 setup:
 	npm install
-	./gradlew wrapper --gradle-version 8.14.1
+	./gradlew wrapper --gradle-version 9.0.0
 	./gradlew build
 
 frontend:
@@ -31,7 +31,7 @@ install:
 # 	./build/install/app/bin/app
 
 lint:
-	./gradlew checkstyleMain checkstyleTest
+	./gradlew spotlessApply
 
 test:
 	./gradlew test

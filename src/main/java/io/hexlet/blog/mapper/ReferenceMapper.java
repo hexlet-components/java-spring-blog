@@ -7,9 +7,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.TargetType;
 
-@Mapper(
-    componentModel = MappingConstants.ComponentModel.SPRING
-)
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public abstract class ReferenceMapper {
     @PersistenceContext
     private EntityManager entityManager;

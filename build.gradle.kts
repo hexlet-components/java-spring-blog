@@ -4,7 +4,6 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 plugins {
     application
     jacoco
-    checkstyle
     alias(libs.plugins.lombok)
     alias(libs.plugins.versions)
     alias(libs.plugins.spotless)
@@ -86,7 +85,7 @@ spotless {
         removeUnusedImports()
         eclipse().sortMembersEnabled(true)
         formatAnnotations()
-        indentWithSpaces(4)
+        leadingTabsToSpaces(4)
     }
 }
 

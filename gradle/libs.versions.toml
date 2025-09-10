@@ -6,34 +6,30 @@ spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot-vers
 spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "spring-dependency-version" }
 lombok = { id = "io.freefair.lombok", version.ref = "lombok-plugin" }
 versions = { id = "com.github.ben-manes.versions", version.ref = "versions-plugin" }
-shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow-plugin" }
+shadow = { id = "com.gradleup.shadow", version.ref = "shadow-plugin" }
 sonarqube = { id = "org.sonarqube", version.ref = "sonarqube-plugin" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless-plugin" }
 
 [versions]
 
-spring-boot-version = "3.5.0"
-spring-security-test-version = "6.5.0"
+spring-boot-version = "3.5.5"
+spring-security-test-version = "6.5.3"
 spring-dependency-version = "1.1.7"
-lombok-plugin = "8.13.1"
+lombok-plugin = "8.14.2"
 versions-plugin = "0.52.0"
-shadow-plugin = "8.1.1"
-sonarqube-plugin = "6.2.0.5505"
-spotless-plugin = "7.0.3"
+shadow-plugin = "9.1.0"
+sonarqube-plugin = "6.3.1.5724"
+spotless-plugin = "7.2.1"
 
-jackson-databind-nullable = "0.2.6"
-springdoc-openapi-ui = "2.8.8"
-commons-lang3 = "3.17.0"
-datafaker = "2.4.3"
-instancio-junit = "5.4.1"
+jackson-databind-nullable = "0.2.7"
+springdoc-openapi-ui = "2.8.13"
+commons-lang3 = "3.18.0"
+datafaker = "2.4.4"
+instancio-junit = "5.5.1"
 jsonunit-assertj = "4.1.1"
 mapstruct = "1.6.3"
 h2 = "2.3.232"
-junit-bom = "5.12.2"
-##     ⬆ = "5.13.0-M1"
-##     ⬆ = "5.13.0-M2"
-##     ⬆ = "5.13.0-M3"
-##     ⬆ = "5.13.0-RC1"
+junit-bom = "5.13.4"
 
 [libraries]
 

@@ -1,13 +1,12 @@
 package io.hexlet.blog.util;
 
+import io.hexlet.blog.model.User;
 import io.hexlet.blog.repository.PostRepository;
+import io.hexlet.blog.repository.UserRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-
-import io.hexlet.blog.model.User;
-import io.hexlet.blog.repository.UserRepository;
-import lombok.AllArgsConstructor;
 
 @Component
 @AllArgsConstructor
@@ -27,14 +26,14 @@ public class UserUtils {
         return userRepository.findByEmail(email).get();
     }
 
+    public User getTestUser() {
+        return userRepository.findByEmail("hexlet@example.com")
+                .orElseThrow(() -> new RuntimeException("User doesn't exist"));
+    }
+
     public boolean isAuthor(long postId) {
         var postAuthorEmail = postRepository.findById(postId).get().getAuthor().getEmail();
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         return postAuthorEmail.equals(authentication.getName());
-    }
-
-    public User getTestUser() {
-        return userRepository.findByEmail("hexlet@example.com")
-                .orElseThrow(() -> new RuntimeException("User doesn't exist"));
     }
 }

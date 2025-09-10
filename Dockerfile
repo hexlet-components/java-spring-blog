@@ -1,4 +1,4 @@
-FROM node:20.6.1 AS frontend
+FROM node:24.7 AS frontend
 
 WORKDIR /frontend
 

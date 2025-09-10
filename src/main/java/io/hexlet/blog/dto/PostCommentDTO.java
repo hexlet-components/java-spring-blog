@@ -1,7 +1,6 @@
 package io.hexlet.blog.dto;
 
 import java.util.Date;
-
 import lombok.Getter;
 import lombok.Setter;
 

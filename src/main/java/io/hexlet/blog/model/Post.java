@@ -2,14 +2,7 @@ package io.hexlet.blog.model;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
-import java.time.LocalDate;
-
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -19,10 +12,14 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalDate;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Getter
@@ -45,15 +42,12 @@ public class Post implements BaseEntity {
 
     @Column(unique = true)
     @ToString.Include
-    @NotNull
-    private String slug;
+    @NotNull private String slug;
 
-    @NotBlank
-    @ToString.Include
+    @NotBlank @ToString.Include
     private String name;
 
-    @NotBlank
-    @ToString.Include
+    @NotBlank @ToString.Include
     @Column(columnDefinition = "TEXT")
     private String body;
 
