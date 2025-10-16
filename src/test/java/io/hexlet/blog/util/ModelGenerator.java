@@ -29,7 +29,7 @@ public class ModelGenerator {
                 .supply(Select.field(Post::getBody), () -> faker.gameOfThrones().quote()).toModel();
 
         postCommentModel = Instancio.of(PostComment.class).ignore(Select.field(PostComment::getId))
-                .supply(Select.field(Post::getBody), () -> faker.gameOfThrones().quote()).toModel();
+                .supply(Select.field(PostComment::getBody), () -> faker.gameOfThrones().quote()).toModel();
 
         userModel = Instancio.of(User.class).ignore(Select.field(User::getId)).ignore(Select.field(User::getPosts))
                 .supply(Select.field(User::getEmail), () -> faker.internet().emailAddress()).toModel();
