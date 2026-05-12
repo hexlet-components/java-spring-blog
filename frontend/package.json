@@ -20,7 +20,7 @@
     "url": "^0.11.4"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.9.0",
+    "@biomejs/biome": "^2.4.15",
     "@types/react": "^19.1.12",
     "@types/react-dom": "^19.1.9",
     "@vitejs/plugin-react": "^5.0.2",
