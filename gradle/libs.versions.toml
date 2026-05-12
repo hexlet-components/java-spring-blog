@@ -17,7 +17,7 @@ spring-dependency-version = "1.1.7"
 lombok-plugin = "9.2.0"
 versions-plugin = "0.53.0"
 shadow-plugin = "9.4.1"
-sonarqube-plugin = "7.2.3.7755"
+sonarqube-plugin = "7.3.0.8198"
 spotless-plugin = "8.4.0"
 
 jackson-databind-nullable = "0.2.10"
