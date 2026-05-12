@@ -14,7 +14,7 @@ spotless = { id = "com.diffplug.spotless", version.ref = "spotless-plugin" }
 
 spring-boot-version = "4.0.5"
 spring-dependency-version = "1.1.7"
-lombok-plugin = "9.2.0"
+lombok-plugin = "9.5.0"
 versions-plugin = "0.53.0"
 shadow-plugin = "9.4.1"
 sonarqube-plugin = "7.2.3.7755"
