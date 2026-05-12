@@ -10,13 +10,14 @@ COPY frontend /frontend
 
 RUN npm run build
 
-FROM eclipse-temurin:21-jdk
+FROM eclipse-temurin:24-jdk
 
 RUN apt-get update && apt-get install -yq make unzip
 
 WORKDIR /backend
 
 COPY gradle gradle
+COPY gradle.properties .
 COPY build.gradle.kts .
 COPY settings.gradle.kts .
 COPY gradlew .

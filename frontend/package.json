@@ -8,28 +8,24 @@
   "scripts": {
     "dev": "vite --host",
     "build": "tsc && npx vite build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint": "biome check .",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@types/react": "^19.1.12",
-    "@types/react-dom": "^19.1.9",
-    "@typescript-eslint/eslint-plugin": "^8.43.0",
-    "@typescript-eslint/parser": "^8.43.0",
-    "@vitejs/plugin-react": "^5.0.2",
     "axios": "^1.11.0",
-    "npm-check-updates": "^18.1.0",
     "ra-data-json-server": "^5.11.1",
     "react": "^19.1.1",
     "react-admin": "^5.11.1",
     "react-dom": "^19.1.1",
-    "typescript": "^5.9.2",
-    "url": "^0.11.4",
-    "vite": "^7.1.5"
+    "url": "^0.11.4"
   },
   "devDependencies": {
-    "eslint": "^9.35.0",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-plugin-react-refresh": "^0.4.20"
+    "@biomejs/biome": "^1.9.0",
+    "@types/react": "^19.1.12",
+    "@types/react-dom": "^19.1.9",
+    "@vitejs/plugin-react": "^5.0.2",
+    "npm-check-updates": "^18.1.0",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.5"
   }
 }

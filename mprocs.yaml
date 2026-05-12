@@ -1,0 +1,9 @@
+procs:
+  backend:
+    cmd: ["make", "app"]
+  frontend:
+    cmd: ["make", "frontend"]
+  classes:
+    cmd: ["make", "reload-classes"]
+  webserver:
+    cmd: ["caddy", "run", "--watch"]

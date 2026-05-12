@@ -1,16 +1,18 @@
+import org.gradle.api.tasks.testing.Test
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
-    application
-    jacoco
-    alias(libs.plugins.lombok)
-    alias(libs.plugins.versions)
     alias(libs.plugins.spotless)
+
+    application
+    // jacoco
+    alias(libs.plugins.lombok)
+    // alias(libs.plugins.versions)
     alias(libs.plugins.spring.boot)
     alias(libs.plugins.spring.dependency.management)
     alias(libs.plugins.shadow)
-    alias(libs.plugins.sonarqube)
+    // alias(libs.plugins.sonarqube)
 }
 
 group = "io.hexlet.blog"
@@ -20,13 +22,19 @@ application {
     mainClass.set("io.hexlet.blog.Application")
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
 repositories {
     mavenCentral()
 }
 
 dependencies {
     // Spring Boot
-    implementation(libs.springBootStarterWeb)
+    implementation(libs.springBootStarterWebmvc)
     implementation(libs.springBootStarterDataJpa)
     implementation(libs.springBootStarterValidation)
     implementation(libs.springBootStarterActuator)
@@ -54,6 +62,7 @@ dependencies {
 
     // Tests
     testImplementation(libs.springBootStarterTest)
+    testImplementation(libs.springBootStarterWebmvcTest)
     testImplementation(libs.springSecurityTest)
     testImplementation(platform(libs.junitBom))
     testImplementation(libs.junitJupiter)
@@ -61,23 +70,38 @@ dependencies {
 }
 
 tasks.test {
-    useJUnitPlatform()
     testLogging {
-        exceptionFormat = TestExceptionFormat.FULL
-        events = setOf(
+        showStandardStreams = true
+
+        events(
             TestLogEvent.FAILED,
             TestLogEvent.PASSED,
-            TestLogEvent.SKIPPED
+            TestLogEvent.SKIPPED,
+            TestLogEvent.STANDARD_OUT,
+            TestLogEvent.STANDARD_ERROR,
         )
-        showStandardStreams = true
+
+        exceptionFormat = TestExceptionFormat.FULL
+
+        showExceptions = true
+        showCauses = true
+        showStackTraces = true
     }
 }
 
-tasks.jacocoTestReport {
-    reports {
-        xml.required.set(true)
+testing {
+    suites {
+        val test by getting(JvmTestSuite::class) {
+            useJUnitJupiter()
+        }
     }
 }
+
+// tasks.jacocoTestReport {
+//     reports {
+//         xml.required.set(true)
+//     }
+// }
 
 spotless {
     java {
@@ -89,11 +113,10 @@ spotless {
     }
 }
 
-sonar {
-    properties {
-        property("sonar.projectKey", "hexlet-boilerplates_java-package")
-        property("sonar.organization", "hexlet-boilerplates")
-        property("sonar.host.url", "https://sonarcloud.io")
-    }
-}
-
+// sonar {
+//     properties {
+//         property("sonar.projectKey", "hexlet-boilerplates_java-package")
+//         property("sonar.organization", "hexlet-boilerplates")
+//         property("sonar.host.url", "https://sonarcloud.io")
+//     }
+// }

@@ -1,33 +1,43 @@
 ---
+rsa:
+  private-key: classpath:certs/private.pem
+  public-key: classpath:certs/public.pem
+
+sentry:
+  dsn: https://examplePublicKey@o0.ingest.sentry.io/0
+  tracesSampleRate: 1.0
+
+server:
+  address: 0.0.0.0
+  port: ${PORT:8080}
+
+---
 logging:
   level:
     root: WARN
+    org.springframework.boot: INFO
     org:
+      zalando:
+        logbook: TRACE
       springframework:
         # web: DEBUG
         security: DEBUG
 
 spring:
-  # mvc:
-  #   log-request-details: true
-  #   log-resolved-exception: true
-  # codec:
-  #   log-request-details: true
   jpa:
     generate-ddl: true
     show-sql: true
   output:
     ansi:
       enabled: always
+  config:
+    activate:
+      on-profile: dev
 
-sentry:
-  dsn: https://examplePublicKey@o0.ingest.sentry.io/0
-  tracesSampleRate: 1.0
+logbook:
+  strategy: status-at-least
+  minimum-status: 400
+  format:
+    style: http
 
-rsa:
-  private-key: classpath:certs/private.pem
-  public-key: classpath:certs/public.pem
-
-server:
-  address: 0.0.0.0
-  port: ${PORT:8080}
+---

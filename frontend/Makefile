@@ -7,12 +7,8 @@ install:
 build:
 	npm run build
 
-publish:
-	npm publish --access=public
-
 lint:
-	npx eslint .
+	npx biome check .
 
-# TODO: добавить тесты
 test:
 	echo no tests
