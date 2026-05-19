@@ -1,4 +1,4 @@
-FROM node:24.7 AS frontend
+FROM node:26.1 AS frontend
 
 WORKDIR /frontend
 
@@ -10,7 +10,7 @@ COPY frontend /frontend
 
 RUN npm run build
 
-FROM eclipse-temurin:24-jdk
+FROM eclipse-temurin:25-jdk
 
 RUN apt-get update && apt-get install -yq make unzip
 
