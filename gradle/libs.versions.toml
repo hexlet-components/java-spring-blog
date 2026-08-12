@@ -5,17 +5,20 @@
 spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot-version" }
 spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "spring-dependency-version" }
 lombok = { id = "io.freefair.lombok", version.ref = "lombok-plugin" }
-versions = { id = "com.github.ben-manes.versions", version.ref = "versions-plugin" }
+versions = { id = "io.github.ben-manes.versions", version.ref = "versions-plugin" }
 shadow = { id = "com.gradleup.shadow", version.ref = "shadow-plugin" }
 sonarqube = { id = "org.sonarqube", version.ref = "sonarqube-plugin" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless-plugin" }
+
+version-catalog-update = { id = "nl.littlerobots.version-catalog-update", version.ref = "catalog-update-plugin" }
 
 [versions]
 
 spring-boot-version = "4.1.0"
 spring-dependency-version = "1.1.7"
 lombok-plugin = "9.5.0"
-versions-plugin = "0.56.0"
+versions-plugin = "0.61.0"
+catalog-update-plugin = "1.1.1"
 shadow-plugin = "9.6.1"
 sonarqube-plugin = "7.3.1.8318"
 spotless-plugin = "8.9.0"

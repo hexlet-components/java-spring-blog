@@ -4,6 +4,7 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
     alias(libs.plugins.spotless)
+    alias(libs.plugins.version.catalog.update)
 
     application
     // jacoco
@@ -107,9 +108,10 @@ spotless {
     java {
         importOrder()
         removeUnusedImports()
-        eclipse().sortMembersEnabled(true)
+        googleJavaFormat().aosp()
         formatAnnotations()
         leadingTabsToSpaces(4)
+        endWithNewline()
     }
 }
 
@@ -120,3 +122,10 @@ spotless {
 //         property("sonar.host.url", "https://sonarcloud.io")
 //     }
 // }
+
+// versionCatalogUpdate пишет свежие версии прямо в gradle/libs.versions.toml,
+// поэтому руками их сверять не нужно. Ключи не сортируются: порядок в каталоге
+// смысловой, по группам зависимостей.
+versionCatalogUpdate {
+    sortByKey = false
+}
