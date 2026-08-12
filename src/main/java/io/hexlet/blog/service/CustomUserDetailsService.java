@@ -12,11 +12,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomUserDetailsService implements UserDetailsManager {
 
-    @Autowired
-    private UserRepository userRepository;
+    @Autowired private UserRepository userRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    @Autowired private PasswordEncoder passwordEncoder;
 
     @Override
     public void changePassword(String oldPassword, String newPassword) {
@@ -41,7 +39,10 @@ public class CustomUserDetailsService implements UserDetailsManager {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        var user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        var user =
+                userRepository
+                        .findByEmail(email)
+                        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         return user;
     }
 

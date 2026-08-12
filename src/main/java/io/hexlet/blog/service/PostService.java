@@ -13,14 +13,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class PostService {
-    @Autowired
-    private PostRepository repository;
+    @Autowired private PostRepository repository;
 
-    @Autowired
-    private PostMapper postMapper;
+    @Autowired private PostMapper postMapper;
 
-    @Autowired
-    private UserUtils userUtils;
+    @Autowired private UserUtils userUtils;
 
     PostDTO create(PostCreateDTO postData) {
         var post = postMapper.map(postData);
@@ -35,7 +32,10 @@ public class PostService {
     }
 
     PostDTO findById(Long id) {
-        var post = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not Found: " + id));
+        var post =
+                repository
+                        .findById(id)
+                        .orElseThrow(() -> new ResourceNotFoundException("Not Found: " + id));
         var postDTO = postMapper.map(post);
         return postDTO;
     }
@@ -47,7 +47,10 @@ public class PostService {
     }
 
     PostDTO update(PostUpdateDTO postData, Long id) {
-        var post = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not Found"));
+        var post =
+                repository
+                        .findById(id)
+                        .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
         postMapper.update(postData, post);
         repository.save(post);
         var postDTO = postMapper.map(post);

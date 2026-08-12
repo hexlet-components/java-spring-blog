@@ -9,8 +9,7 @@ import org.mapstruct.TargetType;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public abstract class ReferenceMapper {
-    @PersistenceContext
-    private EntityManager entityManager;
+    @PersistenceContext private EntityManager entityManager;
 
     public <T extends BaseEntity> T toEntity(Long id, @TargetType Class<T> entityClass) {
         return id != null ? entityManager.find(entityClass, id) : null;

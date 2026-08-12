@@ -28,17 +28,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class PostsController {
 
-    @Autowired
-    private PostRepository repository;
+    @Autowired private PostRepository repository;
 
-    @Autowired
-    private PostMapper postMapper;
+    @Autowired private PostMapper postMapper;
 
-    @Autowired
-    private UserUtils userUtils;
+    @Autowired private UserUtils userUtils;
 
-    @Autowired
-    private PostService postService;
+    @Autowired private PostService postService;
 
     @PostMapping("/posts")
     @ResponseStatus(HttpStatus.CREATED)
@@ -62,13 +58,18 @@ public class PostsController {
     ResponseEntity<List<PostDTO>> index() {
         var posts = postService.getAll();
 
-        return ResponseEntity.ok().header("X-Total-Count", String.valueOf(posts.size())).body(posts);
+        return ResponseEntity.ok()
+                .header("X-Total-Count", String.valueOf(posts.size()))
+                .body(posts);
     }
 
     @GetMapping("/posts/{id}")
     @ResponseStatus(HttpStatus.OK)
     PostDTO show(@PathVariable Long id) {
-        var post = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not Found: " + id));
+        var post =
+                repository
+                        .findById(id)
+                        .orElseThrow(() -> new ResourceNotFoundException("Not Found: " + id));
         var postDTO = postMapper.map(post);
         return postDTO;
     }
@@ -77,7 +78,10 @@ public class PostsController {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("@userUtils.isAuthor(#id)")
     PostDTO update(@RequestBody @Valid PostUpdateDTO postData, @PathVariable Long id) {
-        var post = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not Found"));
+        var post =
+                repository
+                        .findById(id)
+                        .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
         postMapper.update(postData, post);
         repository.save(post);
         var postDTO = postMapper.map(post);

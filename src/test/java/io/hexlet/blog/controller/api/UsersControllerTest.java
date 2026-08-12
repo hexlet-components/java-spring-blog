@@ -38,26 +38,19 @@ import org.springframework.web.context.WebApplicationContext;
 @AutoConfigureMockMvc
 public class UsersControllerTest {
 
-    @Autowired
-    private WebApplicationContext wac;
+    @Autowired private WebApplicationContext wac;
 
-    @Autowired
-    private MockMvc mockMvc;
+    @Autowired private MockMvc mockMvc;
 
-    @Autowired
-    private Faker faker;
+    @Autowired private Faker faker;
 
-    @Autowired
-    private UserRepository userRepository;
+    @Autowired private UserRepository userRepository;
 
-    @Autowired
-    private ModelGenerator modelGenerator;
+    @Autowired private ModelGenerator modelGenerator;
 
-    @Autowired
-    private ObjectMapper om;
+    @Autowired private ObjectMapper om;
 
-    @Autowired
-    private UserMapper userMapper;
+    @Autowired private UserMapper userMapper;
 
     private JwtRequestPostProcessor token;
 
@@ -67,8 +60,11 @@ public class UsersControllerTest {
     public void setUp() {
         userRepository.deleteAll();
 
-        mockMvc = MockMvcBuilders.webAppContextSetup(wac).defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
-                .apply(springSecurity()).build();
+        mockMvc =
+                MockMvcBuilders.webAppContextSetup(wac)
+                        .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
+                        .apply(springSecurity())
+                        .build();
 
         testUser = Instancio.of(modelGenerator.getUserModel()).create();
         userRepository.save(testUser);
@@ -79,8 +75,11 @@ public class UsersControllerTest {
     public void testCreate() throws Exception {
         var data = Instancio.of(modelGenerator.getUserModel()).create();
 
-        var request = post("/api/users").with(token).contentType(MediaType.APPLICATION_JSON)
-                .content(om.writeValueAsString(data));
+        var request =
+                post("/api/users")
+                        .with(token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(om.writeValueAsString(data));
         mockMvc.perform(request).andExpect(status().isCreated());
 
         var user = userRepository.findByEmail(data.getEmail()).orElse(null);
@@ -92,12 +91,14 @@ public class UsersControllerTest {
 
     @Test
     public void testIndex() throws Exception {
-        var response = mockMvc.perform(get("/api/users").with(jwt())).andExpect(status().isOk()).andReturn()
-                .getResponse();
+        var response =
+                mockMvc.perform(get("/api/users").with(jwt()))
+                        .andExpect(status().isOk())
+                        .andReturn()
+                        .getResponse();
         var body = response.getContentAsString();
 
-        List<UserDTO> userDTOS = om.readValue(body, new TypeReference<>() {
-        });
+        List<UserDTO> userDTOS = om.readValue(body, new TypeReference<>() {});
 
         var actual = userDTOS.stream().map(userMapper::map).toList();
         var expected = userRepository.findAll();
@@ -109,9 +110,11 @@ public class UsersControllerTest {
         var request = get("/api/users/" + testUser.getId()).with(jwt());
         var result = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
         var body = result.getResponse().getContentAsString();
-        assertThatJson(body).and(v -> v.node("username").isEqualTo(testUser.getEmail()),
-                v -> v.node("firstName").isEqualTo(testUser.getFirstName()),
-                v -> v.node("lastName").isEqualTo(testUser.getLastName()));
+        assertThatJson(body)
+                .and(
+                        v -> v.node("username").isEqualTo(testUser.getEmail()),
+                        v -> v.node("firstName").isEqualTo(testUser.getFirstName()),
+                        v -> v.node("lastName").isEqualTo(testUser.getLastName()));
     }
 
     @Test
@@ -120,8 +123,11 @@ public class UsersControllerTest {
         var data = new HashMap<>();
         data.put("firstName", "Mike");
 
-        var request = put("/api/users/" + testUser.getId()).with(token).contentType(MediaType.APPLICATION_JSON)
-                .content(om.writeValueAsString(data));
+        var request =
+                put("/api/users/" + testUser.getId())
+                        .with(token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(om.writeValueAsString(data));
 
         mockMvc.perform(request).andExpect(status().isOk());
 

@@ -17,14 +17,11 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class DataInitializer implements ApplicationRunner {
 
-    @Autowired
-    private final PostRepository postRepository;
+    @Autowired private final PostRepository postRepository;
 
-    @Autowired
-    private final UserRepository userRepository;
+    @Autowired private final UserRepository userRepository;
 
-    @Autowired
-    private final CustomUserDetailsService userService;
+    @Autowired private final CustomUserDetailsService userService;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
@@ -37,14 +34,16 @@ public class DataInitializer implements ApplicationRunner {
         var user = userRepository.findByEmail(email).get();
 
         var faker = new Faker();
-        IntStream.range(1, 10).forEach(i -> {
-            var post = new Post();
-            post.setName(faker.book().title());
-            var paragraphs = faker.lorem().paragraphs(5);
-            post.setBody(String.join("\n", paragraphs));
-            post.setSlug(faker.internet().slug());
-            post.setAuthor(user);
-            postRepository.save(post);
-        });
+        IntStream.range(1, 10)
+                .forEach(
+                        i -> {
+                            var post = new Post();
+                            post.setName(faker.book().title());
+                            var paragraphs = faker.lorem().paragraphs(5);
+                            post.setBody(String.join("\n", paragraphs));
+                            post.setSlug(faker.internet().slug());
+                            post.setAuthor(user);
+                            postRepository.save(post);
+                        });
     }
 }

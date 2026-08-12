@@ -40,9 +40,7 @@ public class PostComment implements BaseEntity {
     @ManyToOne(optional = false)
     private Post post;
 
-    @LastModifiedDate
-    private LocalDate updatedAt;
+    @LastModifiedDate private LocalDate updatedAt;
 
-    @CreatedDate
-    private LocalDate createdAt;
+    @CreatedDate private LocalDate createdAt;
 }

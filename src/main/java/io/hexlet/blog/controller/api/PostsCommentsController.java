@@ -18,18 +18,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 public class PostsCommentsController {
-    @Autowired
-    private PostCommentRepository repository;
+    @Autowired private PostCommentRepository repository;
 
-    @Autowired
-    private PostCommentSpecification specBuilder;
+    @Autowired private PostCommentSpecification specBuilder;
 
-    @Autowired
-    private PostCommentMapper postCommentMapper;
+    @Autowired private PostCommentMapper postCommentMapper;
 
     @GetMapping("/posts_comments")
     @ResponseStatus(HttpStatus.OK)
-    Page<PostCommentDTO> index(PostCommentParamsDTO params, @RequestParam(defaultValue = "1") int page) {
+    Page<PostCommentDTO> index(
+            PostCommentParamsDTO params, @RequestParam(defaultValue = "1") int page) {
         var spec = specBuilder.build(params);
         var comments = repository.findAll(spec, PageRequest.of(page - 1, 10));
         var result = comments.map(postCommentMapper::map);

@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PostCommentRepository extends JpaRepository<PostComment, Long>, JpaSpecificationExecutor<PostComment> {
+public interface PostCommentRepository
+        extends JpaRepository<PostComment, Long>, JpaSpecificationExecutor<PostComment> {
     // Page<Post> findAll(Specification<Post> spec, Pageable pageable);
 }

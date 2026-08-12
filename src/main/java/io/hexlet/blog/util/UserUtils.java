@@ -11,11 +11,9 @@ import org.springframework.stereotype.Component;
 @Component
 @AllArgsConstructor
 public class UserUtils {
-    @Autowired
-    private UserRepository userRepository;
+    @Autowired private UserRepository userRepository;
 
-    @Autowired
-    private PostRepository postRepository;
+    @Autowired private PostRepository postRepository;
 
     public User getCurrentUser() {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -27,7 +25,8 @@ public class UserUtils {
     }
 
     public User getTestUser() {
-        return userRepository.findByEmail("hexlet@example.com")
+        return userRepository
+                .findByEmail("hexlet@example.com")
                 .orElseThrow(() -> new RuntimeException("User doesn't exist"));
     }
 

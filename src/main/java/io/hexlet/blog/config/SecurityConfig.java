@@ -21,14 +21,11 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-    @Autowired
-    private JwtDecoder jwtDecoder;
+    @Autowired private JwtDecoder jwtDecoder;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    @Autowired private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private CustomUserDetailsService userService;
+    @Autowired private CustomUserDetailsService userService;
 
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
@@ -45,12 +42,26 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/login").permitAll()
-                        .requestMatchers("/api/pages/*").permitAll().requestMatchers("/api/pages").permitAll()
-                        .requestMatchers("/").permitAll().requestMatchers("/index.html").permitAll()
-                        .requestMatchers("/assets/**").permitAll().anyRequest().authenticated())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(
+                        auth ->
+                                auth.requestMatchers("/api/login")
+                                        .permitAll()
+                                        .requestMatchers("/api/pages/*")
+                                        .permitAll()
+                                        .requestMatchers("/api/pages")
+                                        .permitAll()
+                                        .requestMatchers("/")
+                                        .permitAll()
+                                        .requestMatchers("/index.html")
+                                        .permitAll()
+                                        .requestMatchers("/assets/**")
+                                        .permitAll()
+                                        .anyRequest()
+                                        .authenticated())
+                .sessionManagement(
+                        session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .oauth2ResourceServer((rs) -> rs.jwt((jwt) -> jwt.decoder(jwtDecoder)))
-                .httpBasic(Customizer.withDefaults()).build();
+                .httpBasic(Customizer.withDefaults())
+                .build();
     }
 }

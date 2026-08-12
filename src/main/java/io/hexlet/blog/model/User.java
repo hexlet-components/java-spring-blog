@@ -47,20 +47,16 @@ public class User implements UserDetails, BaseEntity {
     private String email;
 
     // @NotBlank
-    @ToString.Include
-    private String firstName;
+    @ToString.Include private String firstName;
 
     // @NotBlank
-    @ToString.Include
-    private String lastName;
+    @ToString.Include private String lastName;
 
     private String passwordDigest;
 
-    @LastModifiedDate
-    private LocalDate updatedAt;
+    @LastModifiedDate private LocalDate updatedAt;
 
-    @CreatedDate
-    private LocalDate createdAt;
+    @CreatedDate private LocalDate createdAt;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

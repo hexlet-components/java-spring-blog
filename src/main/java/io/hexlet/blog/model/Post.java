@@ -44,16 +44,13 @@ public class Post implements BaseEntity {
     @ToString.Include
     @NotNull private String slug;
 
-    @NotBlank @ToString.Include
-    private String name;
+    @NotBlank @ToString.Include private String name;
 
     @NotBlank @ToString.Include
     @Column(columnDefinition = "TEXT")
     private String body;
 
-    @LastModifiedDate
-    private LocalDate updatedAt;
+    @LastModifiedDate private LocalDate updatedAt;
 
-    @CreatedDate
-    private LocalDate createdAt;
+    @CreatedDate private LocalDate createdAt;
 }

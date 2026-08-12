@@ -42,29 +42,21 @@ import org.springframework.web.context.WebApplicationContext;
 @AutoConfigureMockMvc
 public class PostsControllerTest {
 
-    @Autowired
-    private WebApplicationContext wac;
+    @Autowired private WebApplicationContext wac;
 
-    @Autowired
-    private MockMvc mockMvc;
+    @Autowired private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper om;
+    @Autowired private ObjectMapper om;
 
-    @Autowired
-    private PostMapper postMapper;
+    @Autowired private PostMapper postMapper;
 
-    @Autowired
-    private ModelGenerator modelGenerator;
+    @Autowired private ModelGenerator modelGenerator;
 
-    @Autowired
-    private PostRepository postRepository;
+    @Autowired private PostRepository postRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    @Autowired private UserRepository userRepository;
 
-    @Autowired
-    private PostCommentRepository postCommentRepository;
+    @Autowired private PostCommentRepository postCommentRepository;
 
     private JwtRequestPostProcessor token;
 
@@ -78,8 +70,11 @@ public class PostsControllerTest {
         postRepository.deleteAll();
         userRepository.deleteAll();
 
-        mockMvc = MockMvcBuilders.webAppContextSetup(wac).defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
-                .apply(springSecurity()).build();
+        mockMvc =
+                MockMvcBuilders.webAppContextSetup(wac)
+                        .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
+                        .apply(springSecurity())
+                        .build();
 
         testUser = Instancio.of(modelGenerator.getUserModel()).create();
         userRepository.save(testUser);
@@ -93,8 +88,11 @@ public class PostsControllerTest {
     public void testCreate() throws Exception {
         var dto = postMapper.map(testPost);
 
-        var request = post("/api/posts").with(token).contentType(MediaType.APPLICATION_JSON)
-                .content(om.writeValueAsString(dto));
+        var request =
+                post("/api/posts")
+                        .with(token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(om.writeValueAsString(dto));
 
         mockMvc.perform(request).andExpect(status().isCreated());
 
@@ -125,12 +123,14 @@ public class PostsControllerTest {
     public void testIndex() throws Exception {
         postRepository.save(testPost);
 
-        var response = mockMvc.perform(get("/api/posts").with(token)).andExpect(status().isOk()).andReturn()
-                .getResponse();
+        var response =
+                mockMvc.perform(get("/api/posts").with(token))
+                        .andExpect(status().isOk())
+                        .andReturn()
+                        .getResponse();
         var body = response.getContentAsString();
 
-        List<PostDTO> postDTOS = om.readValue(body, new TypeReference<>() {
-        });
+        List<PostDTO> postDTOS = om.readValue(body, new TypeReference<>() {});
 
         var actual = postDTOS.stream().map(postMapper::map).toList();
         var expected = postRepository.findAll();
@@ -144,8 +144,11 @@ public class PostsControllerTest {
         var request = get("/api/posts/" + testPost.getId()).with(jwt());
         var result = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
         var body = result.getResponse().getContentAsString();
-        assertThatJson(body).and(v -> v.node("slug").isEqualTo(testPost.getSlug()),
-                v -> v.node("name").isEqualTo(testPost.getName()), v -> v.node("body").isEqualTo(testPost.getBody()));
+        assertThatJson(body)
+                .and(
+                        v -> v.node("slug").isEqualTo(testPost.getSlug()),
+                        v -> v.node("name").isEqualTo(testPost.getName()),
+                        v -> v.node("body").isEqualTo(testPost.getBody()));
     }
 
     @Test
@@ -155,8 +158,11 @@ public class PostsControllerTest {
         var data = new PostUpdateDTO();
         data.setName(JsonNullable.of("new name"));
 
-        var request = put("/api/posts/" + testPost.getId()).with(token).contentType(MediaType.APPLICATION_JSON)
-                .content(om.writeValueAsString(data));
+        var request =
+                put("/api/posts/" + testPost.getId())
+                        .with(token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(om.writeValueAsString(data));
 
         mockMvc.perform(request).andExpect(status().isOk());
 
@@ -171,8 +177,11 @@ public class PostsControllerTest {
         var data = new PostUpdateDTO();
         data.setName(JsonNullable.of("new name"));
 
-        var request = put("/api/posts/" + testPost.getId()).with(jwt()).contentType(MediaType.APPLICATION_JSON)
-                .content(om.writeValueAsString(data));
+        var request =
+                put("/api/posts/" + testPost.getId())
+                        .with(jwt())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(om.writeValueAsString(data));
 
         mockMvc.perform(request).andExpect(status().isForbidden());
 

@@ -35,33 +35,25 @@ import org.springframework.web.context.WebApplicationContext;
 @AutoConfigureMockMvc
 public class PostsCommentsControllerTest {
 
-    @Autowired
-    private WebApplicationContext wac;
+    @Autowired private WebApplicationContext wac;
 
-    @Autowired
-    private MockMvc mockMvc;
+    @Autowired private MockMvc mockMvc;
 
-    @Autowired
-    private ModelGenerator modelGenerator;
+    @Autowired private ModelGenerator modelGenerator;
 
-    @Autowired
-    private PostRepository postRepository;
+    @Autowired private PostRepository postRepository;
 
-    @Autowired
-    private PostCommentRepository postCommentRepository;
+    @Autowired private PostCommentRepository postCommentRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    @Autowired private UserRepository userRepository;
 
     private JwtRequestPostProcessor token;
 
     private Post testPost;
 
-    @Autowired
-    private ObjectMapper om;
+    @Autowired private ObjectMapper om;
 
-    @Autowired
-    private PostCommentMapper postCommentMapper;
+    @Autowired private PostCommentMapper postCommentMapper;
 
     private User testUser;
 
@@ -71,8 +63,11 @@ public class PostsCommentsControllerTest {
         postRepository.deleteAll();
         userRepository.deleteAll();
 
-        mockMvc = MockMvcBuilders.webAppContextSetup(wac).defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
-                .apply(springSecurity()).build();
+        mockMvc =
+                MockMvcBuilders.webAppContextSetup(wac)
+                        .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
+                        .apply(springSecurity())
+                        .build();
 
         testUser = Instancio.of(modelGenerator.getUserModel()).create();
         userRepository.save(testUser);
@@ -99,23 +94,27 @@ public class PostsCommentsControllerTest {
 
     @Test
     public void testFilteredIndex() throws Exception {
-        var result = mockMvc.perform(get("/api/posts_comments?postId=" + testPost.getId()).with(token))
-                .andExpect(status().isOk()).andReturn();
+        var result =
+                mockMvc.perform(get("/api/posts_comments?postId=" + testPost.getId()).with(token))
+                        .andExpect(status().isOk())
+                        .andReturn();
         var body = result.getResponse().getContentAsString();
         assertThatJson(body).node("content").isArray().hasSize(1);
     }
 
     @Test
     public void testIndex() throws Exception {
-        var result = mockMvc.perform(get("/api/posts_comments").with(token)).andExpect(status().isOk()).andReturn();
+        var result =
+                mockMvc.perform(get("/api/posts_comments").with(token))
+                        .andExpect(status().isOk())
+                        .andReturn();
         var body = result.getResponse().getContentAsString();
 
-        Map<String, Object> content = om.readValue(body, new TypeReference<>() {
-        });
+        Map<String, Object> content = om.readValue(body, new TypeReference<>() {});
         var postComments = content.get("content");
 
-        List<PostCommentDTO> postCommentDTOS = om.convertValue(postComments, new TypeReference<>() {
-        });
+        List<PostCommentDTO> postCommentDTOS =
+                om.convertValue(postComments, new TypeReference<>() {});
 
         var actual = postCommentDTOS.stream().map(postCommentMapper::map).toList();
         var expected = postCommentRepository.findAll();
