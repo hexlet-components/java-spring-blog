@@ -1,12 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import jsonServerProvider from "ra-data-json-server";
-import {
-  Admin,
-  ListGuesser,
-  Resource,
-  ShowGuesser,
-  fetchUtils,
-} from "react-admin";
+import { Admin, ListGuesser, Resource, ShowGuesser, fetchUtils } from "react-admin";
 
 import authProvider from "./authProvider";
 import { Dashboard } from "./components/Dashboard";
@@ -30,13 +24,7 @@ const App = () => (
     dataProvider={dataProvider}
     // requireAuth
   >
-    <Resource
-      name="posts"
-      create={PostCreate}
-      list={PostList}
-      show={PostShow}
-      edit={PostEdit}
-    />
+    <Resource name="posts" create={PostCreate} list={PostList} show={PostShow} edit={PostEdit} />
 
     <Resource
       name="users"
