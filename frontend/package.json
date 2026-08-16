@@ -8,8 +8,9 @@
   "scripts": {
     "dev": "vite --host",
     "build": "tsc && npx vite build",
-    "lint": "biome check .",
-    "preview": "vite preview"
+    "lint": "oxlint",
+    "preview": "vite preview",
+    "lint:fix": "oxfmt && oxlint --fix"
   },
   "dependencies": {
     "axios": "^1.11.0",
@@ -20,11 +21,12 @@
     "url": "^0.11.4"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.9.0",
     "@types/react": "^19.1.12",
     "@types/react-dom": "^19.1.9",
     "@vitejs/plugin-react": "^5.0.2",
     "npm-check-updates": "^18.1.0",
+    "oxfmt": "^0.63.0",
+    "oxlint": "^1.78.0",
     "typescript": "^5.9.2",
     "vite": "^7.1.5"
   }
