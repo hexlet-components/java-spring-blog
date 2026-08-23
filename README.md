@@ -15,7 +15,7 @@ Demo: https://java-spring-blog.hexlet.app/
 
 ## Tools
 
-* [checkstyle](https://github.com/checkstyle/checkstyle)
+* [spotless](https://github.com/diffplug/spotless)
 
 ## Development
 
