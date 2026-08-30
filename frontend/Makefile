@@ -8,7 +8,10 @@ build:
 	npm run build
 
 lint:
-	npx biome check .
+	npm run lint
+
+lint-fix:
+	npm run lint:fix
 
 test:
 	echo no tests
