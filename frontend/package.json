@@ -2,32 +2,30 @@
   "name": "@hexlet/java-spring-blog-frontend",
   "version": "1.0.0",
   "type": "module",
-  "bin": {
-    "start-frontend": "./bin/devServer.js"
-  },
   "scripts": {
     "dev": "vite --host",
-    "build": "tsc && npx vite build",
+    "build": "tsc && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
     "lint:fix": "oxfmt && oxlint --fix"
   },
   "dependencies": {
-    "axios": "^1.11.0",
-    "ra-data-json-server": "^5.11.1",
-    "react": "^19.1.1",
-    "react-admin": "^5.11.1",
-    "react-dom": "^19.1.1",
-    "url": "^0.11.4"
+    "@mui/material": "^9.4.0",
+    "axios": "^1.20.0",
+    "ra-data-json-server": "^5.15.4",
+    "react": "^19.3.0",
+    "react-admin": "^5.15.4",
+    "react-dom": "^19.3.0"
   },
   "devDependencies": {
-    "@types/react": "^19.1.12",
-    "@types/react-dom": "^19.1.9",
-    "@vitejs/plugin-react": "^5.0.2",
-    "npm-check-updates": "^18.1.0",
-    "oxfmt": "^0.63.0",
-    "oxlint": "^1.78.0",
-    "typescript": "^5.9.2",
-    "vite": "^7.1.5"
-  }
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.1",
+    "npm-check-updates": "^23.1.0",
+    "oxfmt": "^0.71.0",
+    "oxlint": "^1.86.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.1"
+  },
+  "packageManager": "pnpm@12.6.0"
 }

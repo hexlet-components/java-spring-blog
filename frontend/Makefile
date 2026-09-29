@@ -1,17 +1,17 @@
 start:
-	npm run dev
+	pnpm run dev
 
 install:
-	npm i
+	pnpm install
 
 build:
-	npm run build
+	pnpm run build
 
 lint:
-	npm run lint
+	pnpm --silent run lint
 
 lint-fix:
-	npm run lint:fix
+	pnpm --silent run lint:fix
 
 test:
 	echo no tests

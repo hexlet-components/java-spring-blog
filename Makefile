@@ -35,6 +35,6 @@ test:
 	./gradlew test
 
 update-js-deps:
-	cd frontend && npx ncu -u
+	cd frontend && pnpm exec ncu -u
 
 .PHONY: setup app frontend backend clean build dev reload-classes start-prod install lint test update-js-deps

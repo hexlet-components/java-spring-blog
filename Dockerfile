@@ -1,14 +1,18 @@
-FROM node:26.8 AS frontend
+FROM node:26-slim AS frontend
+
+# corepack из образов Node 26 убран, поэтому pnpm ставится напрямую. Версия
+# берётся из поля packageManager, чтобы образ и разработка совпадали.
+RUN npm install -g pnpm@12.6.0
 
 WORKDIR /frontend
 
-COPY frontend/package*.json .
+COPY frontend/package.json frontend/pnpm-lock.yaml frontend/pnpm-workspace.yaml ./
 
-RUN npm ci
+RUN pnpm install --frozen-lockfile
 
 COPY frontend /frontend
 
-RUN npm run build
+RUN pnpm run build
 
 FROM eclipse-temurin:25-jdk
 
