@@ -14,7 +14,7 @@ COPY frontend /frontend
 
 RUN pnpm run build
 
-FROM eclipse-temurin:25-jdk
+FROM eclipse-temurin:27-jdk
 
 RUN apt-get update && apt-get install -yq make unzip
 

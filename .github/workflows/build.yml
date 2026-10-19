@@ -11,6 +11,6 @@ jobs:
       - uses: actions/setup-java@v6.0.1
         with:
           distribution: 'temurin'
-          java-version: '25'
+          java-version: '27'
       - run: make build
       - run: make test
